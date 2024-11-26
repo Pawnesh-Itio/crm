@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 // Detect if the app is running in a local or live environment
 if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
     // Local environment
-    define('APP_BASE_URL', 'http://localhost/live_crm');
+    define('APP_BASE_URL', 'http://localhost/crm');
     define('APP_DB_HOSTNAME', 'localhost');
     define('APP_DB_USERNAME', 'root');
     define('APP_DB_PASSWORD', '');
