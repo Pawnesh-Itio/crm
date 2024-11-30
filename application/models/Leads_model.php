@@ -1189,4 +1189,12 @@ class Leads_model extends App_Model
         $this->db->insert('it_crm_leads', $data);
         return $this->db->insert_id(); // Return the last inserted ID
     }
+    public function get_all_whatsapp_data(){
+        $this->db->where('source', 3);
+		if (!is_admin()) {
+		$this->db->where('assigned', $_SESSION['staff_logged_in']);	// Use condition
+		}
+		$query = $this->db->get('leads'); // Get data from leads
+		return $query->result_array(); // Return the result as an associative array
+    }
 }

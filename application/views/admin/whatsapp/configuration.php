@@ -25,6 +25,7 @@
                 <div class="card-wa-configuration">
                     <div class="card-body">
                         <form id="configurationForm">
+                            <input type="hidden" name="source" id="source" value="crm">
                             <div class="form-group">
                                 <label>Webhook url</label>
                                 <input name="webhookUrl" id="webhookUrl" type="url" class="form-control" value="https://wa-business-api.onrender.com/api/messages/webhook/<?= get_staff_user_id() ?>" readonly>
@@ -68,6 +69,8 @@ $(document).ready(function() {
                 },
                 statusCode:{
                     400: function(response) {
+                        $('.wa-lodder').css('display', 'none');
+                        $('.card-wa-configuration').css('display', 'block');
                         console.error('Bad request:', response.responseJSON.message);
                     }
                 }
@@ -81,7 +84,8 @@ $(document).ready(function() {
         userId:$('#userId').val(),
         accessToken:$('#accessToken').val(),
         phoneNumberId:$('#phoneNumberId').val(),
-        webhookVerificationToken:$('#webhookVerificationToken').val()
+        webhookVerificationToken:$('#webhookVerificationToken').val(),
+        source:$('#source').val()
     };
     $.ajax({
             url: 'https://wa-business-api.onrender.com/api/configuration/save',  // Replace with your Node.js API endpoint
