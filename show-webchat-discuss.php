@@ -28,7 +28,7 @@ if (isset($_POST['message'])) {
 
 	if(isset($description)&&$description)
 	{
-		$response .= '<div class="message outgoing-msg"><p class="message-text">' . ($description) . '</p><span class="send-time">'.date('d-M H:i',strtotime($dateadded)).'</span></div>';
+		$response .= '<div class="message incoming-message"><p class="message-text">' . ($description) . '</p><span class="send-time">'.date('d-M H:i',strtotime($dateadded)).'</span></div>';
 	}
 
 	// Append the new text into tbltelegram (conversion) in the database
@@ -67,11 +67,11 @@ if (isset($_POST['message'])) {
 
 		if($msg_type==1)
 		{
-			$response .= '<div class="message incoming-msg"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
+			$response .= '<div class="message sent-message"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
 		}
 		else
 		{
-			$response .= '<div class="message outgoing-msg"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
+			$response .= '<div class="message incoming-message"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
 		}
 	}
 
@@ -102,7 +102,7 @@ else
 	
 		if(isset($description)&&$description)
 		{
-			$response .= '<div class="message outgoing-msg"><p class="message-text">' . ($description) . '</p><span class="send-time">'.date('d-M H:i',strtotime($dateadded)).'</span></div>';
+			$response .= '<div class="message incoming-message"><p class="message-text">' . ($description) . '</p><span class="send-time">'.date('d-M H:i',strtotime($dateadded)).'</span></div>';
 		}
 
 		$sqlStmt = "SELECT * FROM `it_crm_messages` WHERE `incoming_msg_id` = '$lead_id' ORDER BY `timestamp` ASC";
@@ -131,11 +131,11 @@ else
 
 			if($msg_type==1)
 			{
-				$response .= '<div class="message incoming-msg"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
+				$response .= '<div class="message sent-message"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
 			}
 			else
 			{
-				$response .= '<div class="message outgoing-msg"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
+				$response .= '<div class="message incoming-message"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
 			}
 		}
 	
