@@ -31,3 +31,13 @@ ERROR - 2024-11-29 16:53:36 --> Could not find the language line "als_webchat"
 ERROR - 2024-11-29 16:53:37 --> Could not find the language line "als_webchat"
 ERROR - 2024-11-29 12:53:35 --> 404 Page Not Found: admin/Leads/telegram
 ERROR - 2024-11-29 13:20:32 --> 404 Page Not Found: admin/Leads/telegram
+ERROR - 2024-11-29 13:32:56 --> Could not find the language line "Completed Projects"
+ERROR - 2024-11-29 13:32:56 --> Could not find the language line "In Progress Projects"
+ERROR - 2024-11-29 14:28:42 --> Could not find the language line "Completed Projects"
+ERROR - 2024-11-29 14:28:42 --> Could not find the language line "In Progress Projects"
+ERROR - 2024-11-29 14:40:08 --> Could not find the language line "Completed Projects"
+ERROR - 2024-11-29 14:40:08 --> Could not find the language line "In Progress Projects"
+ERROR - 2024-11-29 18:00:15 --> Could not find the language line "Completed Projects"
+ERROR - 2024-11-29 18:00:15 --> Could not find the language line "In Progress Projects"
+ERROR - 2024-11-29 18:00:33 --> Could not find the language line "Completed Projects"
+ERROR - 2024-11-29 18:00:33 --> Could not find the language line "In Progress Projects"
