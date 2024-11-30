@@ -54,6 +54,8 @@
 }
 
 .message-input button {
+	margin-top:22px;
+	position:relative;
     border-radius: 50%;
     width: 45px;
     height: 45px;
@@ -127,7 +129,6 @@
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
     height: 550px;
 }
-
 </style>
 <div id="wrapper">
 	<div class="content">
@@ -188,7 +189,7 @@
 				<?php
 				}?>
 				<div class="chat-screen"
-					style=" height:100% ;background: url('<?= base_url('assets/images/chatbackground3.jpg')?>">
+					style="height:100% ;background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
 					<?php
 					$response = '<div id="message-container" class="message-container chat-container">';
 
@@ -208,13 +209,19 @@
 			</div>
 			<!-- Input box with 'Send' button inside the border -->
 			<div class="clearfix"></div>
+			<?php
+			if(isset($chat_id)&&$chat_id)
+			{
+			?>
 			<div class="message-input">
-			
 				<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
 				<button type="submit" class="btn btn-primary send-button" id="send-button" onclick="sendMessage()">
 					<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
 				</button>
             </div>
+			<?php
+			}
+			?>
 
 		</div>
 	</div>
@@ -287,7 +294,7 @@ window.onload = function() {
 if(isset($chat_id)&&$chat_id)
 {
 ?>
-	var chat_id = '<?=$chat_id;?>' // Get chat_id 
+	var chat_id = '<?php echo $chat_id;?>' // Get chat_id 
 
 	// Function to fetch and update the message container
 	function fetchData() {

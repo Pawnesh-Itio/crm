@@ -54,6 +54,8 @@
 }
 
 .message-input button {
+	margin-top:22px;
+	position:relative;
     border-radius: 50%;
     width: 45px;
     height: 45px;
@@ -188,7 +190,7 @@
 				<?php
 				}?>
 				<div class="chat-screen"
-					style=" height:100% ;background: url('<?= base_url('assets/images/chatbackground3.jpg')?>">
+					style=" height:100% ;background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
 					<?php
 					$telegram_token = get_option('telegram_token');
 					$response = '<div id="message-container" class="message-container chat-container">';
@@ -197,25 +199,26 @@
 
 					$response .= '</div>';
 					echo $response;
-
-					if(isset($chat_id)&&$chat_id)
-					{
-					?>
-					<?php
-					}
 					?>
 					</div>
 				</div>
 			</div>
-						<!-- Input box with 'Send' button inside the border -->
-						<div class="clearfix"></div>
-			<div class="message-input">
-				<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
-				<button  type="submit" class="btn btn-primary send-button" id="send-button" onclick="sendMessage()">
-					<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-				</button>
-            </div>
+			<!-- Input box with 'Send' button inside the border -->
+			<div class="clearfix"></div>
 
+			<?php
+			if(isset($chat_id)&&$chat_id)
+			{
+			?>
+				<div class="message-input">
+					<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
+					<button  type="submit" class="btn btn-primary send-button" id="send-button" onclick="sendMessage()">
+						<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+					</button>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 	</div>
 </div>
@@ -290,9 +293,9 @@ if(isset($chat_id)&&$chat_id)
 {
 ?>
 	//$telegram_token
-	var chat_id = '<?=$chat_id;?>' // Get telegram chat_id 
+	var chat_id = '<?php echo $chat_id;?>' // Get telegram chat_id 
 	//console.log("chat Id: "+chat_id);
-	var telegram_token = '<?=$telegram_token;?>' // Get telegram token
+	var telegram_token = '<?php echo $telegram_token;?>' // Get telegram token
 	//console.log("telegram_token : "+telegram_token);
 
 	// Function to fetch and update the message container
