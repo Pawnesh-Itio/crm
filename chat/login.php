@@ -9,12 +9,13 @@ if(isset($_SESSION['unique_id'])&&$_SESSION['unique_id'])
 }
 ?>
 <body>
+
 <div class="wrapper">
     <section class="form login">
 		<header>ITIO WebChat</header>
         <form action="php/login.php" enctype="multipart/form-data" method="post" autocomplete="off">
 			<div class="error-text"></div>
-			
+
 			<div class="field input">
 				<label>Name</label>
 				<input type="text" name="fullname" id="fullname" placeholder="Enter Your Name" required>
@@ -30,7 +31,7 @@ if(isset($_SESSION['unique_id'])&&$_SESSION['unique_id'])
 			<div class="field button">
 				<input type="submit" name="submit" id="submit" value="Continue to Chat" >
 			</div>
-		</form>	
+		</form>
 	</section>
 </div>
 <script type="text/javascript" src="js/main.js"></script>
