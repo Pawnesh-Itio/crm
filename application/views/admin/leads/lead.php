@@ -142,6 +142,14 @@
 							</li>
 							<?php
 							}
+							elseif(e($lead->source)==5)
+							{
+							?>
+							<li role="presentation">
+								<a href="leads/webchat/<?php echo ($lead->client_id);?>"><?php echo _l('lead_conversion');?></a>
+							</li>
+							<?php
+							}
 							?>
 							<?php hooks()->do_action('after_lead_lead_tabs', $lead ?? null); ?>
 						</ul>

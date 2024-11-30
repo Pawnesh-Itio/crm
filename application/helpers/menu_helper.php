@@ -180,32 +180,44 @@ function app_init_admin_sidebar_menu_items()
         }
     }
 
+
     if (is_staff_member()) {
 		$CI->app_menu->add_sidebar_menu_item('leads', [
-			'collapse' => true,
-			'name'     => _l('als_leads'),
-			'position' => 45,
-			'icon'     => 'fa-solid fa-tty',
-			'badge'    => [],
-		]);
-        $CI->app_menu->add_sidebar_children_item('leads', [
-			'slug'     => 'als_leads',
 			'name'     => _l('als_leads'),
 			'href'     => admin_url('leads'),
-			'position' => 1,
 			'icon'     => 'fa fa-tty',
-			'badge'    => [],
-		]);
-	
-		$CI->app_menu->add_sidebar_children_item('leads', [
-			'slug'     => 'als_lead_discussion',
-			'name'     => _l('discussion'),
-			'href'     => admin_url('leads/discussion'),
-			'position' => 2,
-			'icon'     => 'fa fa-comment-dots',
+			'position' => 45,
 			'badge'    => [],
 		]);
     }
+
+
+    if (is_staff_member()) {
+		$CI->app_menu->add_sidebar_menu_item('conversion', [
+			'collapse' => true,
+			'name'     => _l('lead_conversion'),
+			'position' => 20,
+			'icon'     => 'fas fa-comments',
+			'badge'    => [],
+		]);
+        $CI->app_menu->add_sidebar_children_item('conversion', [
+			'slug'     => 'als_telegram',
+			'name'     => _l('als_telegram'),
+			'href'     => admin_url('leads/telegram'),
+			'position' => 1,
+			'icon'     => 'fa-brands fa-telegram',
+			'badge'    => [],
+		]);
+		$CI->app_menu->add_sidebar_children_item('conversion', [
+			'slug'     => 'als_webchat',
+			'name'     => _l('als_webchat'),
+			'href'     => admin_url('leads/webchat'),
+			'position' => 2,
+			'icon'     => 'far fa-comment-dots',
+			'badge'    => [],
+		]);
+    }
+
 
     // if ((staff_can('view',  'estimate_request') || staff_can('view_own',  'estimate_request'))) {
     //     $CI->app_menu->add_sidebar_menu_item('estimate_request', [

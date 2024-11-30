@@ -18,6 +18,9 @@ class Leads extends AdminController
 
         // Load the Telegram_model
         $this->load->model('Telegram_model');
+
+        // Load the Webchat_model
+        $this->load->model('Webchat_model');
     }
 
     /* List all leads */
@@ -1373,5 +1376,31 @@ class Leads extends AdminController
         $data['title']    = _l('lead_discussion');
         // Pass the data to the view
         $this->load->view('admin/leads/discussion', $data);
+    }
+
+    // Method to display the discussion page with telegram data
+    public function telegram($chat_id = NULL)
+    {
+        // Fetch all the data from the 'tblleads' table using the model
+        $data['tabs'] = $this->Telegram_model->get_filtered_leads_data();
+        // Fetch the filtered data from the 'telegram' table using the Leads_model
+        $data['leads'] = $this->Telegram_model->get_all_telegram_data($chat_id);
+        // If chat_id is provided, fetch specific discussion data related to chat_id
+        $data['title']    = _l('lead_discussion');
+        // Pass the data to the view
+        $this->load->view('admin/leads/telegram', $data);
+    }
+
+    // Method to display the discussion page with telegram data
+    public function webchat($chat_id = NULL)
+    {
+        // Fetch all the data from the 'tblleads' table using the model
+        $data['tabs'] = $this->Webchat_model->get_filtered_data();
+        // Fetch the filtered data from the 'telegram' table using the Leads_model
+        $data['leads'] = $this->Webchat_model->get_all_data($chat_id);
+        // If chat_id is provided, fetch specific discussion data related to chat_id
+        $data['title']    = _l('lead_discussion');
+        // Pass the data to the view
+        $this->load->view('admin/leads/webchat', $data);
     }
 }

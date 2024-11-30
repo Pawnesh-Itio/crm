@@ -78,5 +78,4 @@ ERROR - 2024-11-26 13:02:07 --> Could not find the language line "Completed Proj
 ERROR - 2024-11-26 13:02:07 --> Could not find the language line "In Progress Projects"
 ERROR - 2024-11-26 14:23:57 --> Could not find the language line "Completed Projects"
 ERROR - 2024-11-26 14:23:57 --> Could not find the language line "In Progress Projects"
-ERROR - 2024-11-26 17:56:53 --> Could not find the language line "Completed Projects"
-ERROR - 2024-11-26 17:56:53 --> Could not find the language line "In Progress Projects"
+
