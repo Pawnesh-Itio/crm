@@ -21,7 +21,7 @@
 						$is_active = ($group['client_id']==$chat_id)?' active':''; 
 						?>
 						<li class="settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
-							<a href="<?php echo admin_url('leads/discussion/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
+							<a href="<?php echo admin_url('leads/telegram/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
 								<i class="fa-brands fa-telegram menu-icon"></i>
 								<?php echo e($group['name']); ?>
 							</a>
