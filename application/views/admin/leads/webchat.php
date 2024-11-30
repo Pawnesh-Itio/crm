@@ -7,7 +7,7 @@
 		<div class="row">
 			<div class="col-md-3">
 				<h4 class="tw-font-semibold tw-mt-0 tw-text-neutral-800">
-					<?php echo _l('lead_discussion'); ?>
+					<?php echo _l('als_webchat'); ?>
 				</h4>
 				<ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked">
 				<?php
@@ -21,8 +21,8 @@
 						$is_active = ($group['client_id']==$chat_id)?' active':''; 
 						?>
 						<li class="settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
-							<a href="<?php echo admin_url('leads/discussion/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
-								<i class="fa-brands fa-telegram menu-icon"></i>
+							<a href="<?php echo admin_url('leads/webchat/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
+								<i class="fa-solid fa-comment menu-icon"></i>
 								<?php echo e($group['name']); ?>
 							</a>
 						</li>
@@ -47,9 +47,9 @@
 				<div class="panel_s">
 					<div class="panel-body">
 					<?php
-					$telegram_token = get_option('telegram_token');
 					$response = '<div id="message-container" class="message-container">';
 
+					
 					if(isset($leads)&&$chat_id)
 					{/*
 						$disp_date='';
@@ -111,7 +111,6 @@ function sendMessage() {
 	var message = document.getElementById("message").value;
 	var chat_id = window.location.pathname.split("/").pop(); // Get the last part of the URL as chat_id
 	var staff_id = '<?php echo $_SESSION['staff_user_id'];?>' //1; // You can change this to dynamically fetch the staff_id, based on your system
-	var telegram_token = '<?php echo $telegram_token;?>' // Get telegram token
 
 	// Check if the message is not empty
 	if (message) {
@@ -120,12 +119,11 @@ function sendMessage() {
 			chat_id: chat_id,
 			message: message,
 			staff_id: staff_id,
-			telegram_token: telegram_token
 		};
 
 		// Perform AJAX request to send the message
 		var xhr = new XMLHttpRequest();
-		xhr.open("POST", "/crm/show-telegram-discuss.php", true); // The PHP file is called show-telegram-discuss.php
+		xhr.open("POST", "/crm/show-webchat-discuss.php", true); // The PHP file is called discuss page
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
 		// When the request is completed
@@ -143,7 +141,7 @@ function sendMessage() {
 		};
 
 		// Sending data to the PHP file (using URL-encoded form data)
-		xhr.send("chat_id=" + encodeURIComponent(data.chat_id) + "&telegram_message=" + encodeURIComponent(data.message) + "&staff_id=" + encodeURIComponent(data.staff_id) + "&telegram_token=" + encodeURIComponent(data.telegram_token));
+		xhr.send("chat_id=" + encodeURIComponent(data.chat_id) + "&message=" + encodeURIComponent(data.message) + "&staff_id=" + encodeURIComponent(data.staff_id));
 	} else {
 		alert("Please type a message before sending.");
 	}
@@ -172,23 +170,22 @@ window.onload = function() {
 if(isset($chat_id)&&$chat_id)
 {
 ?>
-//$telegram_token
-	var chat_id = '<?=$chat_id;?>' // Get telegram chat_id 
-	//console.log("chat Id: "+chat_id);
-	var telegram_token = '<?=$telegram_token;?>' // Get telegram token
-	//console.log("telegram_token : "+telegram_token);
+	var chat_id = '<?=$chat_id;?>' // Get chat_id 
 
 	// Function to fetch and update the message container
 	function fetchData() {
+
 		$.ajax({
 			type: "POST",
-			url: "/crm/show-telegram-discuss.php",
-			data: { chat_id: chat_id,telegram_token: telegram_token }
+			url: "/crm/show-webchat-discuss.php",
+			data: { chat_id: chat_id }
 		}).done(function(data) {
+//			alert(1111+data);
+
 			$('#message-container').html(data); // Update the content of the message container
 			scrollToBottom(); // Scroll to the bottom if needed
 		}).fail(function(jqXHR, textStatus, errorThrown) {
-    		//console.error("Failed to fetch data:", textStatus, errorThrown);
+    console.error("Failed to fetch data:", textStatus, errorThrown);
 });
 	}
 	
@@ -196,7 +193,7 @@ if(isset($chat_id)&&$chat_id)
 	fetchData();
 
 	// Set an interval to run the fetchData function every 30 seconds (30000 milliseconds)
-	setInterval(fetchData, 30000);
+	setInterval(fetchData, 5000);
 <?php
 }
 ?>

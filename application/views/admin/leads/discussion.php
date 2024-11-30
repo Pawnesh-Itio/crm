@@ -7,7 +7,7 @@
 		<div class="row">
 			<div class="col-md-3">
 				<h4 class="tw-font-semibold tw-mt-0 tw-text-neutral-800">
-					Test Heading
+					<?php echo _l('lead_discussion'); ?>
 				</h4>
 				<ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked">
 				<?php

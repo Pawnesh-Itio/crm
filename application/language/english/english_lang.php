@@ -525,6 +525,8 @@ $lang['als_announcements_submenu'] = 'Announcements';
 $lang['als_calendar_submenu']      = 'Calendar';
 $lang['als_activity_log_submenu']  = 'Activity Log';
 $lang['als_lead_discussion']       = 'Lead Discussion';
+$lang['als_telegram']       	   = 'Telegram';
+$lang['als_webchat']       		   = 'Webchat';
 
 # Admin Customizer Sidebar
 $lang['acs_ticket_priority_submenu']           = 'Ticket Priority';

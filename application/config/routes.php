@@ -186,8 +186,11 @@ $route['authentication/set_password/(:num)/(:num)/(:any)'] = 'admin/authenticati
 // For backward compatilibilty
 $route['survey/(:num)/(:any)'] = 'surveys/participate/index/$1/$2';
 
-//for discussion via telegram/whatsapp
+//for discussion via telegram
 $route['admin/leads/discussion/(:num)?'] = 'admin/leads/discussion/$1';
+
+//for discussion via webchats
+$route['admin/leads/webchat/(:num)?'] = 'admin/leads/webchat/$1';
 
 if (file_exists(APPPATH . 'config/my_routes.php')) {
     include_once(APPPATH . 'config/my_routes.php');
