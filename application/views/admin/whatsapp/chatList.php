@@ -149,7 +149,7 @@
                     <div class="card-body">
                         <div class="whatsapp-box">
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-md-3">
                                     <div class="whatsapp-side-bar">
                                         <div class="sidebar-header">
                                             <ul class="sidebar-head-item">
@@ -225,6 +225,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
                                         </button>
                                     </div>
+                                    
                                 </form>
                             </div>
                         </div>
