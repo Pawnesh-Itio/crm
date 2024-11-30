@@ -527,6 +527,7 @@ $lang['als_activity_log_submenu']  = 'Activity Log';
 $lang['als_lead_discussion']       = 'Lead Discussion';
 $lang['als_telegram']       	   = 'Telegram';
 $lang['als_webchat']       		   = 'Webchat';
+$lang['als_whatsapp']              = 'Whatsapp';
 
 # Admin Customizer Sidebar
 $lang['acs_ticket_priority_submenu']           = 'Ticket Priority';
