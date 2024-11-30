@@ -314,3 +314,5 @@ ERROR - 2024-11-30 12:42:34 --> Could not find the language line "test"
 ERROR - 2024-11-30 12:42:42 --> Could not find the language line "test"
 ERROR - 2024-11-30 12:43:00 --> Could not find the language line "test"
 ERROR - 2024-11-30 08:16:47 --> 404 Page Not Found: /index
+ERROR - 2024-11-30 13:06:08 --> Could not find the language line "test"
+ERROR - 2024-11-30 13:06:43 --> Could not find the language line "test"
