@@ -50,37 +50,8 @@
 					$telegram_token = get_option('telegram_token');
 					$response = '<div id="message-container" class="message-container">';
 
-					if(isset($leads)&&$chat_id)
-					{/*
-						$disp_date='';
-						foreach ($leads as $chat_row) {
-							$msg_type	= $chat_row['msg_type'];
-							$message	= $chat_row['message'];
-							$timestamp	= $chat_row['timestamp'];
+				//	if(isset($leads)&&$chat_id) {}
 
-							$date = date('Y-m-d', strtotime($timestamp));
-
-							if($disp_date!=$date)
-							{
-								if($date==date('Y-m-d'))
-									$dt_display= 'Today';
-								else
-									$dt_display= date('d-M', strtotime($date));
-
-								$response .= '<div class="disp_date">' . ($dt_display) . '</div>';
-								$disp_date=$date;
-							}
-
-							if($msg_type==1)
-							{
-								$response .= '<div class="message incoming-msg"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
-							}
-							else
-							{
-								$response .= '<div class="message outgoing-msg"><p class="message-text">' . ($message) . '</p><span class="send-time">'.date('H:i', strtotime($timestamp)).'</span></div>';
-							}
-						}
-					*/}
 					$response .= '</div>';
 					echo $response;
 
@@ -172,7 +143,7 @@ window.onload = function() {
 if(isset($chat_id)&&$chat_id)
 {
 ?>
-//$telegram_token
+	//$telegram_token
 	var chat_id = '<?=$chat_id;?>' // Get telegram chat_id 
 	//console.log("chat Id: "+chat_id);
 	var telegram_token = '<?=$telegram_token;?>' // Get telegram token
@@ -189,9 +160,9 @@ if(isset($chat_id)&&$chat_id)
 			scrollToBottom(); // Scroll to the bottom if needed
 		}).fail(function(jqXHR, textStatus, errorThrown) {
     		//console.error("Failed to fetch data:", textStatus, errorThrown);
-});
+		});
 	}
-	
+
 	// Call the function immediately when the page loads
 	fetchData();
 
