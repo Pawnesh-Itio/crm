@@ -50,27 +50,40 @@
 			</div>
 			<div class="col-md-9">
 				<div class="whatsapp-chat-interface">
-				<?php
-				if(isset($chat_id)&&$chat_id)
-				{
-				?>
-				<h4 class="tw-font-semibold tw-mt-0 tw-text-neutral-800">
-					Chat ID: <?php echo e($chat_id); ?>
-				</h4>
-				<?php
-				}?>
+					<?php
+					if(isset($chat_id)&&$chat_id)
+					{
+					?>
+						<h4 class="tw-font-semibold tw-mt-0 tw-text-neutral-800">
+							Chat ID: <?php echo e($chat_id); ?>
+						</h4>
+					<?php
+					}?>
 				<div class="chat-screen"
-					style=" height:100% ;background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
+					style="height:100% ;background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
 					<?php
 					$telegram_token = get_option('telegram_token');
-					$response = '<div id="message-container" class="message-container chat-container">';
+					$response = '<div id="message-container" class="chat-container">';
 
-				//	if(isset($leads)&&$chat_id) {}
+						//	if(isset($leads)&&$chat_id) {}
 
 					$response .= '</div>';
 					echo $response;
+					if(isset($chat_id)&&$chat_id)
+					{
 					?>
+					<div class="button">
+						<div class="message-input">
+							<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
+							<button  type="submit" class="btn wa-btn" id="send-button" onclick="sendMessage()">
+								<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+							</button>	
+						</div>
 					</div>
+					<?php
+					}
+					?>
+				</div>
 				</div>
 			</div>
 			<!-- Input box with 'Send' button inside the border -->
@@ -80,12 +93,6 @@
 			if(isset($chat_id)&&$chat_id)
 			{
 			?>
-				<div class="message-input">
-					<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
-					<button  type="submit" class="btn btn-primary send-button" id="send-button" onclick="sendMessage()">
-						<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-					</button>
-				</div>
 			<?php
 			}
 			?>

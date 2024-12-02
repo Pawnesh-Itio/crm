@@ -52,32 +52,6 @@
 	margin-top: 5px; /* Space between message and time */
 	align-self: flex-end; /* Align timestamp to the right */
 }
-
-/* Make sure the message container takes full width if needed */
-.message-container {
-	width: 100%;
-}
-
-
-    .input-container {
-        position: relative;
-        width: 100%;
-		margin-top:20px;
-    }
-
-    .input-box {
-        width: 100%;
-        padding: 10px 0px 10px 10px;
-        padding-right: 60px;  /* Add padding to the right to make space for the button */
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-    }
-
-
-    .send-button:hover {
-        background-color: #0056b3;
-    }
 /* TechWizard CSS */
 /* Container for messages */
 .chat-container {
@@ -129,23 +103,6 @@
     border-radius: 20px;
     width: 90%;
     padding: 25px;
-}
-
-.message-input button {
-	margin-top:22px;
-	position:relative;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    background-color: #1e293b;
-    color: white;
-    border: none;
-    margin-left: 10px;
-
-}
-
-.message-input button:hover {
-    background-color: #465c80;
 }
 .card-wa-configuration {
     padding: 20px;
@@ -221,4 +178,14 @@
 
 .formBtnDiv{
     display:none;
+}
+.wa-btn{
+width: 50px;
+height: 50px;
+border-radius: 25px;
+margin-left: 10px;
+background-color: #1e293bff;
+}
+.wa-btn:hover{
+    background-color: rgb(51, 113, 212);
 }
