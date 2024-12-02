@@ -1,69 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
-<style>
-/* Container for messages */
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  width: auto;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 8px;
-}
-/* Incoming message box */
-.incoming-message {
-  align-self: flex-start;
-  max-width: 80%;
-  padding: 10px;
-  margin: 5px 0;
-  background-color: #d3e3fc;
-  color: #333;
-  border-radius: 12px 12px 12px 0;
-  font-size: 14px;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
-}
 
-/* Send message box */
-.sent-message {
-  align-self: flex-end;
-  max-width: 80%;
-  padding: 10px;
-  margin: 5px 0;
-  background-color: #1e293b;
-  color: white;
-  border-radius: 12px 12px 0 12px;
-  font-size: 14px;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
-}
-/* Message input area */
-.message-input {
-    display: flex;
-    flex-direction: row;
-	border-top: 1px solid #ddd;
-	background-color: #fff;
-	padding-top: 10px;
-}
-
-.message-input input {
-	border-radius: 20px;
-	width: 90%;
-    padding: 25px;
-}
-
-.message-input button {
-	border-radius: 50%;
-	width: 45px;
-	height: 45px;
-	background-color: #1e293b;
-	color: white;
-	border: none;
-	margin-left: 10px;
-
-}
-.message-input button:hover{
-	background-color: #465c80;
-}
-</style>
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -361,29 +298,34 @@
 </div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Pawnesh Kumar ( 918851411809 )</h4>
-      </div>
-      <div class="modal-body">
-        <div class="chat-container" id="chatContainer">
-
-        </div>
-            <form id="messageForm" >
-                <input type="hidden" id="formUserId" value="">
-                <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
-                <div class="message-input">
-                    <input type="text" class="form-control" id="messageInput" placeholder="Type a message...">	
-                    <button  type="submit" class="btn btn-primary" id="sendMessageBtn">
-                        <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-                    </button>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                    <div class="wa-lodder">
+                        <img src="<?= base_url("assets/images/1488.gif") ?>" alt="">
+                    </div>
+                <div class="chat-container" id="chatContainer">
+                    <!-- Message containet -->
                 </div>
-            </form>
-      </div>
+                <div class="formBtnDiv">
+                    <form id="messageForm" >
+                        <input type="hidden" id="formUserId" value="<?= get_staff_user_id() ?>">
+                        <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
+                        <div class="message-input">
+                            <input type="text" class="form-control" id="messageInput" placeholder="Type a message...">	
+                            <button  type="submit" class="btn btn-primary" id="sendMessageBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- MySocket logic -->
@@ -391,6 +333,7 @@
 <script>
 // Socket connection
 const URL = "wss://wa-business-api.onrender.com";
+const waURL = "https://wa-business-api.onrender.com";
 const socket = io(URL);
 socket.on('connect', () => {
     console.log('Connected to Socket.io server');
@@ -401,10 +344,42 @@ socket.on('disconnect', () => {
 socket.on('error', (error) => {
     console.log("Error:", error);
 });
+function getMessages(name,chatId){
+    console.log(name);
+    $('.modal-title').html(name+' ('+ chatId +')');
+    $('#formNumber').val(chatId);
+	$('.chat-container').html('');// Remove any exisiting listener before adding new one
+    $.ajax({
+        url: waURL+'/api/chat/messages/'+chatId,
+        method: 'GET',
+        success: function (data) {
+            $('.formBtnDiv').show();
+            $('.wa-lodder').hide();
+            $('.chat-container').html('');
+            // Add Messages to chat box.
+                data.messages.forEach(function (message) {
+                    const messageClass = message.message_type === 'received' ? 'incoming-message' : 'sent-message';
+                // Create a new div for each message
+                const messageDiv = $('<div>'+message.message_body+'</div>') // Create the div
+                    .attr('id', message.message_id) // Set message_id as the id attribute
+                    .addClass(messageClass); // Optionally add a class for styling
+
+                // Append the created message div to the body or a specific parent
+                $('#chatContainer').append(messageDiv); // Or append to a specific container if needed
+            });
+            autoScrollToBottom();
+            // Add realtime incomming messages.
+            setupChatSocketListener(chatId);
+
+        },
+        error: function () {
+            $('.wa-lodder').hide();
+            console.error('Failed to fetch data');
+        }
+    });
+}
 function setupChatSocketListener(chatId){
     console.log(chatId);
-	// Remove any exisiting listener before adding new one
-	$('.chat-container').html('');
 	socket.off('chat-' + chatId);
 	socket.on('chat-' + chatId, (data)=>{
 	console.log(data);//Checking.
@@ -445,6 +420,50 @@ $(function() {
         } else {
             $('#leads_bulk_mark_lost').prop('disabled', false);
         }
+    });
+});
+// Function to automatically scroll the chat container to the bottom
+function autoScrollToBottom() {
+    var chatContainer = $('#chatContainer');
+    chatContainer.scrollTop(chatContainer[0].scrollHeight);  // Scroll to the bottom
+}
+$(document).ready(function() {
+    $('#messageForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        // Gather form data
+        const source = "crm";
+        const userId = $('#formUserId').val();
+        const to = $('#formNumber').val();
+        const message = $('#messageInput').val();
+        const type = 1;
+
+        // Send the data via AJAX
+        $.ajax({
+            type: 'POST',
+            url: waURL+'/api/messages/send/', // Replace with your actual URL
+            contentType: 'application/json',
+            data: JSON.stringify({
+                userId: userId,
+                source: source,
+                to: to,
+                message: message,
+                type: type
+            }),
+            success: function(response) {
+                // Handle success (e.g., clear input, display message, etc.)
+                const messageData = response.data.messages[0];
+                $('#messageInput').val(''); // Clear the input after sending
+                data = '<div id='+messageData.id+' class="sent-message">'+message+'</div>';
+                //Appending chat data to UI
+                $('.chat-container').append(data);
+                // Automatically scroll to the bottom of the chat box
+                autoScrollToBottom();
+            },
+            error: function(error) {
+                // Handle error
+                console.error('Error sending message:', error);
+            }
+        });
     });
 });
 </script>

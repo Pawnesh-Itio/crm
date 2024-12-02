@@ -1,146 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
-<style>
-/* Container for messages */
-.chat-container {
-    height:500px;
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    padding: 10px;
-    border-radius: 8px;
-    overflow-y:auto;
-}
-
-/* Incoming message box */
-.incoming-message {
-    align-self: flex-start;
-    max-width: 80%;
-    padding: 10px;
-    margin: 5px 0;
-    background-color: #d3e3fc;
-    color: #333;
-    border-radius: 12px 12px 12px 0;
-    font-size: 14px;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Send message box */
-.sent-message {
-    align-self: flex-end;
-    max-width: 80%;
-    padding: 10px;
-    margin: 5px 0;
-    background-color: #1e293b;
-    color: white;
-    border-radius: 12px 12px 0 12px;
-    font-size: 14px;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Message input area */
-.message-input {
-    display: flex;
-    flex-direction: row;
-    border-top: 1px solid #ddd;
-    background-color: #fff;
-    padding-top: 10px;
-}
-
-.message-input input {
-    border-radius: 20px;
-    width: 90%;
-    padding: 25px;
-}
-
-.message-input button {
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    background-color: #1e293b;
-    color: white;
-    border: none;
-    margin-left: 10px;
-
-}
-
-.message-input button:hover {
-    background-color: #465c80;
-}
-</style>
-<style>
-.card-wa-configuration {
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 5px;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-}
-
-.wa-lodder {
-    position: absolute;
-    top:45%;
-    left: 45%;
-    width: 80%;
-    z-index: 9999; /* Ensure it's on top of everything */
-}
-
-.whatsapp-side-bar {
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 500px;
-    overflow-y: auto;
-}
-
-.sidebar-head-text {
-    font-size: 25px;
-    text-align: center;
-    position: absolute;
-    top: 20px;
-}
-
-.sidebar-head-item {
-    display: flex;
-}
-
-.chat-item {
-    font-size: 16px;
-    text-align: center;
-    border-bottom: 2px solid #1e293b;
-    padding: 5px;
-}
-
-.chat-link {
-    color: #1e293b;
-}
-
-.chat-item:hover {
-    background-color: #1e293b;
-    color: #ffffff;
-    cursor: pointer;
-}
-.active-chat{
-    background-color: #1e293b;
-    color: #ffffff;
-    cursor: pointer;
-}
-
-.whatsapp-chat-interface {
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 500px;
-}
-.chat-screen{
-    display:none;
-}
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: white; /* White overlay */
-    opacity: 1; /* Fully opaque */
-    display: none; /* Start hidden */
-}
-</style>
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -202,7 +61,7 @@
                                         <div class="initial-screen"
                                             style="height:100% ;background: url('<?= base_url('assets/images/waChatBackground.png')?>')">
                                         </div>
-                                        <div class="chat-screen"
+                                        <div class="wa-chat-screen"
                                             style=" height:100% ;background: url('<?= base_url('assets/images/chatbackground3.jpg')?>">
                                             <div class="wa-lodder">
                                                 <img src="<?= base_url("assets/images/1488.gif") ?>" alt="">
@@ -213,20 +72,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="button">
-                            <!-- sendMessage button -->
-                                <form id="messageForm" >
-                                    <input type="hidden" id="formUserId" value="<?= get_staff_user_id() ?>">
-                                    <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
-                                    <div class="message-input">
-                                        <input type="text" class="form-control" id="messageInput" placeholder="Type a message...">	
-                                        <button  type="submit" class="btn btn-primary" id="sendMessageBtn">
-                                            <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-                                        </button>
-                                    </div>
-                                    
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -240,7 +85,7 @@
 <script>
 // Socket connection
 const URL = "wss://wa-business-api.onrender.com";
-const waURL = "http://localhost:4000"
+const waURL = "https://wa-business-api.onrender.com";
 const socket = io(URL);
 socket.on('connect', () => {
     console.log('Connected to Socket.io server');
@@ -257,8 +102,8 @@ socket.on('error', (error) => {
         $('#formNumber').val(chatId);
         console.log(chatId);
         $('.initial-screen').css('display', 'none');
-        $('.chat-screen').show();
-        $('.chat-screen').append('<div class="overlay"></div>');
+        $('.wa-chat-screen').show();
+        $('.wa-chat-screen').append('<div class="overlay"></div>');
         $('.overlay').show();
         const links = document.querySelectorAll('.chat-item');
         // Remove 'active' class from all links
@@ -267,11 +112,10 @@ socket.on('error', (error) => {
         clickedLink.classList.add('active-chat');
         // Fetch chats
         $.ajax({
-        url: 'http://localhost:4000/api/chat/messages/918851411809',
+        url: waURL+'/api/chat/messages/'+chatId,
         method: 'GET',
         success: function (data) {
             $('.wa-lodder').hide();
-            $('.overlay').show();
             $('.overlay').fadeOut('slow', function () {
                 $(this).remove(); // Remove overlay from the DOM
             });
