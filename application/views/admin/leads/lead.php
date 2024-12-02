@@ -135,7 +135,7 @@
 							{
 							?>
 							<li role="presentation">
-							<a href="leads/discussion/<?php echo ($lead->client_id);?>"><?php echo _l('lead_conversion');?></a>
+							<a href="leads/telegram/<?php echo ($lead->client_id);?>"><?php echo _l('lead_conversion');?></a>
 							<?php /*?>
 								<a href="#tab_leads_conversions" onclick="" aria-controls="tab_leads_conversions" role="tab" data-toggle="tab"><?php echo _l('lead_conversion');?></a>
 							<?php */?>
@@ -382,31 +382,31 @@
 								<i class="fa-regular fa-pen-to-square"></i></a>
 								<?php } ?>
 	
-								<a href="<?php echo admin_url('profile/' . $note['addedfrom']); ?>" target="_blank">
-									<h5 class="media-heading tw-font-semibold tw-mb-0">
-										<?php if (!empty($note['date_contacted'])) { ?>
-										<span data-toggle="tooltip"
-											data-title="<?php echo e(_dt($note['date_contacted'])); ?>">
-											<i class="fa fa-phone-square text-success" aria-hidden="true"></i>
-										</span>
-										<?php } ?>
-										<?php echo e(get_staff_full_name($note['addedfrom'])); ?>
+							<a href="<?php echo admin_url('profile/' . $note['addedfrom']); ?>" target="_blank">
+								<h5 class="media-heading tw-font-semibold tw-mb-0">
+								<?php if (!empty($note['date_contacted'])) { ?>
+									<span data-toggle="tooltip"
+										data-title="<?php echo e(_dt($note['date_contacted'])); ?>">
+										<i class="fa fa-phone-square text-success" aria-hidden="true"></i>
+									</span>
+									<?php } ?>
+									<?php echo e(get_staff_full_name($note['addedfrom'])); ?>
 									</h5>
 									<span class="tw-text-sm tw-text-neutral-500">
 										<?php echo e(_l('lead_note_date_added', _dt($note['dateadded']))); ?>
 									</span>
-								</a>
-	
-								<div data-note-description="<?php echo e($note['id']); ?>" class="text-muted mtop10"><?php echo process_text_content_for_display($note['description']); ?></div>
-								<div data-note-edit-textarea="<?php echo e($note['id']); ?>" class="hide mtop15">
-									<?php echo render_textarea('note', '', $note['description']); ?>
-									<div class="text-right">
-										<button type="button" class="btn btn-default"
-											onclick="toggle_edit_note(<?php echo e($note['id']); ?>);return false;"><?php echo _l('cancel'); ?></button>
-										<button type="button" class="btn btn-primary"
-											onclick="edit_note(<?php echo e($note['id']); ?>);"><?php echo _l('update_note'); ?></button>
-									</div>
+							</a>
+
+							<div data-note-description="<?php echo e($note['id']); ?>" class="text-muted mtop10"><?php echo process_text_content_for_display($note['description']); ?></div>
+							<div data-note-edit-textarea="<?php echo e($note['id']); ?>" class="hide mtop15">
+								<?php echo render_textarea('note', '', $note['description']); ?>
+								<div class="text-right">
+									<button type="button" class="btn btn-default"
+										onclick="toggle_edit_note(<?php echo e($note['id']); ?>);return false;"><?php echo _l('cancel'); ?></button>
+									<button type="button" class="btn btn-primary"
+										onclick="edit_note(<?php echo e($note['id']); ?>);"><?php echo _l('update_note'); ?></button>
 								</div>
+							</div>
 						</div>
 						<?php if ($i >= 0 && $i != $len - 1) {
 							echo '<hr />';
@@ -419,28 +419,22 @@
 				if(e($lead->source)==4)
 				{
 				?>
-						<div role="tabpanel" class="tab-pane" id="tab_leads_conversions">
+				<div role="tabpanel" class="tab-pane" id="tab_leads_conversions">
 					<div class="lead_conversion_list" id="lead_conversion_list">
 						<?php require_once "./telegram.php";?>
 					</div>
 					<div class="clearfix"></div>
 
 					<div class="col-md-12">
-					
-					
-					
-					
-					<?php echo render_input('telegram_send_message', 'send_as_plain_text', '', 'text'); ?>
+						<?php echo render_input('telegram_send_message', 'send_as_plain_text', '', 'text'); ?>
 						<div class="text-right">
 							<button id="send_telegram_conv" data-url="/crm/telegram.php" class="btn btn-primary"><?php echo _l('send'); ?></button>
 						</div>
 					</div>
-					
-					
 				</div>
 				<?php } ?>
 				<?php } ?>
-				<?php hooks()->do_action('after_lead_tabs_content', $lead ?? null); ?>
+				<?php hooks()->do_action('after_lead_tabs_content',$lead??null);?>
 			</div>
 		</div>
 	</div>
@@ -587,5 +581,5 @@ function scrollToBottom(){
 }
 </style>
 <?php 
-	hooks()->do_action('lead_modal_profile_bottom', (isset($lead) ? $lead->id : '')); 
+hooks()->do_action('lead_modal_profile_bottom', (isset($lead) ? $lead->id : '')); 
 ?>
