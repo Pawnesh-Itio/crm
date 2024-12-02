@@ -27,8 +27,6 @@ if(!isset($_SESSION['unique_id']))
 			}
 			*/
 			?>
-			<!--<a href="users.php" class="back-icon"><i class="fas fa-arrow-left"></i></a> -->
-			<!--<img src="php/images/<?php echo $row['img'];?>" alt="" /> -->
 			<div class="details">
 				<span><?php echo @$_SESSION['fullname'];?></span>
 				<p><?php echo @$row['status'];?></p>

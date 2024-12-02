@@ -17,7 +17,6 @@
 * environments.
 *
 */
-if(!defined('APP_BASE_URL')) define('APP_BASE_URL', 'http://localhost/crm/');
 
 /*
 * --------------------------------------------------------------------------
@@ -41,6 +40,9 @@ if(!defined('APP_ENC_KEY')) define('APP_ENC_KEY', '8d23c5dbcf07eb8c55f087ee49a1e
 if(!defined('APP_DB_HOSTNAME')) define('APP_DB_HOSTNAME', 'localhost');
 
 if (strpos($_SERVER["HTTP_HOST"], "localhost") !== false){
+
+	if(!defined('APP_BASE_URL')) define('APP_BASE_URL', 'http://localhost/crm/');
+
 	/**
 	 * The username used to connect to the database
 	 */
