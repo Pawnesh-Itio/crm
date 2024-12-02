@@ -60,6 +60,7 @@ if (strpos($_SERVER["HTTP_HOST"], "localhost") !== false){
 }
 else
 {
+	define('APP_BASE_URL', 'https://xeyso.com/crm');
 	/**
 	 * The username used to connect to the database
 	 */
