@@ -3,35 +3,35 @@
 <div id="wrapper">
     <div class="content accounting-template proposal">
         <div class="row">
-            <?php
-         if (isset($proposal)) {
-             echo form_hidden('isedit', $proposal->id);
-         }
-         $rel_type  = '';
+			<?php
+			if (isset($proposal)) {
+				echo form_hidden('isedit', $proposal->id);
+			}
+			$rel_type  = '';
             $rel_id = '';
             if (isset($proposal) || ($this->input->get('rel_id') && $this->input->get('rel_type'))) {
-                if ($this->input->get('rel_id')) {
-                    $rel_id   = $this->input->get('rel_id');
-                    $rel_type = $this->input->get('rel_type');
-                } else {
-                    $rel_id   = $proposal->rel_id;
-                    $rel_type = $proposal->rel_type;
-                }
-            }
-            ?>
+				if ($this->input->get('rel_id')) {
+					$rel_id   = $this->input->get('rel_id');
+					$rel_type = $this->input->get('rel_type');
+				} else {
+					$rel_id   = $proposal->rel_id;
+					$rel_type = $proposal->rel_type;
+				}
+			}
+			?>
             <?php
-         echo form_open($this->uri->uri_string(), ['id' => 'proposal-form', 'class' => '_transaction_form proposal-form']);
-
-         if ($this->input->get('estimate_request_id')) {
-             echo form_hidden('estimate_request_id', $this->input->get('estimate_request_id'));
-         }
-         ?>
+			echo form_open($this->uri->uri_string(), ['id' => 'proposal-form', 'class' => '_transaction_form proposal-form']);
+	
+			if ($this->input->get('estimate_request_id')) {
+				echo form_hidden('estimate_request_id', $this->input->get('estimate_request_id'));
+			}
+			?>
 
             <div class="col-md-12">
                 <h4
                     class="tw-mt-0 tw-font-semibold tw-text-lg tw-text-neutral-700 tw-flex tw-items-center tw-space-x-2">
                     <span>
-                        <?php echo e(isset($proposal) ? format_proposal_number($proposal->id) : _l('new_proposal')); ?>
+                        <?php echo e(isset($proposal) ? format_proposal_number($proposal->id) : _l('new_quotes')); ?>
                     </span>
                     <?php echo isset($proposal) ? format_proposal_status($proposal->status) : ''; ?>
                 </h4>
@@ -44,7 +44,7 @@
                                 <?php echo render_input('subject', 'proposal_subject', $value, 'text', $attrs); ?>
                                 <div class="form-group select-placeholder">
                                     <label for="rel_type"
-                                        class="control-label"><?php echo _l('proposal_related'); ?></label>
+                                        class="control-label"><?php echo _l('quotes_related'); ?></label>
                                     <select name="rel_type" id="rel_type" class="selectpicker" data-width="100%"
                                         data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
                                         <option value=""></option>
@@ -52,12 +52,12 @@
              if ($rel_type == 'lead') {
                  echo 'selected';
              }
-         } ?>><?php echo _l('proposal_for_lead'); ?></option>
+         } ?>><?php echo _l('quotes_for_lead'); ?></option>
                                         <option value="customer" <?php if ((isset($proposal) && $proposal->rel_type == 'customer') || $this->input->get('rel_type')) {
              if ($rel_type == 'customer') {
                  echo 'selected';
              }
-         } ?>><?php echo _l('proposal_for_customer'); ?></option>
+         } ?>><?php echo _l('quotes_for_customer'); ?></option>
                                     </select>
                                 </div>
                                 <div class="form-group select-placeholder<?php if ($rel_id == '') {
@@ -83,12 +83,13 @@
                                         <select name="project_id" id="project_id" class="projects ajax-search"
                                             data-live-search="true" data-width="100%"
                                             data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
-                                            <?php
-
-                                     if (isset($proposal) && $proposal->project_id) {
+									<?php
+									
+									if (isset($proposal) && $proposal->project_id)
+									{
                                          echo '<option value="' . $proposal->project_id . '" selected>' . e(get_project_name_by_id($proposal->project_id)) . '</option>';
-                                     }
-                                     ?>
+                                    }
+                                    ?>
                                         </select>
                                     </div>
                                 </div>
@@ -183,13 +184,13 @@
                                         data-role="tagsinput">
                                 </div>
                                 <div class="form-group mtop10 no-mbot">
-                                    <p><?php echo _l('proposal_allow_comments'); ?></p>
+                                    <p><?php echo _l('quotes_allow_comments'); ?></p>
                                     <div class="onoffswitch">
                                         <input type="checkbox" id="allow_comments" class="onoffswitch-checkbox" <?php if ((isset($proposal) && $proposal->allow_comments == 1) || !isset($proposal)) {
                                       echo 'checked';
                                   }; ?> value="on" name="allow_comments">
                                         <label class="onoffswitch-label" for="allow_comments" data-toggle="tooltip"
-                                            title="<?php echo _l('proposal_allow_comments_help'); ?>"></label>
+                                            title="<?php echo _l('quotes_allow_comments_help'); ?>"></label>
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +199,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group select-placeholder">
                                             <label for="status"
-                                                class="control-label"><?php echo _l('proposal_status'); ?></label>
+                                                class="control-label"><?php echo _l('quotes_status'); ?></label>
                                             <?php
                                     $disabled = '';
                                     if (isset($proposal)) {
@@ -268,7 +269,7 @@
                         <div
                             class="btn-bottom-toolbar bottom-transaction text-right sm:tw-flex sm:tw-items-center sm:tw-justify-between">
                             <p class="no-mbot pull-left mtop5 btn-toolbar-notice tw-hidden sm:tw-block">
-                                <?php echo _l('include_proposal_items_merge_field_help', '<b>{proposal_items}</b>'); ?>
+                                <?php echo _l('include_quotes_items_merge_field_help', '<b>{quote_items}</b>'); ?>
                             </p>
                             <div>
                                 <button type="button"

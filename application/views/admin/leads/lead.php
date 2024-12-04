@@ -380,7 +380,7 @@
 							<a href="#" class="pull-right mright5"
 								onclick="toggle_edit_note(<?php echo e($note['id']); ?>);return false;">
 								<i class="fa-regular fa-pen-to-square"></i></a>
-								<?php } ?>
+							<?php } ?>
 	
 							<a href="<?php echo admin_url('profile/' . $note['addedfrom']); ?>" target="_blank">
 								<h5 class="media-heading tw-font-semibold tw-mb-0">

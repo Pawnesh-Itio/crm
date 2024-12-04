@@ -1,11 +1,11 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php if (isset($client)) { ?>
-<h4 class="customer-profile-group-heading"><?php echo _l('proposals'); ?></h4>
+<h4 class="customer-profile-group-heading"><?php echo _l('quotes'); ?></h4>
 <?php if (staff_can('create',  'proposals')) { ?>
 <a href="<?php echo admin_url('proposals/proposal?rel_type=customer&rel_id=' . $client->userid); ?>"
     class="btn btn-primary mbot15<?php echo $client->active == 0 ? ' disabled' : ''; ?>">
     <i class="fa-regular fa-plus tw-mr-1"></i>
-    <?php echo _l('new_proposal'); ?>
+    <?php echo _l('new_quotes'); ?>
 </a>
 <?php } ?>
 <?php if (total_rows(db_prefix() . 'proposals', ['rel_type' => 'customer', 'rel_id' => $client->userid]) > 0 && (staff_can('create',  'proposals') || staff_can('edit',  'proposals'))) { ?>
@@ -21,14 +21,14 @@
 <?php } ?>
 <?php
 $table_data = [
- _l('proposal') . ' #',
- _l('proposal_subject'),
- _l('proposal_total'),
- _l('proposal_date'),
- _l('proposal_open_till'),
+ _l('quotes') . ' #',
+ _l('quotes_subject'),
+ _l('quotes_total'),
+ _l('quotes_date'),
+ _l('quotes_open_till'),
  _l('tags'),
- _l('proposal_date_created'),
- _l('proposal_status'), ];
+ _l('quotes_date_created'),
+ _l('quotes_status'), ];
 $custom_fields = get_custom_fields('proposal', ['show_on_table' => 1]);
 foreach ($custom_fields as $field) {
     array_push($table_data, [
