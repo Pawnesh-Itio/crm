@@ -6,7 +6,34 @@
 
 /* Container for messages */
 
+.chat-top-bar{
+    position: relative;
+    top: -10px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    border-radius: 20px;
+    height: 50px;
+    background: #ffffff;
+    margin-right: 10px;
+    margin-left: 10px;
+    color: #1e293bff;
+    z-index: 999    ;
+}
+.chat-title{
+    position: relative;
+    top: 5px;
+    margin-left: 10px;
+    font-size: 26px;
+}
+.back-btn{
+    font-size: 26px ;
+}
+.chat-back-btn{
+    position: relative;
+    top: 5px;
+    margin-left: 10px;
+    padding: 5px;
 
+}
 /* display date styles */
 .disp_date {
 	display: flex;
@@ -170,7 +197,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 620PX;
     background-color: white; /* White overlay */
     opacity: 1; /* Fully opaque */
     display: none; /* Start hidden */
@@ -189,3 +216,40 @@ background-color: #1e293bff;
 .wa-btn:hover{
     background-color: rgb(51, 113, 212);
 }
+@media only screen and (max-width: 768px) {
+    /* Styles for mobile devices */
+    .overlay{
+        height: 470px;
+    }
+    .wa-side-bar-col{
+        display: block;   
+    }
+    .wa-chat-col{
+        display: none;
+    }
+    
+    .whatsapp-chat-interface {
+        height: 450px;
+    }
+    .chat-container {
+        height:350px;
+        display: flex;
+        flex-direction: column;
+        width: auto;
+        padding: 10px;
+        border-radius: 8px;
+        overflow-y:auto;
+    }
+    .whatsapp-side-bar {
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        height: 400px;
+        overflow-y: auto;
+    }
+    .chat-title{
+        font-size: 22px;
+    }
+    .chat-back-btn{
+        font-size: 22px;
+    }
+  }
+  

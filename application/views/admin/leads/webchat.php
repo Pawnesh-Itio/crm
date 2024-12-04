@@ -3,7 +3,7 @@
 <div id="wrapper">
 	<div class="content">
 		<div class="row card-wa-configuration">
-			<div class="col-md-3">
+			<div class="col-md-3 wa-side-bar-col">
 				<div class="whatsapp-side-bar">
 					<div class="sidebar-header">
 						<ul class="sidebar-head-item">
@@ -47,19 +47,27 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-9">
+			<div class="col-md-9 wa-chat-col">
 				<div class="whatsapp-chat-interface">
 				<?php
 				if(isset($chat_id)&&$chat_id)
 				{
+					// Find the selected chat from the $tabs array
+					$chat_name = ''; // Default value if chat is not found
+					foreach ($tabs as $group) {
+						if ($group['client_id'] == $chat_id) {
+							$chat_name = $group['name']; // Set the chat name
+							break;
+						}
+					}
 				?>
-				<h4 class="tw-font-semibold tw-mt-0 tw-text-neutral-800">
-					Chat ID: <?php echo e($chat_id); ?>
-				</h4>
+					<div class="chat-top-bar">
+						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/webchat') ?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"><?= $chat_name ?></span>
+					</div>
 				<?php
 				}?>
 				<div class="chat-screen"
-					style="height:100% ;background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
+					style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
 					<?php
 					$response = '<div id="message-container" class="chat-container">';
 
@@ -102,6 +110,16 @@
 <?php init_tail(); ?>
 
 <script>
+	// Mobile View Adjustment
+	if (window.innerWidth <= 768) {
+	<?php if(isset($chat_id)&&$chat_id){ ?>
+		$('.wa-side-bar-col').hide(); // Toggles between block and none
+		$('.wa-chat-col').show();
+	<?php }else{ ?>
+		$('.wa-side-bar-col').show(); // Toggles between block and none
+		$('.wa-chat-col').hide();
+	<?php } ?>
+	}
 // Function to send the message via AJAX
 function sendMessage() {
 	var message = document.getElementById("message").value;

@@ -8,7 +8,7 @@
                     <div class="card-body">
                         <div class="whatsapp-box">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-3 wa-side-bar-col">
                                     <div class="whatsapp-side-bar">
                                         <div class="sidebar-header">
                                             <ul class="sidebar-head-item">
@@ -48,7 +48,7 @@
                                             <ul>
                                                 <?php foreach($chatData as $cd){ ?>
                                                 <a class="chat-link" >
-                                                    <li class="chat-item" onclick="getMessage(this,<?= $cd['phonenumber'] ?>)" ><?= $cd['name']." (".$cd['phonenumber'].")" ?>
+                                                    <li class="chat-item" onclick="getMessage(this,<?= $cd['phonenumber'] ?>,'<?= $cd['name'] ?>')" ><?= $cd['name']." (".$cd['phonenumber'].")" ?>
                                                     </li>
                                                 </a>
                                                 <?php } ?>
@@ -56,13 +56,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-9 wa-chat-col">
                                     <div class="whatsapp-chat-interface">
                                         <div class="initial-screen"
                                             style="height:100% ;background: url('<?= base_url('assets/images/waChatBackground.png')?>')">
                                         </div>
                                         <div class="wa-chat-screen"
-                                            style="height:100% ;background: url('<?= base_url('assets/images/chatbackground3.jpg')?>">
+                                            style="background: url('<?= base_url('assets/images/chatbackground3.jpg')?>">
+                                            <div class="chat-top-bar">
+						                        <span class="chat-back-btn"><a href="" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"></span>
+					                        </div>
                                             <div class="wa-lodder">
                                                 <img src="<?= base_url("assets/images/1488.gif") ?>" alt="">
                                              </div>
@@ -111,12 +114,17 @@ socket.on('error', (error) => {
 });
 </script>
 <script>
-    function getMessage(clickedLink,chatId){
+    function getMessage(clickedLink,chatId,name){
+        if (window.innerWidth <= 768) {
+          $('.wa-side-bar-col').hide(); // Toggles between block and none
+          $('.wa-chat-col').show();
+        }
         $('#formNumber').val(chatId);
-        console.log(chatId);
+        console.log(name);
+        $('.chat-title').html(name+' ('+ chatId +')');
         $('.initial-screen').css('display', 'none');
         $('.wa-chat-screen').show();
-        $('.wa-chat-screen').append('<div class="overlay"></div>');
+        $('.wa-chat-col').append('<div class="overlay"></div>');
         $('.overlay').show();
         const links = document.querySelectorAll('.chat-item');
         // Remove 'active' class from all links
