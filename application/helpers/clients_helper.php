@@ -193,6 +193,7 @@ function app_init_customer_profile_tabs()
         'badge'    => [],
     ]);
 
+	/*
     $CI->app_tabs->add_customer_profile_tab('contacts', [
         'name'     => !is_empty_customer_company($client_id) || empty($client_id) ? _l('customer_contacts') : _l('contact'),
         'icon'     => 'fa fa-user',
@@ -200,7 +201,8 @@ function app_init_customer_profile_tabs()
         'position' => 10,
         'badge'    => [],
     ]);
-
+	*/
+	
     $CI->app_tabs->add_customer_profile_tab('notes', [
         'name'     => _l('contracts_notes_tab'),
         'icon'     => 'fa-regular fa-note-sticky',
@@ -209,6 +211,7 @@ function app_init_customer_profile_tabs()
         'badge'    => [],
     ]);
 
+	/*
     $CI->app_tabs->add_customer_profile_tab('statement', [
         'name'     => _l('customer_statement'),
         'icon'     => 'fa fa-area-chart',
@@ -217,7 +220,7 @@ function app_init_customer_profile_tabs()
         'position' => 20,
         'badge'    => [],
     ]);
-
+	*/
     $CI->app_tabs->add_customer_profile_tab('invoices', [
         'name'     => _l('client_invoices_tab'),
         'icon'     => 'fa fa-file-text',
@@ -236,8 +239,8 @@ function app_init_customer_profile_tabs()
         'badge'    => [],
     ]);
 
-    $CI->app_tabs->add_customer_profile_tab('proposals', [
-        'name'     => _l('proposals'),
+    $CI->app_tabs->add_customer_profile_tab('quotes', [
+        'name'     => _l('quotes'),
         'icon'     => 'fa-regular fa-file-powerpoint',
         'view'     => 'admin/clients/groups/proposals',
         'visible'  => (staff_can('view',  'proposals') || staff_can('view_own',  'proposals') || (get_option('allow_staff_view_proposals_assigned') == 1 && staff_has_assigned_proposals())),
@@ -245,6 +248,7 @@ function app_init_customer_profile_tabs()
         'badge'    => [],
     ]);
 
+	/*
     $CI->app_tabs->add_customer_profile_tab('credit_notes', [
         'name'     => _l('credit_notes'),
         'icon'     => 'fa-regular fa-file-lines',
@@ -314,15 +318,16 @@ function app_init_customer_profile_tabs()
         'position' => 75,
         'badge'    => [],
     ]);
-
+	*/
     $CI->app_tabs->add_customer_profile_tab('attachments', [
         'name'     => _l('customer_attachments'),
         'icon'     => 'fa fa-paperclip',
         'view'     => 'admin/clients/groups/attachments',
-        'position' => 80,
+        'position' => 20,
         'badge'    => [],
     ]);
 
+	/*
     $CI->app_tabs->add_customer_profile_tab('vault', [
         'name'     => _l('vault'),
         'icon'     => 'fa fa-lock',
@@ -346,6 +351,7 @@ function app_init_customer_profile_tabs()
         'position' => 95,
         'badge'    => [],
     ]);
+	*/
 }
 
 /**

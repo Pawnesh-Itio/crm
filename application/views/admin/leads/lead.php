@@ -135,8 +135,8 @@
 							{
 							?>
 							<li role="presentation">
-							<a href="leads/telegram/<?php echo ($lead->client_id);?>"><?php echo _l('lead_conversion');?></a>
-							<?php /*?>
+								<a href="leads/telegram/<?php echo ($lead->client_id);?>"><?php echo _l('lead_conversion');?></a>
+								<?php /*?>
 								<a href="#tab_leads_conversions" onclick="" aria-controls="tab_leads_conversions" role="tab" data-toggle="tab"><?php echo _l('lead_conversion');?></a>
 							<?php */?>
 							</li>
@@ -380,7 +380,7 @@
 							<a href="#" class="pull-right mright5"
 								onclick="toggle_edit_note(<?php echo e($note['id']); ?>);return false;">
 								<i class="fa-regular fa-pen-to-square"></i></a>
-								<?php } ?>
+							<?php } ?>
 	
 							<a href="<?php echo admin_url('profile/' . $note['addedfrom']); ?>" target="_blank">
 								<h5 class="media-heading tw-font-semibold tw-mb-0">
@@ -421,7 +421,7 @@
 				?>
 				<div role="tabpanel" class="tab-pane" id="tab_leads_conversions">
 					<div class="lead_conversion_list" id="lead_conversion_list">
-						<?php require_once "./telegram.php";?>
+						<?php //require_once "./telegram.php";?>
 					</div>
 					<div class="clearfix"></div>
 

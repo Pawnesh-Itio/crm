@@ -51,7 +51,7 @@
                                 </svg>
 
                                 <span>
-                                    <?php echo _l('customers_summary'); ?>
+                                    <?php echo _l('client_summary'); ?>
                                 </span>
                             </h4>
                             <div class="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-6 tw-gap-2">
@@ -63,7 +63,7 @@
                                     <span
                                         class="text-dark tw-truncate sm:tw-text-clip"><?php echo _l('customers_summary_total'); ?></span>
                                 </div>
-                                <div
+                                <?php /*?><div
                                     class="md:tw-border-r md:tw-border-solid md:tw-border-neutral-300 tw-flex-1 tw-flex tw-items-center">
                                     <span class="tw-font-semibold tw-mr-3 rtl:tw-ml-3 tw-text-lg">
                                         <?php echo total_rows(db_prefix() . 'clients', 'active=1' . $where_summary); ?></span>
@@ -76,7 +76,7 @@
                                         <?php echo total_rows(db_prefix() . 'clients', 'active=0' . $where_summary); ?></span>
                                     <span
                                         class="text-danger tw-truncate sm:tw-text-clip"><?php echo _l('inactive_active_customers'); ?></span>
-                                </div>
+                                </div><?php */?>
                                 <div
                                     class="md:tw-border-r md:tw-border-solid md:tw-border-neutral-300 tw-flex-1 tw-flex tw-items-center">
                                     <span class="tw-font-semibold tw-mr-3 rtl:tw-ml-3 tw-text-lg">

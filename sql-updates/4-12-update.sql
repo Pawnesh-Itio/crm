@@ -1,0 +1,4 @@
+ALTER TABLE `it_crm_clients` ADD `business_tags` TEXT NULL AFTER `shipping_country`, ADD `target_country` INT NULL AFTER `business_tags`, ADD `ticket_size` INT NULL AFTER `target_country`, ADD `processing_duration` VARCHAR(50) NULL AFTER `ticket_size`, ADD `valume_of_transaction` INT NULL AFTER `processing_duration`, ADD `chargeback_ratio` FLOAT(10,2) NULL AFTER `valume_of_transaction`, ADD `reason_to_switch` TEXT NULL AFTER `chargeback_ratio`, ADD `incorporate_country` INT NULL AFTER `reason_to_switch`, ADD `website_url` VARCHAR(200) NULL AFTER `incorporate_country`, ADD `website_type` VARCHAR(200) NULL AFTER `website_url`, ADD `website_volume` VARCHAR(50) NULL AFTER `website_type`, ADD `hosting_partner` INT NULL AFTER `website_volume`, ADD `cloud_info` TEXT NULL AFTER `hosting_partner`, ADD `default_langauge` INT NULL AFTER `cloud_info`, ADD `business_desc` TEXT NULL AFTER `default_langauge`;
+
+
+==========

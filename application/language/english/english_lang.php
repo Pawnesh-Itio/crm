@@ -60,10 +60,10 @@ $lang['announcement_show_to_clients'] = 'Show to clients';
 $lang['announcement_show_my_name']    = 'Show my name';
 
 # Clients
-$lang['clients']                                 = 'Customers';
-$lang['client']                                  = 'Customer';
-$lang['new_client']                              = 'New Customer';
-$lang['client_lowercase']                        = 'customer';
+$lang['clients']                                 = 'Contacts';
+$lang['client']                                  = 'Contact';
+$lang['new_client']                              = 'New Contact';
+$lang['client_lowercase']                        = 'contact';
 $lang['client_firstname']                        = 'First Name';
 $lang['client_lastname']                         = 'Last Name';
 $lang['client_email']                            = 'Email';
@@ -508,7 +508,7 @@ $lang['wd_sunday']    = 'Sunday';
 
 # Admin Left Sidebar
 $lang['als_dashboard']             = 'Dashboard';
-$lang['als_clients']               = 'Customers';
+$lang['als_clients']               = 'Contacts';
 $lang['als_leads']                 = 'Leads';
 $lang['als_contracts']             = 'Contracts';
 $lang['als_sales']                 = 'Sales';
@@ -1158,6 +1158,7 @@ $lang['invoice_item_long_description'] = 'Long Description';
 # Customers
 $lang['clients_list_phone']                = 'Phone';
 $lang['client_expenses_tab']               = 'Expenses';
+$lang['client_summary']	                   = 'Contacts Summary';
 $lang['customers_summary']                 = 'Customers Summary';
 $lang['customers_summary_active']          = 'Active Contacts';
 $lang['customers_summary_inactive']        = 'Inactive Contacts';
@@ -1372,7 +1373,23 @@ $lang['show_shipping_on_invoice']  = 'Show shipping details in invoice';
 $lang['show_shipping_on_estimate']         = 'Show shipping details in estimate';
 $lang['is_invoiced_estimate_delete_error'] = 'This estimate is invoiced. You cant delete the estimate';
 
+# Customers Business information
+$lang['business_info']			= 'Business Info';
+$lang['target_country']			= 'Target Country';
+$lang['ticket_size']			= 'Ticket Size';
+$lang['processing_duration']	= 'Processing Duration';
+$lang['valume_of_transaction']	= 'Valume of Transaction';
+$lang['chargeback_ratio']		= 'Chargeback Ratio';
+$lang['reason_to_switch']		= 'Reason to switch (if any)';
+$lang['incorporate_country']	= 'Incorporate Country';
+$lang['website_type']			= 'Website Type';
+$lang['website_volume']			= 'Website Volume';
+$lang['hosting_partner']		= 'Hosting Partner';
+$lang['cloud_info']				= 'Cloud Info';
+$lang['business_desc']			= 'Description';
+
 # Customers & Invoices / Estimates
+$lang['personal_detail']					= 'Personal Details';
 $lang['ship_to']                            = 'Ship to';
 $lang['customer_profile_details']           = 'Customer Details';
 $lang['billing_shipping']                   = 'Billing & Shipping';
@@ -1402,7 +1419,7 @@ $lang['customer_billing_copy']                                 = 'Copy Billing A
 $lang['customer_map']                                          = 'Map';
 $lang['set_password_email_sent_to_client']                     = 'Email to set password is successfully sent to contact';
 $lang['set_password_email_sent_to_client_and_profile_updated'] = 'Profile updated and email to set password is successfully sent to contact';
-$lang['customer_attachments']                                  = 'Files';
+$lang['customer_attachments']                                  = 'Attachments';
 $lang['customer_longitude']                                    = 'Longitude (Google Maps)';
 $lang['customer_latitude']                                     = 'Latitude (Google Maps)';
 
@@ -1565,7 +1582,7 @@ $lang['simulate_import']             = 'Simulate Import';
 $lang['import_upload_failed']        = 'Upload Failed';
 $lang['import_total_imported']       = 'Total Imported: %s';
 $lang['import_leads']                = 'Import Leads';
-$lang['import_customers']            = 'Import Customers';
+$lang['import_customers']            = 'Import Contact';
 $lang['choose_csv_file']             = 'Choose CSV File';
 $lang['import']                      = 'Import';
 $lang['lead_import_status']          = 'Status';
@@ -1627,6 +1644,67 @@ $lang['view_estimate_as_client']         = 'View estimate as customer';
 $lang['estimate_mark_as']                = 'Mark as %s';
 $lang['estimate_status_changed_success'] = 'Estimate status changed';
 $lang['estimate_status_changed_fail']    = 'Failed to change estimate status';
+
+# Quotes
+$lang['quotes_to']                            = 'Company / Name';
+$lang['quotes_date']                          = 'Date';
+$lang['quotes_address']                       = 'Address';
+$lang['quotes_phone']                         = 'Phone';
+$lang['quotes_email']                         = 'Email';
+$lang['quotes_date_created']                  = 'Date Created';
+$lang['quotes_open_till']                     = 'Open Till';
+$lang['quotes_status_open']                   = 'Open';
+$lang['quotes_status_accepted']               = 'Accepted';
+$lang['quotes_status_declined']               = 'Declined';
+$lang['quotes_status_sent']                   = 'Sent';
+$lang['quotes_expired']                       = 'Expired';
+$lang['quotes_subject']                       = 'Subject';
+$lang['quotes_total']                         = 'Total';
+$lang['quotes_status']                        = 'Status';
+$lang['quotes_list_all']                      = 'All';
+$lang['quotes_leads_related']                 = 'Leads Related';
+$lang['quotes_customers_related']             = 'Customers Related';
+$lang['quotes_related']                       = 'Related';
+$lang['quotes_for_lead']                      = 'Lead';
+$lang['quotes_for_customer']                  = 'Contact';
+$lang['quotes_lowercase']                     = 'quotation';
+$lang['quotation']                            = 'Quotation';
+$lang['quotes']                               = 'Quote';
+$lang['new_quotes']                           = 'New Quotation';
+$lang['quotes_currency']                      = 'Currency';
+$lang['quotes_allow_comments']                = 'Allow Comments';
+$lang['quotes_allow_comments_help']           = 'If you check this options comments will be allowed when your client view the quotes.';
+$lang['quotes_edit']                          = 'Edit';
+$lang['quotes_pdf']                           = 'PDF';
+$lang['quotes_send_to_email']                 = 'Send to Email';
+$lang['quotes_send_to_email_title']           = 'Send quotation to Email';
+$lang['quotes_attach_pdf']                    = 'Attach PDF';
+$lang['quotes_preview_template']              = 'Preview Template';
+$lang['quotes_view']                          = 'View Quotation';
+$lang['quotes_copy']                          = 'Copy';
+$lang['quotes_delete']                        = 'Delete';
+$lang['quotes_to']                            = 'To';
+$lang['quotes_add_comment']                   = 'Add Comment';
+$lang['quotes_sent_to_email_success']         = 'Quotation sent to email successfully';
+$lang['quotes_sent_to_email_fail']            = 'Failed to sent Quotation to email';
+$lang['quotes_copy_fail']                     = 'Failed to copy Quotation';
+$lang['quotes_copy_success']                  = 'Quotation copied successfully';
+$lang['quotes_status_changed_success']        = 'Quotation status changed successfully';
+$lang['quotes_status_changed_fail']           = 'Failed to change Quotation status';
+$lang['quotes_assigned']                      = 'Assigned';
+$lang['quotes_comments']                      = 'Comments';
+$lang['quotes_convert']                       = 'Convert';
+$lang['quotes_convert_estimate']              = 'Estimate';
+$lang['quotes_convert_invoice']               = 'Invoice';
+$lang['quotes_convert_to_estimate']           = 'Convert to Estimate';
+$lang['quotes_convert_to_invoice']            = 'Convert to Invoice';
+$lang['quotes_convert_to_lead_disabled_help'] = 'You need to convert the lead to customer in order to create %s';
+$lang['quotes_convert_not_related_help']      = 'The Quotation needs to be related to customer in order to convert to %s';
+$lang['quotes_converted_to_estimate_success'] = 'Quotation converted to estimate successfully';
+$lang['quotes_converted_to_invoice_success']  = 'Quotation converted to invoice successfully';
+$lang['quotes_converted_to_estimate_fail']    = 'Failed to convert Quotation to estimate';
+$lang['quotes_converted_to_invoice_fail']     = 'Failed to convert Quotation to invoice';
+$lang['include_quotes_items_merge_field_help'] = 'Include quotation items with merge field anywhere in quotation content as %s';
 
 # Proposals
 $lang['proposal_to']                            = 'Company / Name';
@@ -2384,7 +2462,7 @@ $lang['expense_report_category']                          = 'Category';
 $lang['expense_paid_via']                                 = 'Paid Via %s';
 $lang['item_as_expense']                                  = '[Expense]';
 $lang['show_help_on_setup_menu']                          = 'Show help menu item on setup menu';
-$lang['customers_summary_total']                          = 'Total Customers';
+$lang['customers_summary_total']                          = 'Total Contacts';
 $lang['filter_by']                                        = 'Filter by';
 $lang['re_captcha']                                       = 'reCAPTCHA';
 $lang['recaptcha_site_key']                               = 'Site key';
@@ -3948,3 +4026,4 @@ $lang['allow_non_admin_members_to_edit_ticket_messages'] = 'Allow non-admin staf
 $lang['proposal_auto_convert_to_invoice_on_client_accept'] = 'Auto convert the proposal to invoice after client accept (only customers related proposals)';
 $lang['invoice_activity_auto_converted_from_proposal']      = 'Invoice auto created from proposal with number %s';
 $lang['clients_proposal_invoiced_successfully'] = 'Thank you for accepting the proposal. Please review the created invoice for the proposal';
+?>

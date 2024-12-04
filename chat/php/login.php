@@ -21,6 +21,7 @@ if(!empty($email)&&!empty($mobile))
 				$_SESSION['fullname']=$row['name'];
 				$_SESSION['unique_id']=$row['client_id'];
 				$_SESSION['incoming_id']=$row['id'];
+				$_SESSION['client_email']=$email;
 				echo 'success';
 			}
 			//header("Location: users.php");

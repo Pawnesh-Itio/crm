@@ -15,10 +15,18 @@
                 <ul class="nav nav-tabs customer-profile-tabs nav-tabs-horizontal" role="tablist">
                     <li role="presentation" class="<?php echo !$this->input->get('tab') ? 'active' : ''; ?>">
                         <a href="#contact_info" aria-controls="contact_info" role="tab" data-toggle="tab">
-                            <?php echo _l('customer_profile_details'); ?>
+                            <?php echo _l('personal_detail'); ?>
                         </a>
                     </li>
-                    <?php
+                    
+					<li role="presentation" class="<?php if ($this->input->get('tab') == 'business_info') {
+                          echo 'active';
+                      }; ?>">
+                        <a href="#business_info" aria-controls="business_info" role="tab" data-toggle="tab">
+                            <?php echo _l('business_info'); ?>
+                        </a>
+                    </li>
+                  <?php
                   $customer_custom_fields = false;
                   if (total_rows(db_prefix() . 'customfields', ['fieldto' => 'customers', 'active' => 1]) > 0) {
                       $customer_custom_fields = true; ?>
@@ -38,7 +46,9 @@
                         </a>
                     </li>
                     <?php hooks()->do_action('after_customer_billing_and_shipping_tab', isset($client) ? $client : false); ?>
-                    <?php if (isset($client)) { ?>
+                    <?php 
+					/*
+					if (isset($client)) { ?>
                     <li role="presentation">
                         <a href="#customer_admins" aria-controls="customer_admins" role="tab" data-toggle="tab">
                             <?php echo _l('customer_admins'); ?>
@@ -48,7 +58,8 @@
                         </a>
                     </li>
                     <?php hooks()->do_action('after_customer_admins_tab', $client); ?>
-                    <?php } ?>
+                    <?php }
+					*/ ?>
                 </ul>
             </div>
         </div>
@@ -192,6 +203,111 @@
                     </div>
                 </div>
             </div>
+
+			<!-- new section for business info tab-->			
+            <div role="tabpanel" class="tab-pane" id="business_info">			
+				<div class="row">
+					<div class="col-md-12">
+
+						<?php $value = (isset($client) ? $client->business_tags : ''); ?>
+						<?php echo render_textarea('business_tags', 'tags', $value); ?>
+
+					</div>
+				</div>
+				
+				<div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+					 <?php $countries       = get_all_countries();
+                     $customer_default_country = get_option('customer_default_country');
+                     $selected                 = (isset($client) ? $client->target_country : $customer_default_country);
+                     echo render_select('target_country', $countries, [ 'country_id', [ 'short_name']], 'target_country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);?>
+                                
+
+                                <?php $value = (isset($client) ? $client->ticket_size : ''); ?>
+                                <?php echo render_input('ticket_size', 'ticket_size', $value); ?>
+                                <?php $value = (isset($client) ? $client->processing_duration : ''); ?>
+                                <?php echo render_input('processing_duration', 'processing_duration', $value); ?>
+                                <?php $value = (isset($client) ? $client->valume_of_transaction : ''); ?>
+                                <?php echo render_input('valume_of_transaction', 'valume_of_transaction', $value); ?>
+                                <?php $value = (isset($client) ? $client->chargeback_ratio : ''); ?>
+                                <?php echo render_input('chargeback_ratio', 'chargeback_ratio', $value); ?>
+                                <?php $value = (isset($client) ? $client->reason_to_switch : ''); ?>
+                                <?php echo render_input('reason_to_switch', 'reason_to_switch', $value); ?>
+                                <?php $selected = (isset($client) ? $client->incorporate_country : ''); ?>
+                                <?php echo render_select('incorporate_country', $countries, [ 'country_id', [ 'short_name']], 'incorporate_country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]); ?>
+                            </div>
+                            <div class="col-md-6">
+                                
+
+                                <?php $value = (isset($client) ? $client->website_url : ''); ?>
+                                <?php //echo render_input('website_url', 'form_submit_website_url', $value); ?>
+	                            <label for="website"><?php echo _l('form_submit_website_url'); ?></label>
+								<div class="input-group">
+                                <input type="text" name="website_url" id="website_url" value="<?php echo e($client->website_url); ?>"
+                                    class="form-control">
+								
+                                <span class="input-group-btn">
+                                    <a href="<?php echo e(maybe_add_http($client->website_url)); ?>" class="btn btn-default"
+                                        target="_blank" tabindex="-1">
+                                        <i class="fa fa-globe"></i></a>
+                                </span>
+
+                            </div>
+                                <?php $value = (isset($client) ? $client->website_type : ''); ?>
+                                <?php echo render_input('website_type', 'website_type', $value); ?>
+                                <?php $value = (isset($client) ? $client->website_volume : ''); ?>
+                                <?php echo render_input('website_volume', 'website_volume', $value); ?>
+                                <?php $value = (isset($client) ? $client->hosting_partner : ''); ?>
+                                <?php echo render_input('hosting_partner', 'hosting_partner', $value); ?>
+
+                                <?php $value = (isset($client) ? $client->cloud_info : ''); ?>
+                                <?php echo render_input('cloud_info', 'cloud_info', $value); ?>
+								<div class="form-group select-placeholder">
+                                    <label for="default_language"
+                                        class="control-label"><?php echo _l('localization_default_language'); ?>
+                                    </label>
+                                    <select name="default_language" id="default_language"
+                                        class="form-control selectpicker"
+                                        data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                                        <option value=""><?php echo _l('system_default_string'); ?></option>
+                                        <?php foreach ($this->app->get_available_languages() as $availableLanguage) {
+										 $selected = '';
+										 if (isset($client)) {
+											 if ($client->default_langauge == $availableLanguage) {
+												 $selected = 'selected';
+											 }
+										 } ?>
+                                        <option value="<?php echo e($availableLanguage); ?>" <?php echo e($selected); ?>>
+                                            <?php echo e(ucfirst($availableLanguage)); ?></option>
+										<?php
+					                     } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+						
+						<div class="row">
+                            <div class="col-md-12">
+
+                                <?php $value = (isset($client) ? $client->business_desc : ''); ?>
+                                <?php echo render_textarea('business_desc', 'business_desc', $value); ?>
+
+							</div>
+						</div>
+                    </div>
+                </div>
+				
+				
+				
+				
+				
+				
+                
+            </div>
+
+			
             <?php if (isset($client)) { ?>
             <div role="tabpanel" class="tab-pane" id="customer_admins">
                 <?php if (staff_can('create',  'customers') || staff_can('edit',  'customers')) { ?>
