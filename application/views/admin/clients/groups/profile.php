@@ -19,6 +19,8 @@
                         </a>
                     </li>
                     
+					<?php if (isset($client)) { ?>
+					
 					<li role="presentation" class="<?php if ($this->input->get('tab') == 'business_info') {
                           echo 'active';
                       }; ?>">
@@ -26,6 +28,8 @@
                             <?php echo _l('business_info'); ?>
                         </a>
                     </li>
+					<?php
+					}?>
                   <?php
                   $customer_custom_fields = false;
                   if (total_rows(db_prefix() . 'customfields', ['fieldto' => 'customers', 'active' => 1]) > 0) {
@@ -204,6 +208,8 @@
                 </div>
             </div>
 
+			
+			<?php if (isset($client)) { ?>
 			<!-- new section for business info tab-->			
             <div role="tabpanel" class="tab-pane" id="business_info">			
 				<div class="row">
@@ -249,7 +255,7 @@
                                     class="form-control">
 								
                                 <span class="input-group-btn">
-                                    <a href="<?php echo e(maybe_add_http($client->website_url)); ?>" class="btn btn-default"
+                                    <a href="<?php if(isset($client->website_url)&&$client->website_url) echo e(maybe_add_http($client->website_url)); else echo 'javascript:void(0)'; ?>" class="btn btn-default"
                                         target="_blank" tabindex="-1">
                                         <i class="fa fa-globe"></i></a>
                                 </span>
@@ -306,7 +312,9 @@
 				
                 
             </div>
-
+			<?php
+			}
+			?>
 			
             <?php if (isset($client)) { ?>
             <div role="tabpanel" class="tab-pane" id="customer_admins">
