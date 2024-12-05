@@ -99,7 +99,7 @@ return App_table::find('clients')
             }
 
             if (!$isPerson) {
-                $company .= ' | <a href="' . admin_url('clients/client/' . $aRow['userid'] . '?group=contacts') . '">' . _l('customer_contacts') . '</a>';
+              //  $company .= ' | <a href="' . admin_url('clients/client/' . $aRow['userid'] . '?group=contacts') . '">' . _l('customer_contacts') . '</a>';
             }
 
             if ($hasPermissionDelete) {
