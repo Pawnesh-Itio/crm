@@ -25,7 +25,7 @@ if(isset($_SESSION['unique_id'])&&$_SESSION['unique_id'])
 				<input type="email" name="email" id="email" placeholder="Enter Your Email" required>
 			</div>
 			<div class="field input">
-				<label>Number</label>
+				<label>WhatsApp Number</label>
 				<input type="number" name="mobile" id="mobile" placeholder="Enter Your Mobile" required>
 			</div>
 			<div class="field button">

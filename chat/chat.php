@@ -57,19 +57,22 @@ closeBtn.addEventListener('click', () => {
 
 // End chat action (simply close the chat)
 endChatBtn.addEventListener('click', () => {
-	window.close(); // Close the chat window
+	sendChatEmail(2);
+	document.getElementById('modal').style.display = 'none';
+	window.parent.document.getElementById('chat-container').style.display = 'none';
 });
 
 // Send chat via email action
 sendEmailBtn.addEventListener('click', () => {
-	sendChatEmail();
-	window.close(); // Close the chat window after sending the email
+	sendChatEmail(1);
+	document.getElementById('modal').style.display = 'none';
+	window.parent.document.getElementById('chat-container').style.display = 'none';
 });
 
 // Function to send chat messages via email
-function sendChatEmail() {
+function sendChatEmail(close_type) {
 	// Collect chat messages
-	const chatMessages = document.querySelector('.chat-box').innerText;
+	const chatMessages = document.querySelector('.chat-box').innerHTML;
 
 	// Create a form for sending an email
 	const form	= document.createElement('form');
@@ -83,6 +86,15 @@ function sendChatEmail() {
 	input.value = chatMessages;
 	form.appendChild(input);
 
+	if(close_type===1)	//close type 1 for send chat to email
+	{
+		// Create a hidden input field with the chat messages
+		const input1 = document.createElement('input');
+		input1.type	= 'hidden';
+		input1.name	= 'issendEmail';
+		input1.value = true;
+		form.appendChild(input1);
+	}
 	// Append the form to the body and submit it
 	document.body.appendChild(form);
 	form.submit();
