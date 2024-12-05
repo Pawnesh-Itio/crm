@@ -1,1 +1,32 @@
-ALTER TABLE `it_crm_clients` ADD `business_tags` TEXT NULL AFTER `shipping_country`, ADD `target_country` INT NULL AFTER `business_tags`, ADD `ticket_size` INT NULL AFTER `target_country`, ADD `processing_duration` VARCHAR(50) NULL AFTER `ticket_size`, ADD `valume_of_transaction` INT NULL AFTER `processing_duration`, ADD `chargeback_ratio` FLOAT(10,2) NULL AFTER `valume_of_transaction`, ADD `reason_to_switch` TEXT NULL AFTER `chargeback_ratio`, ADD `incorporate_country` INT NULL AFTER `reason_to_switch`, ADD `website_url` VARCHAR(200) NULL AFTER `incorporate_country`, ADD `website_type` VARCHAR(200) NULL AFTER `website_url`, ADD `website_volume` VARCHAR(50) NULL AFTER `website_type`, ADD `hosting_partner` INT NULL AFTER `website_volume`, ADD `cloud_info` TEXT NULL AFTER `hosting_partner`, ADD `default_langauge` INT NULL AFTER `cloud_info`, ADD `business_desc` TEXT NULL AFTER `default_langauge`;
+
+--
+-- Table structure for table `it_crm_chat_archive`
+--
+
+CREATE TABLE `it_crm_chat_archive` (
+  `id` int(11) NOT NULL,
+  `client_id` bigint(20) NOT NULL,
+  `chat_message` longtext NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `it_crm_chat_archive`
+--
+ALTER TABLE `it_crm_chat_archive`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `it_crm_chat_archive`
+--
+ALTER TABLE `it_crm_chat_archive`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
