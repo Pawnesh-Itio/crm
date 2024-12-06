@@ -858,7 +858,7 @@ $lang['online_payment_recorded_success']               = 'Payment recorded succe
 $lang['online_payment_recorded_success_fail_database'] = 'Payment is successful but failed to insert payment to database, contact administrator';
 
 # Leads
-$lang['lead_convert_to_client']                = 'Convert to customer';
+$lang['lead_convert_to_client']                = 'Convert to Contact';
 $lang['lead_convert_to_email']                 = 'Email';
 $lang['lead_convert_to_client_firstname']      = 'First Name';
 $lang['lead_convert_to_client_lastname']       = 'Last Name';
