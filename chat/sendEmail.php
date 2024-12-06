@@ -43,19 +43,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		mysqli_query($conn, $sqlStmt) or die();
 	}
 
-    // Get the chat messages from the POST request
-    $chatMessages = $_POST['chatMessages'];
+	// Get the chat messages from the POST request
+	$chatMessages = $_POST['chatMessages'];
 	
 	if(isset($_POST['issendEmail'])&&$_POST['issendEmail']==true)
 	{
 		// Your email logic here
 		$to = $_SESSION['client_email']; // The email to send to
 
-		$subject = 'Chat Transcript';
-		$message = "Here is your chat transcript:\n\n" . $chatMessages;
-		$headers = 'From: no-reply@yourdomain.com' . "\r\n" .
-				   'Reply-To: no-reply@yourdomain.com' . "\r\n" .
-				   'X-Mailer: PHP/' . phpversion();
+		$subject =	'Chat Transcript';
+		$message =	"Here is your chat transcript:\n\n" . $chatMessages;
+		$headers =	'From: no-reply@yourdomain.com' . "\r\n" .
+					'Reply-To: no-reply@yourdomain.com' . "\r\n" .
+					'X-Mailer: PHP/' . phpversion();
 	
 		if (mail($to, $subject, $message, $headers)) {
 			echo "Email sent successfully!";
