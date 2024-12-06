@@ -89,10 +89,10 @@ function sendChatEmail(close_type) {
 	if(close_type===1)	//close type 1 for send chat to email
 	{
 		// Create a hidden input field with the chat messages
-		const input1 = document.createElement('input');
+		const input1= document.createElement('input');
 		input1.type	= 'hidden';
 		input1.name	= 'issendEmail';
-		input1.value = true;
+		input1.value= true;
 		form.appendChild(input1);
 	}
 	// Append the form to the body and submit it
