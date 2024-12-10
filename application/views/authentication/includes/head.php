@@ -25,6 +25,7 @@
         color: #475569;
         margin: 0;
         padding: 0;
+        background:#1e293bff !important;
     }
 
     .company-logo {
