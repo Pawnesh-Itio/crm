@@ -140,6 +140,15 @@ return App_table::find('clients')
             }
 
             $row[] = $groupsRow;
+            $whatsappLink ='';
+            if($aRow['phonenumber'] && !empty($aRow['phonenumber'])){
+                $whatsappLink .= '<li>
+                                        <a data-toggle="modal" data-target="#myModal" onclick="getMessages(\'' . e(($aRow['fullname'])) . '\',\'' . e($aRow['phonenumber']) . '\')">
+                                            <i class="fa-brands fa-whatsapp"></i> 
+                                            ' . _l('lead_conversion_whatsapp') . '
+                                        </a> 
+                                  </li>';
+                                }
 
             $row[] = e(_dt($aRow['datecreated']));
             $row[] = '<a class="btn btn-default dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -147,12 +156,7 @@ return App_table::find('clients')
                           <span class="caret"></span>
                       </a>
                         <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenu1">
-                            <li>
-                                <a data-toggle="modal" data-target="#myModal" onclick="getMessages(\'' . e(trim($aRow['fullname'])) . '\',\'' . e($aRow['phonenumber']) . '\')">
-                                    <i class="fa-brands fa-whatsapp"></i> 
-                                    ' . _l('lead_conversion_whatsapp') . '
-                                </a> 
-                            </li>
+                        '.$whatsappLink.'
                         </ul>';
             // Custom fields add values
             foreach ($customFieldsColumns as $customFieldColumn) {
