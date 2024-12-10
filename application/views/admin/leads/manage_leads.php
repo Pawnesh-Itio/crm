@@ -257,9 +257,6 @@
                                 'name'     => _l('leads_dt_datecreated'),
                                 'th_attrs' => ['class' => 'date-created toggleable', 'id' => 'th-date-created'],
                               ];
-                              $_table_data[] = [
-                                'name'     => 'Chats',   // Set the table header attributes
-                               ];
                               foreach ($_table_data as $_t) {
                                   array_push($table_data, $_t);
                               }
@@ -344,7 +341,10 @@ socket.on('disconnect', () => {
 socket.on('error', (error) => {
     console.log("Error:", error);
 });
-function getMessages(name,chatId){
+function getMessages(element){
+    $('#lead-modal').modal('hide');
+    var name = element.getAttribute('data-name');
+    var chatId = parseInt(element.getAttribute('data-number'));
     console.log(name);
     $('.modal-title').html(name+' ('+ chatId +')');
     $('#formNumber').val(chatId);

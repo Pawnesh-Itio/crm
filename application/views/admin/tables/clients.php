@@ -142,7 +142,18 @@ return App_table::find('clients')
             $row[] = $groupsRow;
 
             $row[] = e(_dt($aRow['datecreated']));
-
+            $row[] = '<a class="btn btn-default dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          ' . _l('chatBtn') . '
+                          <span class="caret"></span>
+                      </a>
+                        <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenu1">
+                            <li>
+                                <a data-toggle="modal" data-target="#myModal" onclick="getMessages(\'' . e(trim($aRow['fullname'])) . '\',\'' . e($aRow['phonenumber']) . '\')">
+                                    <i class="fa-brands fa-whatsapp"></i> 
+                                    ' . _l('lead_conversion_whatsapp') . '
+                                </a> 
+                            </li>
+                        </ul>';
             // Custom fields add values
             foreach ($customFieldsColumns as $customFieldColumn) {
                 $row[] = (strpos($customFieldColumn, 'date_picker_') !== false ? _d($aRow[$customFieldColumn]) : $aRow[$customFieldColumn]);

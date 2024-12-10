@@ -3,6 +3,9 @@
 	font-size: 14px; /* Adjust to your preferred font size */
 	line-height: 1.2;
 }
+a{
+cursor: pointer;
+}
 
 /* Container for messages */
 
@@ -215,6 +218,8 @@ background-color: #1e293bff;
 }
 .wa-btn:hover{
     background-color: rgb(51, 113, 212);
+}
+@media only screen and (min-width: 769px) and (max-width: 992px) {
 }
 @media only screen and (max-width: 768px) {
     /* Styles for mobile devices */

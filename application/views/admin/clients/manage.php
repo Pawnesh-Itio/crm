@@ -195,6 +195,10 @@
                          'name'     => _l('date_created'),
                          'th_attrs' => ['class' => 'toggleable', 'id' => 'th-date-created'],
                         ],
+                        [
+                        'name'     => _l('chatBtn'),
+                        'th_attrs' => ['class' => 'toggleable', 'id' => 'th-date-created'],
+                        ],
                       ];
                      foreach ($_table_data as $_t) {
                          array_push($table_data, $_t);
@@ -225,8 +229,57 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                    <div class="wa-lodder">
+                        <img src="<?= base_url("assets/images/1488.gif") ?>" alt="">
+                    </div>
+                <div id ="errdiv"></div>
+                <div class="chat-container" id="chatContainer">
+                    <span id="errSpan" class="text-center"></span>
+                    <!-- Message containet -->
+                </div>
+                <div class="formBtnDiv">
+                    <form id="messageForm" >
+                        <input type="hidden" id="formUserId" value="<?= get_staff_user_id() ?>">
+                        <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
+                        <div class="message-input">
+                            <input type="text" class="form-control" id="messageInput" placeholder="Type a message...">	
+                            <button  type="submit" class="btn wa-btn" id="sendMessageBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <?php init_tail(); ?>
+<!-- MySocket logic -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
+// Socket connection
+const URL = "wss://wa-business-api.onrender.com";
+const waURL = "https://wa-business-api.onrender.com";
+const socket = io(URL);
+socket.on('connect', () => {
+    console.log('Connected to Socket.io server');
+});
+socket.on('disconnect', () => {
+    console.log('Disconnected from Socket.io server');
+});
+socket.on('error', (error) => {
+    console.log("Error:", error);
+});
+
 $(function() {
     var tAPI = initDataTable('.table-clients', admin_url + 'clients/table', [0], [0], {},
         <?php echo hooks()->apply_filters('customers_table_default_order', json_encode([2, 'asc'])); ?>);
@@ -264,6 +317,113 @@ function customers_bulk_action(event) {
         }, 50);
     }
 }
+function getMessages(name,chatId){
+    console.log(name);
+    $('.modal-title').html(name+' ('+ chatId +')');
+    $('#formNumber').val(chatId);
+	$('.chat-container').html('');// Remove any exisiting listener before adding new one
+    $.ajax({
+        url: waURL+'/api/chat/messages/'+chatId,
+        method: 'GET',
+        success: function (data) {
+            console.log(data);
+            $('.formBtnDiv').show();
+            $('.wa-lodder').hide();
+            $('.chat-container').html('');
+            $('#errdiv').html('');
+            // Add Messages to chat box.
+            if(data.status != 'no_contact' && data.status !='no_messages'){
+                data.messages.forEach(function (message) {
+                    const messageClass = message.message_type === 'received' ? 'incoming-message' : 'sent-message';
+                // Create a new div for each message
+                const messageDiv = $('<div>'+message.message_body+'</div>') // Create the div
+                    .attr('id', message.message_id) // Set message_id as the id attribute
+                    .addClass(messageClass); // Optionally add a class for styling
+
+                // Append the created message div to the body or a specific parent
+                $('#chatContainer').append(messageDiv); // Or append to a specific container if needed
+            });
+        }else{
+            const errSpan = "<span class='text-center'>No Message found...</span>";
+            $('#errdiv').append(errSpan);
+        }
+            autoScrollToBottom();
+            // Add realtime incomming messages.
+            setupChatSocketListener(chatId);
+
+        },
+        error: function () {
+            $('.wa-lodder').hide();
+            console.error('Failed to fetch data');
+        }
+    });
+}
+function setupChatSocketListener(chatId){
+    $('#errSpan').html('');
+	socket.off('chat-' + chatId);
+	socket.on('chat-' + chatId, (data)=>{
+	console.log(data);//Checking.
+	var type = data.type;
+	var messageData = data.messageToInsert;//getting message body
+	var data ; // Initializing empty variable'
+	//Check if message is sent or status
+	if(type=='received'){
+	    data = '<div class="incoming-message">'+messageData.message_body+'</div>';
+	    //Appending chat data to UI
+	    $('.chat-container').append(data);
+	    // Automatically scroll to the bottom of the chat box
+	    $('#chatContainer').scrollTop($('#chatContainer')[0].scrollHeight);
+	}else{
+	    
+	}
+	});
+}
+// Function to automatically scroll the chat container to the bottom
+function autoScrollToBottom() {
+    var chatContainer = $('#chatContainer');
+    chatContainer.scrollTop(chatContainer[0].scrollHeight);  // Scroll to the bottom
+}
+// Send Functionality...
+$(document).ready(function() {
+    $('#errSpan').html('');
+    $('#messageForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        // Gather form data
+        const source = "crm";
+        const userId = $('#formUserId').val();
+        const to = $('#formNumber').val();
+        const message = $('#messageInput').val();
+        const type = 1;
+
+        // Send the data via AJAX
+        $.ajax({
+            type: 'POST',
+            url: waURL+'/api/messages/send/', // Replace with your actual URL
+            contentType: 'application/json',
+            data: JSON.stringify({
+                userId: userId,
+                source: source,
+                to: to,
+                message: message,
+                type: type
+            }),
+            success: function(response) {
+                // Handle success (e.g., clear input, display message, etc.)
+                const messageData = response.data.messages[0];
+                $('#messageInput').val(''); // Clear the input after sending
+                data = '<div id='+messageData.id+' class="sent-message">'+message+'</div>';
+                //Appending chat data to UI
+                $('.chat-container').append(data);
+                // Automatically scroll to the bottom of the chat box
+                autoScrollToBottom();
+            },
+            error: function(error) {
+                // Handle error
+                console.error('Error sending message:', error.message);
+            }
+        });
+    });
+});
 </script>
 </body>
 

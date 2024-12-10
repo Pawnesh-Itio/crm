@@ -6,6 +6,42 @@
 } ?>>
 
     <?php if (isset($lead)) { ?>
+    <!-- Conversation Dropdown By TechWizard -->
+    <div class="btn-group pull-right mleft5">
+        <a class="btn btn-default dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?php echo _l('chatBtn'); ?>				
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenu1">
+            <!-- TechWizard Whatsapp Link -->
+            <?php if(!empty($lead->phonenumber)){ ?>
+                <li>
+                    <a data-toggle="modal" data-target="#myModal" data-name="<?= $lead->name ?>" data-number= "<?= $lead->phonenumber ?>" onclick="getMessages(this)">
+                        <i class="fa-brands fa-whatsapp"></i>    
+                        <?php echo _l('lead_conversion_whatsapp'); ?>
+                    </a>
+                </li>
+            <?php } ?>
+            <!-- TechWizard Telegram Link -->
+             <?php if(e($lead->source) ==  4){ ?>
+                <li>
+                    <a href="leads/telegram/<?php echo ($lead->client_id);?>">
+                        <i class="fa-brands fa-telegram"></i>  
+                        <?php echo _l('lead_conversion_telegram');?>
+                    </a>
+                </li>
+             <?php } ?>
+             <!-- TechWizard LiveChat -->
+             <?php if(e($lead->source) ==  5){ ?>
+                <li>
+                    <a href="leads/webchat/<?php echo ($lead->client_id);?>">
+                        <i class="far fa-comment-dots"></i> 
+                        <?php echo _l('lead_conversion_live_chat');?>
+                    </a>
+                </li>
+            <?php } ?>
+        </ul>
+    </div>
     <div class="btn-group pull-right mleft5" id="lead-more-btn">
         <a href="#" class="btn btn-default dropdown-toggle lead-top-btn" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
@@ -116,7 +152,6 @@
         <?php echo e($text); ?>
     </a>
     <?php } ?>
-
     <?php } ?>
 
     <div class="clearfix no-margin"></div>

@@ -186,6 +186,7 @@ socket.on('error', (error) => {
 	    // Automatically scroll to the bottom of the chat box
         autoScrollToBottom();
 	}else{
+    console.log(data);
 	    
 	}
 	});
