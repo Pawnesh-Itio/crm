@@ -243,7 +243,6 @@
                     </div>
                 <div id ="errdiv"></div>
                 <div class="chat-container" id="chatContainer">
-                    <span id="errSpan" class="text-center"></span>
                     <!-- Message containet -->
                 </div>
                 <div class="formBtnDiv">

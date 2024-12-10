@@ -305,6 +305,7 @@
                     <div class="wa-lodder">
                         <img src="<?= base_url("assets/images/1488.gif") ?>" alt="">
                     </div>
+                <div id ="errdiv"></div>
                 <div class="chat-container" id="chatContainer">
                     <!-- Message containet -->
                 </div>
@@ -353,10 +354,12 @@ function getMessages(element){
         url: waURL+'/api/chat/messages/'+chatId,
         method: 'GET',
         success: function (data) {
+            console.log(data);
             $('.formBtnDiv').show();
             $('.wa-lodder').hide();
             $('.chat-container').html('');
             // Add Messages to chat box.
+            if(data.status != 'no_contact' && data.status !='no_messages'){
                 data.messages.forEach(function (message) {
                     const messageClass = message.message_type === 'received' ? 'incoming-message' : 'sent-message';
                 // Create a new div for each message
@@ -367,6 +370,10 @@ function getMessages(element){
                 // Append the created message div to the body or a specific parent
                 $('#chatContainer').append(messageDiv); // Or append to a specific container if needed
             });
+        }else{
+            const errSpan = "<span class='text-center'>No Message found...</span>";
+            $('#errdiv').append(errSpan);
+        }
             autoScrollToBottom();
             // Add realtime incomming messages.
             setupChatSocketListener(chatId);
