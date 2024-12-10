@@ -232,3 +232,14 @@ function load_lead_language($lead_id)
 
     return true;
 }
+function fetch_lead_detail($lead_id)
+{
+	$CI = & get_instance();
+    $CI->db->where('id', $lead_id);
+    $lead = $CI->db->get(db_prefix() . 'leads')->row();
+
+	$lead_detail['source']		= $lead->source;
+	$lead_detail['client_id']	= $lead->client_id;
+
+	return $lead_detail;
+}
