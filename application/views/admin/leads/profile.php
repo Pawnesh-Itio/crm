@@ -23,29 +23,23 @@
                 </li>
             <?php } ?>
             <!-- TechWizard Telegram Link -->
-             <?php if(e($lead->source) ==  4){ ?>
+             <?php if(e($lead->source) ==  4){
+			 	
+				$telegram_token = get_option('telegram_token');
+				?>
                 <li>
-                    <a href="leads/telegram/<?php echo ($lead->client_id);?>">
+					<a data-toggle="modal" data-target="#myModalTel" onclick="getTelegramChat('<?php echo $lead->name;?>', '<?php echo $lead->client_id;?>', '<?php echo $telegram_token;?>')">
                         <i class="fa-brands fa-telegram"></i>  
-                        <?php echo _l('lead_conversion_telegram');?>
+                        <?php echo _l('lead_conversion_telegram'); ?>
                     </a>
                 </li>
              <?php } ?>
              <!-- TechWizard LiveChat -->
              <?php if(e($lead->source) ==  5){ ?>
-
-				
 				<li><a data-toggle="modal" data-target="#myModal_web" onclick="getWebChat('<?php echo $lead->name;?>', '<?php echo $lead->client_id;?>')">
                         <i class="far fa-comment-dots"></i>    
                         <?php echo _l('lead_conversion_live_chat'); ?>
                     </a></li>
-				
-				<?php /*?><li>
-                    <a href="leads/webchat/<?php echo ($lead->client_id);?>">
-                        <i class="far fa-comment-dots"></i> 
-                        <?php echo _l('lead_conversion_live_chat');?>
-                    </a>
-                </li><?php */?>
             <?php } ?>
         </ul>
     </div>
