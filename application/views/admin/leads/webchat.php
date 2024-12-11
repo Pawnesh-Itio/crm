@@ -67,7 +67,7 @@
 				<?php
 				}?>
 				<div class="chat-screen"
-					style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
+					style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
 					<?php
 					$response = '<div id="message-container" class="chat-container">';
 
@@ -95,13 +95,7 @@
 			</div>
 			<!-- Input box with 'Send' button inside the border -->
 			<div class="clearfix"></div>
-			<?php
-			if(isset($chat_id)&&$chat_id)
-			{
-			?>
-			<?php
-			}
-			?>
+			
 
 		</div>
 	</div>
