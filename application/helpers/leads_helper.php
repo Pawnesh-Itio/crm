@@ -232,14 +232,22 @@ function load_lead_language($lead_id)
 
     return true;
 }
-function fetch_lead_detail($lead_id)
+function fetch_lead_detail($lead_id=NULL)
 {
-	$CI = & get_instance();
-    $CI->db->where('id', $lead_id);
-    $lead = $CI->db->get(db_prefix() . 'leads')->row();
-
-	$lead_detail['source']		= $lead->source;
-	$lead_detail['client_id']	= $lead->client_id;
-
-	return $lead_detail;
+	if(!empty($lead_id) && $lead_id!='null')
+	{
+		$CI = & get_instance();
+		$CI->db->where('id', $lead_id);
+		$lead = $CI->db->get(db_prefix() . 'leads')->row();
+	
+		if($lead)
+		{
+			$lead_detail['source']		= $lead->source;
+			$lead_detail['client_id']	= $lead->client_id;
+		
+			return $lead_detail;
+		}
+		return;
+	}
+	return;
 }

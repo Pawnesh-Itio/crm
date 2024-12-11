@@ -11,7 +11,7 @@
 			<div class="modal-body">
 					
 				<div class="chat-screen"
-					style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
+					style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
 					<?php
 					$telegram_token = get_option('telegram_token');
 					?>
@@ -51,7 +51,7 @@
 			<div class="modal-body">
 					
 				<div class="chat-screen"
-					style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>">
+					style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
 					<?php
 					$response = '<div id="message-container" class="chat-container">';
 
