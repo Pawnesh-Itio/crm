@@ -1974,10 +1974,10 @@ $lang['tasks_view_follower_by_user'] = 'Tasks i\'m following';
 $lang['no_tasks_found']              = 'No Tasks Found';
 
 # Leads
-$lang['lead_conversion']                    = 'Conersation';
-$lang['lead_conversion_whatsapp']			= 'Whatsapp';
-$lang['lead_conversion_telegram']			= 'Telegram';
-$lang['lead_conversion_live_chat']			= 'Live Chat';
+$lang['lead_conversion']            = 'Conversation';
+$lang['lead_conversion_whatsapp']	= 'Whatsapp';
+$lang['lead_conversion_telegram']	= 'Telegram';
+$lang['lead_conversion_live_chat']	= 'Live Chat';
 $lang['leads_dt_datecreated']       = 'Created';
 $lang['leads_sort_by']              = 'Sort By';
 $lang['leads_sort_by_datecreated']  = 'Date Created';

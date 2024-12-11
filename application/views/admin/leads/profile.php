@@ -33,12 +33,19 @@
              <?php } ?>
              <!-- TechWizard LiveChat -->
              <?php if(e($lead->source) ==  5){ ?>
-                <li>
+
+				
+				<li><a data-toggle="modal" data-target="#myModal_web" onclick="getWebChat('<?php echo $lead->name;?>', '<?php echo $lead->client_id;?>')">
+                        <i class="far fa-comment-dots"></i>    
+                        <?php echo _l('lead_conversion_live_chat'); ?>
+                    </a></li>
+				
+				<?php /*?><li>
                     <a href="leads/webchat/<?php echo ($lead->client_id);?>">
                         <i class="far fa-comment-dots"></i> 
                         <?php echo _l('lead_conversion_live_chat');?>
                     </a>
-                </li>
+                </li><?php */?>
             <?php } ?>
         </ul>
     </div>

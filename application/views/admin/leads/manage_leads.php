@@ -404,6 +404,9 @@ function setupChatSocketListener(chatId){
 <?php echo get_staff_meta(get_staff_user_id(), 'hidden-columns-table-leads'); ?>
 </script>
 <?php include_once(APPPATH . 'views/admin/leads/status.php'); ?>
+
+<?php include_once(APPPATH . 'views/admin/leads/conversation.php'); ?>
+
 <?php init_tail(); ?>
 <script>
 var openLeadID = '<?php echo e($leadid); ?>';
