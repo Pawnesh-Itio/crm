@@ -173,6 +173,7 @@ window.onload = function() {
 function getTelegramChat(name,chatId,telegram_token='')
 {
 	//console.log(token);
+	$('#lead-modal').modal('hide');
 	$('.modal-title').html(name);
 	$('#chatTeleId').val(chatId);
 	$('#telegram_token').val(telegram_token);
