@@ -22,27 +22,27 @@
 					<div class="sidebar-body">
 						<ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked">
 							<?php
-								// Get the chat_id from the URL (assuming it's the last segment of the URL)
-								$chat_id = $this->uri->segment(4); // Adjust the segment number if needed
-								$i = 0;
-								if (isset($tabs)) 
-								{
-									foreach ($tabs as $group) 
-									{ 
-										// Check if the current group client_id matches the chat_id from the URL
-										$is_active = ($group['client_id']==$chat_id)?' active-chat':''; 
-										?>
-											<a class="chat-link" href="<?php echo admin_url('leads/telegram/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
-												<li class="chat-item settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
-													<i class="fa-brands fa-telegram menu-icon"></i>
-													<?php echo e($group['name']); ?>
-												</li>
-											</a>
+							// Get the chat_id from the URL (assuming it's the last segment of the URL)
+							$chat_id = $this->uri->segment(4); // Adjust the segment number if needed
+							$i = 0;
+							if (isset($tabs)) 
+							{
+								foreach ($tabs as $group) 
+								{ 
+									// Check if the current group client_id matches the chat_id from the URL
+									$is_active = ($group['client_id']==$chat_id)?' active-chat':''; 
+									?>
+										<a class="chat-link" href="<?php echo admin_url('leads/telegram/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
+											<li class="chat-item settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
+												<i class="fa-brands fa-telegram menu-icon"></i>
+												<?php echo e($group['name']); ?>
+											</li>
+										</a>
 
-										<?php 
-										$i++;
-									}
+									<?php 
+									$i++;
 								}
+							}
 							?>
 						</ul>
 					</div>
@@ -53,14 +53,14 @@
 					<?php
 					if(isset($chat_id)&&$chat_id)
 					{
-						   // Find the selected chat from the $tabs array
-							$chat_name = ''; // Default value if chat is not found
-							foreach ($tabs as $group) {
-								if ($group['client_id'] == $chat_id) {
-									$chat_name = $group['name']; // Set the chat name
-									break;
-								}
+						// Find the selected chat from the $tabs array
+						$chat_name = ''; // Default value if chat is not found
+						foreach ($tabs as $group) {
+							if ($group['client_id'] == $chat_id) {
+								$chat_name = $group['name']; // Set the chat name
+								break;
 							}
+						}
 					?>
 					<div class="chat-top-bar">
 						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram') ?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?= $chat_name ?></span>
@@ -72,8 +72,6 @@
 					<?php
 					$telegram_token = get_option('telegram_token');
 					$response = '<div id="message-container" class="chat-container">';
-
-						//	if(isset($leads)&&$chat_id) {}
 
 					$response .= '</div>';
 					echo $response;

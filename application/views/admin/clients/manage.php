@@ -117,13 +117,13 @@
                                             data-html="true" data-content="<?php echo $contactsTemplate; ?>"
                                             data-placement="bottom" <?php } ?>>
                                             <?php echo _l('customers_summary_logged_in_today'); ?>
-                                    </span>
+ 	                                   </span>
                                     </span>
                                 </div>
                             </div>
                         </div>
                         <?php
-                  } ?>
+    	              } ?>
                         <hr class="hr-panel-separator" />
                         <a href="#" data-toggle="modal" data-target="#customers_bulk_action"
                             class="bulk-actions-btn table-btn hide"
@@ -261,7 +261,13 @@
         </div>
     </div>
 </div>
+
+
+</div>
+<?php include_once(APPPATH . 'views/admin/leads/conversation.php'); ?>
+
 <?php init_tail(); ?>
+
 <!-- MySocket logic -->
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
@@ -423,6 +429,8 @@ $(document).ready(function() {
         });
     });
 });
+
+
 </script>
 </body>
 

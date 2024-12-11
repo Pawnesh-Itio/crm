@@ -18,7 +18,9 @@ return App_table::find('clients')
             'CONCAT(firstname, " ", lastname) as fullname',
             'email',
             db_prefix() . 'clients.phonenumber as phonenumber',
+            db_prefix() . 'clients.leadid as leadid',
             db_prefix() . 'clients.active',
+			
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'customer_groups JOIN ' . db_prefix() . 'customers_groups ON ' . db_prefix() . 'customer_groups.groupid = ' . db_prefix() . 'customers_groups.id WHERE customer_id = ' . db_prefix() . 'clients.userid ORDER by name ASC) as customerGroups',
             db_prefix() . 'clients.datecreated as datecreated',
         ];
@@ -66,6 +68,9 @@ return App_table::find('clients')
         $output  = $result['output'];
         $rResult = $result['rResult'];
 
+
+		$telegram_token = get_option('telegram_token');
+
         foreach ($rResult as $aRow) {
             $row = [];
 
@@ -111,7 +116,8 @@ return App_table::find('clients')
             $row[] = $company;
 
             // Primary contact
-            $row[] = ($aRow['contact_id'] ? '<a href="' . admin_url('clients/client/' . $aRow['userid'] . '?contactid=' . $aRow['contact_id']) . '" target="_blank">' . e(trim($aRow['fullname'])) . '</a>' : '');
+//            $row[] = ($aRow['contact_id'] ? '<a href="' . admin_url('clients/client/' . $aRow['userid'] . '?contactid=' . $aRow['contact_id']) . '" target="_blank">' . e(trim($aRow['fullname'])) . '</a>' : '');
+            $row[] = ($aRow['contact_id'] ? '<a href="' . admin_url('clients/client/' . $aRow['userid']) . '" target="_blank">' . e(trim($aRow['fullname'])) . '</a>' : '');
 
             // Primary contact email
             $row[] = ($aRow['email'] ? '<a href="mailto:' . e($aRow['email']) . '">' . e($aRow['email']) . '</a>' : '');
@@ -147,8 +153,36 @@ return App_table::find('clients')
                                             <i class="fa-brands fa-whatsapp"></i> 
                                             ' . _l('lead_conversion_whatsapp') . '
                                         </a> 
-                                  </li>';
+                                  </li>
+								  ';
                                 }
+
+			if(isset($aRow['leadid']) && !empty($aRow['leadid'])){
+				$lead_detail=fetch_lead_detail($aRow['leadid']);
+				
+				if(isset($lead_detail['source'])&&$lead_detail['source']==4)
+				{
+					$whatsappLink .= '<li>
+						<a data-toggle="modal" data-target="#myModalTel" onclick="getTelegramChat(\'' . e(($aRow['fullname'])) . '\',\'' . e($lead_detail['client_id']) . '\',\'' . e($telegram_token) . '\')">
+							<i class="fa-brands fa-telegram"></i> 
+							' . _l('als_telegram') . '
+						</a> 
+				  </li>
+				  ';
+				
+				
+				}
+				elseif(isset($lead_detail['source'])&&$lead_detail['source']==5)
+				{
+					$whatsappLink .= '<li>
+						<a data-toggle="modal" data-target="#myModal_web" onclick="getWebChat(\'' . e(($aRow['fullname'])) . '\',\'' . e($lead_detail['client_id']) . '\')">
+							<i class="far fa-comment-dots"></i> 
+							' . _l('als_webchat') . '
+						</a> 
+				  </li>
+				  ';
+				}
+			}
 
             $row[] = e(_dt($aRow['datecreated']));
             $row[] = '<a class="btn btn-default dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
