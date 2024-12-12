@@ -283,7 +283,7 @@ return App_table::find('leads')
             }
 			if(!(isset($aRow['hash'])&&$aRow['hash']))
 			{
-				$row['DT_RowClass'] = 'new_leads';
+				$row['DT_RowClass'] = 'info';
 			}
 
             if (isset($row['DT_RowClass'])) {

@@ -7,10 +7,7 @@ a{
 cursor: pointer;
 }
 
-.new_leads{background-color: rgb(224 242 254 / var(--tw-border-opacity));}
-
 /* Container for messages */
-
 .chat-top-bar{
     position: relative;
     top: -10px;
