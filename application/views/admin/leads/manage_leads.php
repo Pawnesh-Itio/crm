@@ -305,8 +305,7 @@
                     <div class="wa-lodder">
                         <img src="<?= base_url("assets/images/1488.gif") ?>" alt="">
                     </div>
-                <div id ="errdiv"></div>
-                <div class="chat-container" id="chatContainer">
+                <div class="chat-container" id="chatContainer" style="background: url('<?= base_url('assets/images/chatbackground3.jpg')?>">
                     <!-- Message containet -->
                 </div>
                 <div class="formBtnDiv">
@@ -371,8 +370,8 @@ function getMessages(element){
                 $('#chatContainer').append(messageDiv); // Or append to a specific container if needed
             });
         }else{
-            const errSpan = "<span class='text-center'>No Message found...</span>";
-            $('#errdiv').append(errSpan);
+            const errSpan = "<span class='err_span text-center text-danger'>No Message found...</span>";
+            $('.chat-container').append(errSpan);
         }
             autoScrollToBottom();
             // Add realtime incomming messages.
@@ -395,6 +394,7 @@ function setupChatSocketListener(chatId){
 	var data ; // Initializing empty variable'
 	//Check if message is sent or status
 	if(type=='received'){
+        $('.err_span').html('');
 	    data = '<div class="incoming-message">'+messageData.message_body+'</div>';
 	    //Appending chat data to UI
 	    $('.chat-container').append(data);

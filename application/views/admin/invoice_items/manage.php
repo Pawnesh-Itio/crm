@@ -83,13 +83,9 @@
                                                         <br>
                                                         <div class="row text-center">
                                                             <div class="col-sm-6" style="border-right: 1px solid #1e293b; padding-right: 15px;">
-                                                                 <p><strong>Rate:</strong> <?php echo !empty($pd['rate']) ? $pd['rate'] : 'No rate set' ; ?></p>
-                                                                 <p><strong>Unit:</strong> <?php echo !empty($pd['unit']) ? $pd['unit'] : 'No Unit Set'; ?></p>
                                                                  <span style="color: blue; cursor: pointer;" onclick="showLess(<?php echo $pd['id']; ?>)">Show Less</span>
                                                             </div>
                                                             <div class="col-sm-6" style="padding-left: 15px;">
-                                                                 <p><strong>Tax:</strong> <?php echo !empty($pd['tax']) ? $pd['tax'] : 'No Tax Set'; ?></p>
-                                                                 <p><strong>Tax 2:</strong> <?php echo !empty($pd['tax']) ? $pd['tax2'] : 'No Tax 2 Set'; ?></p>
                                                                  <a href="#" data-toggle="modal" data-target="#sales_item_modal" data-id="<?= $pd['id']; ?>">Edit </a>
                                                             </div>
                                                         </div>
@@ -201,9 +197,6 @@ $(function() {
             $itemModal.find('textarea[name="long_description"]').val(response.long_description.replace(
                 /(<|<)br\s*\/*(>|>)/g, " "));
             $itemModal.find('input[name="rate"]').val(response.rate);
-            $itemModal.find('input[name="unit"]').val(response.unit);
-            $('select[name="tax"]').selectpicker('val', response.taxid).change();
-            $('select[name="tax2"]').selectpicker('val', response.taxid_2).change();
             $itemModal.find('#group_id').selectpicker('val', response.group_id);
             $.each(response, function(column, value) {
                 if (column.indexOf('rate_currency_') > -1) {

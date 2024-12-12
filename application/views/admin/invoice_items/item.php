@@ -38,35 +38,6 @@
                              <?php   }
                             }
                         ?>
-                        <div class="row">
-                            <div class="col-md-6">
-                             <div class="form-group">
-                                <label class="control-label" for="tax"><?php echo _l('tax_1'); ?></label>
-                                <select class="selectpicker display-block" data-width="100%" name="tax" data-none-selected-text="<?php echo _l('no_tax'); ?>">
-                                    <option value=""></option>
-                                    <?php foreach ($taxes as $tax) { ?>
-                                    <option value="<?php echo e($tax['id']); ?>" data-subtext="<?php echo e($tax['name']); ?>">
-                                        <?php echo e($tax['taxrate']); ?>%
-                                    </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                         <div class="form-group">
-                            <label class="control-label" for="tax2"><?php echo _l('tax_2'); ?></label>
-                            <select class="selectpicker display-block" disabled data-width="100%" name="tax2" data-none-selected-text="<?php echo _l('no_tax'); ?>">
-                                <option value=""></option>
-                                <?php foreach ($taxes as $tax) { ?>
-                                <option value="<?php echo e($tax['id']); ?>" data-subtext="<?php echo e($tax['name']); ?>">
-                                    <?php echo e($tax['taxrate']); ?>%
-                                </option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <label class="control-label">Image</label>
@@ -74,7 +45,6 @@
                     </div>
                 </div>
                 <div class="clearfix mbot15"></div>
-                <?php echo render_input('unit', 'unit'); ?>
                 <div id="custom_fields_items">
                     <?php echo render_custom_fields('items'); ?>
                 </div>

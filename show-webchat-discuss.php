@@ -1,4 +1,4 @@
-<?php
+	<?php
 // Include the database configuration file
 require_once "application/config/db.php";
 

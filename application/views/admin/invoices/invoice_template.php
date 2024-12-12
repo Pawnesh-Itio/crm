@@ -606,9 +606,6 @@
                         <td>
                             <input type="number" name="quantity" min="0" value="1" class="form-control"
                                 placeholder="<?php echo _l('item_quantity_placeholder'); ?>">
-                            <input type="text" placeholder="<?php echo _l('unit'); ?>" data-toggle="tooltip"
-                                data-title="e.q kg, lots, packs" name="unit"
-                                class="form-control input-transparent text-right">
                         </td>
                         <td>
                             <input type="number" name="rate" class="form-control"
