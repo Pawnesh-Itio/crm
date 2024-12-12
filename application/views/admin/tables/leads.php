@@ -94,6 +94,7 @@ return App_table::find('leads')
         $aColumns = array_merge($aColumns, [
             'company',
             db_prefix() . 'leads.email as email',
+            db_prefix() . 'leads.hash as hash',
             db_prefix() . 'leads.phonenumber as phonenumber',
             'lead_value',
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'leads.id and rel_type="lead" ORDER by tag_order ASC LIMIT 1) as tags',
@@ -278,8 +279,12 @@ return App_table::find('leads')
             $row['DT_RowId'] = 'lead_' . $aRow['id'];
 
             if ($aRow['assigned'] == get_staff_user_id()) {
-                $row['DT_RowClass'] = 'info';
+                //$row['DT_RowClass'] = 'info';
             }
+			if(!(isset($aRow['hash'])&&$aRow['hash']))
+			{
+				$row['DT_RowClass'] = 'new_leads';
+			}
 
             if (isset($row['DT_RowClass'])) {
                 $row['DT_RowClass'] .= ' has-row-options';
