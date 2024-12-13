@@ -71,13 +71,15 @@ return App_table::find('clients')
 
 		$telegram_token = get_option('telegram_token');
 
+		$i=1;
         foreach ($rResult as $aRow) {
             $row = [];
 
             // Bulk actions
             $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['userid'] . '"><label></label></div>';
             // User id
-            $row[] = $aRow['userid'];
+//            $row[] = $aRow['userid'];
+			$row[] = $i++;
 
             // Company
             $company  = e($aRow['company']);
