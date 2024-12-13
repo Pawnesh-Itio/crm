@@ -61,13 +61,14 @@
                   if (!is_admin()) {
                       $where .= '(addedfrom = ' . get_staff_user_id() . ' OR assigned = ' . get_staff_user_id() . ')';
                   }
-                  // Junk leads are excluded from total
-                  $total_leads = total_rows(db_prefix() . 'leads', ($where == '' ? 'junk=0' : $where .= ' AND junk =0'));
-                  if ($where == '') {
-                      $where .= "date_converted!='NULL'";
-                  } else {
-                      $where .= "date_converted!='NULL'";
-                  }
+                    // Junk leads are excluded from total
+                    $total_leads = total_rows(db_prefix() . 'leads', $where == '' ? 'junk=0' : $where . ' AND junk=0');
+                    if ($where == '') {
+                        $where = "date_converted IS NOT NULL";
+                    } else {
+                        $where .= " AND date_converted IS NOT NULL";
+                    }
+
                   $total_leads_converted         = total_rows(db_prefix() . 'leads', $where);
                   $percent_total_leads_converted = ($total_leads > 0 ? number_format(($total_leads_converted * 100) / $total_leads, 2) : 0);
                   ?>
