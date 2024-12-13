@@ -27,10 +27,11 @@ foreach ($milestones as $milestone) {
     if ($milestone['id'] == 0 && count($tasks) == 0) {
         continue;
     } ?>
+	
 <ul class="kan-ban-col milestone-column<?php if (staff_cant('edit_milestones', 'projects') || $milestone['id'] == 0) {
         echo ' milestone-not-sortable';
     }; ?>" data-col-status-id="<?php echo e($milestone['id']); ?>" data-total-pages="<?php echo e($total_pages); ?>">
-    <li class="kan-ban-col-wrapper">
+    <li class="kan-ban-col-wrapper"><h4><?php echo e($milestone['name']); ?></h4>
         <div class="border-right panel_s">
             <div class="panel-heading <?php if ($milestone_color != '') {
         echo 'color-not-auto-adjusted color-white ';
@@ -40,7 +41,7 @@ foreach ($milestones as $milestone) {
         echo 'bg-info';
     } ?>" <?php echo $milestone_color; ?>>
                 <?php if ($milestone['id'] != 0 && staff_can('edit_milestones', 'projects')) { ?>
-                <i class="fa fa-reorder pointer"></i>&nbsp;
+                <!--<i class="fa fa-reorder pointer"></i>&nbsp; -->
                 <?php } ?>
                 <?php if ($milestone['id'] != 0 && staff_can('edit_milestones', 'projects')) { ?>
                 <a href="#" data-hide-from-customer="<?php echo e($milestone['hide_from_customer']); ?>"
@@ -54,10 +55,10 @@ foreach ($milestones as $milestone) {
         echo 'color-white';
     } ?>">
                     <?php } ?>
-                    <span class="bold heading"><?php echo e($milestone['name']); ?></span>
-                    <span class="tw-text-sm">
+                    <span class="bold heading"><h1><?php echo e($milestone['name']); ?></h1></span>
+                    <?php /*?><span class="tw-text-sm">
                         <?php echo  $milestone['id'] != 0 ? (' | ' . _d($milestone['start_date']) . ' - ' . _d($milestone['due_date'])) : ''; ?>
-                    </span>
+                    </span><?php */?>
                     <?php if ($milestone['id'] != 0 && staff_can('edit_milestones', 'projects')) { ?>
                 </a>
                 <?php } ?>
@@ -83,14 +84,16 @@ foreach ($milestones as $milestone) {
         echo 'hide';
     } ?>' data-color=''>
      <?php echo _l('reset_to_default_color'); ?>
-   </a><?php } ?>" data-html="true" data-trigger="focus">
+   </a>
+   <?php } ?>" data-html="true" data-trigger="focus">
                     <i class="fa fa-angle-down"></i>
                 </a>
                 <?php } ?>
+				
                 <?php if (staff_can('create', 'tasks')) { ?>
-                <?php echo '<p class="tw-text-sm tw-mb-0'.($milestone['id'] !== 0 ? ' tw-ml-5' : '').'">' . e(_l('milestone_total_logged_time') . ': ' . seconds_to_time_format($milestone['total_logged_time'])) . '</p>'; } ?>
+                <?php echo '<p class="tw-text-sm tw-mb-0'.($milestone['id'] !== 0 ? ' tw-ml-5' : '').'">' /*. e(_l('milestone_total_logged_time') . ': ' . seconds_to_time_format($milestone['total_logged_time'])) .*/. '&nbsp;</p>'; } ?>
             </div>
-            <div class="kan-ban-content-wrapper">
+            <div class="kan-ban-content-wrapper" style="min-height:400px !important;">
                 <div class="kan-ban-content">
                     <ul class="status project-milestone milestone-tasks-wrapper sortable relative"
                         data-task-status-id="<?php echo e($milestone['id']); ?>">
@@ -98,8 +101,11 @@ foreach ($milestones as $milestone) {
     foreach ($tasks as $task) {
         $this->load->view('admin/projects/_milestone_kanban_card', ['task' => $task, 'milestone' => $milestone['id']]);
     } ?>
+						<li class="text-center not-sortable"><button type='button' class='btn btn-success btn-block mtop10 new-task-to-short' return false; ><?php echo _l('new_task'); ?></button></li>
+						
+	   
                         <?php if ($total_tasks > 0) { ?>
-                        <li class="text-center not-sortable kanban-load-more"
+                        <li class="text-center mtop10 not-sortable kanban-load-more"
                             data-load-status="<?php echo e($milestone['id']); ?>">
                             <a href="#" class="btn btn-default btn-block<?php if ($total_pages <= 1) {
         echo ' disabled';
@@ -109,6 +115,7 @@ foreach ($milestones as $milestone) {
                             </a>
                         </li>
                         <?php } ?>
+						
                         <li class="text-center not-sortable mtop30 kanban-empty<?php if ($total_tasks > 0) {
         echo ' hide';
     } ?>">
