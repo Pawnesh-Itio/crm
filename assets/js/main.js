@@ -1048,6 +1048,22 @@ $(function () {
     $('body [data-toggle="popover"]').popover("hide");
   });
 
+
+$("body").on("click", ".new-task-to-short", function (e) {
+    e.preventDefault();
+    var milestone_id = $(this)
+      .parents(".milestone-column")
+      .data("col-status-id");
+    new_task(
+      admin_url +
+        "tasks/task?rel_type=project&form_type=short&rel_id=" +
+        project_id +
+        "&milestone_id=" +
+        milestone_id
+    );
+    $('body [data-toggle="popover"]').popover("hide");
+  });
+
   // On shown task add/edit modal
   $("body").on("shown.bs.modal", "#_task_modal", function (e) {
     if (!$(e.currentTarget).hasClass("edit")) {
