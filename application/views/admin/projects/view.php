@@ -16,8 +16,8 @@
                                             <?php if (count($other_projects) > 6) { ?> data-live-search="true"
                                             <?php } ?>>
                                             <option value="<?php echo e($project->id); ?>" selected
-                                                data-content="<?php echo e($project->name); ?> - <small><?php echo e($project->client_data->company); ?></small>">
-                                                <?php echo e($project->client_data->company); ?>
+                                                data-content="<?php echo e($project->name); ?> - <small><?php ($project->client_data && !empty($project->client_data) ?  e($project->client_data->company) : "No Customer" )?></small>">
+                                                <?php (($project->client_data && !empty($project->client_data)) ? e($project->client_data->company) : "No Customer")  ?>
                                                 <?php echo e($project->name); ?>
                                             </option>
                                             <?php foreach ($other_projects as $op) { ?>
@@ -81,7 +81,7 @@
                             <?php if (staff_can('create',  'invoices')) { ?>
                             <a href="#"
                                 onclick="<?php echo e($invoice_func); ?>(<?php echo e($project->id); ?>); return false;"
-                                class="invoice-project btn btn-primary<?php if ($project->client_data->active == 0) {
+                                class="invoice-project btn btn-primary<?php if ($project->client_data && $project->client_data->active == 0) {
                                echo ' disabled';
                            } ?>">
                                 <i class="fa-solid fa-file-invoice tw-mr-1"></i>
@@ -140,10 +140,12 @@
                                     </li>
                                     <?php } ?>
                                     <?php if (is_admin()) { ?>
+                                        <?php if($project->clientid && $project->clientid !=0){ ?>
                                     <li>
                                         <a href="<?php echo admin_url('projects/view_project_as_client/' . $project->id . '/' . $project->clientid); ?>"
                                             target="_blank"><?php echo _l('project_view_as_client'); ?></a>
                                     </li>
+                                    <?php } ?>
                                     <?php } ?>
                                     <?php if (staff_can('delete',  'projects')) { ?>
                                     <li>

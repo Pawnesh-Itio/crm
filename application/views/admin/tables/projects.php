@@ -26,17 +26,13 @@ return App_table::find('projects')
         $sTable       = db_prefix() . 'projects';
 
         $join = [
-            'JOIN ' . db_prefix() . 'clients ON ' . db_prefix() . 'clients.userid = ' . db_prefix() . 'projects.clientid',
+            'LEFT JOIN ' . db_prefix() . 'clients ON ' . db_prefix() . 'clients.userid = ' . db_prefix() . 'projects.clientid',
         ];
 
         $where  = [];
 
         if ($filtersWhere = $this->getWhereFromRules()) {
             $where[] = $filtersWhere;
-        }
-
-        if ($clientid != '') {
-            array_push($where, ' AND clientid=' . $this->ci->db->escape_str($clientid));
         }
 
         if (staff_cant('view', 'projects')) {

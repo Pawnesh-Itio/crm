@@ -96,10 +96,14 @@
                                     <?php echo _l('project_customer'); ?>
                                 </dt>
                                 <dd class="tw-mt-1 tw-text-sm tw-text-neutral-900">
+                                    <?php if($project->client_data){ ?>
                                     <a
                                         href="<?php echo admin_url(); ?>clients/client/<?php echo e($project->clientid); ?>">
-                                        <?php echo e($project->client_data->company); ?>
+                                        <?php  echo e($project->client_data->company);  ?>
                                     </a>
+                                    <?php }else{ ?>
+                                        No Customer
+                                    <?php } ?>
                                 </dd>
                             </div>
 

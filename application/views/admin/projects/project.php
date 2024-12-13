@@ -506,7 +506,6 @@ $(function() {
 
     appValidateForm($('form'), {
         name: 'required',
-        clientid: 'required',
         start_date: 'required',
         billing_type: 'required',
         'notify_contacts[]': {
