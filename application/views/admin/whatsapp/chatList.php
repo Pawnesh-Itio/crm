@@ -74,7 +74,7 @@
                                             </div>
                                         </div>
                                         <!-- sendMessage button -->
-                                        <div class="button">
+                                        <div class="button wa-send-message">
                                             <form id="messageForm" >
                                                 <input type="hidden" id="formUserId" value="<?= get_staff_user_id() ?>">
                                                 <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
@@ -136,6 +136,7 @@ socket.on('error', (error) => {
         url: waURL+'/api/chat/messages/'+chatId,
         method: 'GET',
         success: function (data) {
+            $('.wa-send-message').show();
             $('.wa-lodder').hide();
             $('.overlay').fadeOut('slow', function () {
                 $(this).remove(); // Remove overlay from the DOM
