@@ -20,6 +20,7 @@
                         <?php
                   $rel_type = '';
                   $rel_id   = '';
+				  $form_type= '';
                   if (isset($task) || ($this->input->get('rel_id') && $this->input->get('rel_type'))) {
                       $rel_id   = isset($task) ? $task->rel_id : $this->input->get('rel_id');
                       $rel_type = isset($task) ? $task->rel_type : $this->input->get('rel_type');
@@ -27,6 +28,10 @@
                    if (isset($task) && $task->billed == 1) {
                        echo '<div class="alert alert-success text-center no-margin">' . _l('task_is_billed', '<a href="' . admin_url('invoices/list_invoices/' . $task->invoice_id) . '" target="_blank">' . e(format_invoice_number($task->invoice_id))) . '</a></div><br />';
                    }
+				   
+				   if ($this->input->get('form_type')) {
+                      $form_type= 'short';
+                  }
                   ?>
                         <?php if (isset($task)) { ?>
                         <div class="pull-right mbot10 task-single-menu task-menu-options">
@@ -150,6 +155,9 @@
                             <?php $value = (isset($task) ? $task->hourly_rate : 0); ?>
                             <?php echo render_input('hourly_rate', 'task_hourly_rate', $value); ?>
                         </div>
+						
+						<div <?php if($form_type=='short') echo 'class="hide"';?>>
+						
                         <div class="project-details<?php if ($rel_type != 'project') {
                             echo ' hide';
                           } ?>">
@@ -186,6 +194,8 @@
                                 <?php $value = (isset($task) ? _d($task->duedate) : ''); ?>
                                 <?php echo render_date_input('duedate', 'task_add_edit_due_date', $value, $project_end_date_attrs); ?>
                             </div>
+							</div>
+							<div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="priority"
@@ -201,6 +211,7 @@
                                     </select>
                                 </div>
                             </div>
+							
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="repeat_every"
@@ -376,7 +387,7 @@
                                         <select name="rel_id" id="rel_id" class="ajax-sesarch" data-width="100%"
                                             data-live-search="true"
                                             data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
-                                            <?php if ($rel_id != '' && $rel_type != '') {
+                          <?php if ($rel_id != '' && $rel_type != '') {
                                 $rel_data = get_relation_data($rel_type, $rel_id);
                                 $rel_val  = get_relation_values($rel_data, $rel_type);
                                 echo '<option value="' . $rel_val['id'] . '" selected>' . $rel_val['name'] . '</option>';
@@ -450,9 +461,10 @@
                         <hr />
                         <p class="bold"><?php echo _l('task_add_edit_description'); ?></p>
                         <?php
-               // onclick and onfocus used for convert ticket to task too
-               echo render_textarea('description', '', (isset($task) ? $task->description : ''), ['rows' => 6, 'placeholder' => _l('task_add_description'), 'data-task-ae-editor' => true, !is_mobile() ? 'onclick' : 'onfocus' => (!isset($task) || isset($task) && $task->description == '' ? 'init_editor(\'.tinymce-task\', {height:200, auto_focus: true});' : '')], [], 'no-mbot', 'tinymce-task'); ?>
-                    </div>
+					   // onclick and onfocus used for convert ticket to task too
+					   echo render_textarea('description', '', (isset($task) ? $task->description : ''), ['rows' => 6, 'placeholder' => _l('task_add_description'), 'data-task-ae-editor' => true, !is_mobile() ? 'onclick' : 'onfocus' => (!isset($task) || isset($task) && $task->description == '' ? 'init_editor(\'.tinymce-task\', {height:200, auto_focus: true});' : '')], [], 'no-mbot', 'tinymce-task'); ?>
+						</div>
+					</div>
                 </div>
             </div>
             <div class="modal-footer">
