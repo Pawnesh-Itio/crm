@@ -8,87 +8,125 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">
-                    <?php echo e($title); ?>
-                </h4>
-            </div>
+				<!-- Button to close the modal -->
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<!-- The "X" symbol to close the modal -->
+					<span aria-hidden="true">&times;</span>
+				</button>
+	
+				<h4 class="modal-title" id="myModalLabel">
+					<!-- Output the title variable passed from the controller -->
+					<?php echo e($title); ?>
+				</h4>
+			</div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <?php
-                  $rel_type = '';
-                  $rel_id   = '';
-				  $form_type= '';
-                  if (isset($task) || ($this->input->get('rel_id') && $this->input->get('rel_type'))) {
-                      $rel_id   = isset($task) ? $task->rel_id : $this->input->get('rel_id');
-                      $rel_type = isset($task) ? $task->rel_type : $this->input->get('rel_type');
-                  }
+                 <?php
+					// Initialize variables for relation type, relation ID, and form type
+					$rel_type = '';
+					$rel_id   = '';
+					$form_type= '';
+					
+					// Check if task is set or if there are query parameters for 'rel_id' and 'rel_type'
+					if (isset($task) || ($this->input->get('rel_id') && $this->input->get('rel_type'))) {
+						// If task is set, assign the task's rel_id and rel_type. Otherwise, use the query parameters
+						$rel_id   = isset($task) ? $task->rel_id : $this->input->get('rel_id');
+						$rel_type = isset($task) ? $task->rel_type : $this->input->get('rel_type');
+					}
+					// Check if task is set and if the task is billed
                    if (isset($task) && $task->billed == 1) {
+					// Display an alert that the task is billed, with a link to the related invoice
                        echo '<div class="alert alert-success text-center no-margin">' . _l('task_is_billed', '<a href="' . admin_url('invoices/list_invoices/' . $task->invoice_id) . '" target="_blank">' . e(format_invoice_number($task->invoice_id))) . '</a></div><br />';
                    }
-				   
-				   if ($this->input->get('form_type')) {
-                      $form_type= 'short';
-                  }
+					// Check if a 'form_type' is provided in the query parameters
+					if ($this->input->get('form_type')) {
+						// If 'form_type' is present, set it to 'short'
+						$form_type= 'short';
+					}
                   ?>
                         <?php if (isset($task)) { ?>
+						<!-- Check if the task is set before displaying the menu -->
                         <div class="pull-right mbot10 task-single-menu task-menu-options">
-                            <div class="content-menu hide">
-                                <ul>
-                                    <?php if (staff_can('create',  'tasks')) { ?>
-                                    <?php
-                           $copy_template = '';
-                           if (total_rows(db_prefix() . 'task_assigned', ['taskid' => $task->id]) > 0) {
-                               $copy_template .= "<div class='checkbox checkbox-primary'><input type='checkbox' name='copy_task_assignees' id='copy_task_assignees' checked><label for='copy_task_assignees'>" . _l('task_single_assignees') . '</label></div>';
-                           }
-                           if (total_rows(db_prefix() . 'task_followers', ['taskid' => $task->id]) > 0) {
-                               $copy_template .= "<div class='checkbox checkbox-primary'><input type='checkbox' name='copy_task_followers' id='copy_task_followers' checked><label for='copy_task_followers'>" . _l('task_single_followers') . '</label></div>';
-                           }
-                           if (total_rows(db_prefix() . 'task_checklist_items', ['taskid' => $task->id]) > 0) {
-                               $copy_template .= "<div class='checkbox checkbox-primary'><input type='checkbox' name='copy_task_checklist_items' id='copy_task_checklist_items' checked><label for='copy_task_checklist_items'>" . _l('task_checklist_items') . '</label></div>';
-                           }
-                           if (total_rows(db_prefix() . 'files', ['rel_id' => $task->id, 'rel_type' => 'task']) > 0) {
-                               $copy_template .= "<div class='checkbox checkbox-primary'><input type='checkbox' name='copy_task_attachments' id='copy_task_attachments'><label for='copy_task_attachments'>" . _l('task_view_attachments') . '</label></div>';
-                           }
-
-                           $copy_template .= '<p>' . _l('task_status') . '</p>';
-                           $task_copy_statuses = hooks()->apply_filters('task_copy_statuses', $task_statuses);
-                           foreach ($task_copy_statuses as $copy_status) {
-                               $copy_template .= "<div class='radio radio-primary'><input type='radio' value='" . $copy_status['id'] . "' name='copy_task_status' id='copy_task_status_" . $copy_status['id'] . "'" . ($copy_status['id'] == hooks()->apply_filters('copy_task_default_status', 1) ? ' checked' : '') . "><label for='copy_task_status_" . $copy_status['id'] . "'>" . $copy_status['name'] . '</label></div>';
-                           }
-
-                           $copy_template .= "<div class='text-center'>";
-                           $copy_template .= "<button type='button' data-task-copy-from='" . $task->id . "' class='btn btn-success copy_task_action'>" . _l('copy_task_confirm') . '</button>';
-                           $copy_template .= '</div>';
-                           ?>
-                                    <li> <a href="#" onclick="return false;" data-placement="bottom"
-                                            data-toggle="popover"
-                                            data-content="<?php echo htmlspecialchars($copy_template); ?>"
-                                            data-html="true"><?php echo _l('task_copy'); ?></span></a>
-                                    </li>
-                                    <?php } ?>
-                                    <?php if (staff_can('delete',  'tasks')) { ?>
-                                    <li>
-                                        <a href="<?php echo admin_url('tasks/delete_task/' . $task->id); ?>"
-                                            class="_delete task-delete">
-                                            <?php echo _l('task_single_delete'); ?>
-                                        </a>
-                                    </li>
-                                    <?php } ?>
-                                </ul>
-                            </div>
-                            <?php if (staff_can('delete',  'tasks') || staff_can('create',  'tasks')) { ?>
-                            <a href="#" onclick="return false;" class="trigger manual-popover mright5">
-                                <i class="fa-regular fa-circle fa-sm"></i>
-                                <i class="fa-regular fa-circle fa-sm"></i>
-                                <i class="fa-regular fa-circle fa-sm"></i>
-                            </a>
-                            <?php } ?>
-                        </div>
-                        <?php } ?>
+						<div class="content-menu hide">
+							<ul>
+								<?php if (staff_can('create',  'tasks')) { ?>
+								<!-- Check if the staff member has permission to create tasks -->
+								<?php
+								// Initialize variable for storing HTML content for the copy template
+								$copy_template = '';
+				
+								// Check if the task has assignees and if so, add a checkbox to copy them
+								if (total_rows(db_prefix() . 'task_assigned', ['taskid' => $task->id]) > 0) {
+									$copy_template .= "<div class='checkbox checkbox-primary'><input type='checkbox' name='copy_task_assignees' id='copy_task_assignees' checked><label for='copy_task_assignees'>" . _l('task_single_assignees') . '</label></div>';
+								}
+				
+								// Check if the task has followers and if so, add a checkbox to copy them
+								if (total_rows(db_prefix() . 'task_followers', ['taskid' => $task->id]) > 0) {
+									$copy_template .= "<div class='checkbox checkbox-primary'><input type='checkbox' name='copy_task_followers' id='copy_task_followers' checked><label for='copy_task_followers'>" . _l('task_single_followers') . '</label></div>';
+								}
+				
+								// Check if the task has checklist items and if so, add a checkbox to copy them
+								if (total_rows(db_prefix() . 'task_checklist_items', ['taskid' => $task->id]) > 0) {
+									$copy_template .= "<div class='checkbox checkbox-primary'><input type='checkbox' name='copy_task_checklist_items' id='copy_task_checklist_items' checked><label for='copy_task_checklist_items'>" . _l('task_checklist_items') . '</label></div>';
+								}
+				
+								// Check if the task has attachments and if so, add a checkbox to copy them
+								if (total_rows(db_prefix() . 'files', ['rel_id' => $task->id, 'rel_type' => 'task']) > 0) {
+									$copy_template .= "<div class='checkbox checkbox-primary'><input type='checkbox' name='copy_task_attachments' id='copy_task_attachments'><label for='copy_task_attachments'>" . _l('task_view_attachments') . '</label></div>';
+								}
+				
+								// Add a paragraph for task status
+								$copy_template .= '<p>' . _l('task_status') . '</p>';
+				
+								// Apply filters for custom task statuses and add them as radio buttons
+								$task_copy_statuses = hooks()->apply_filters('task_copy_statuses', $task_statuses);
+								foreach ($task_copy_statuses as $copy_status) {
+									$copy_template .= "<div class='radio radio-primary'><input type='radio' value='" . $copy_status['id'] . "' name='copy_task_status' id='copy_task_status_" . $copy_status['id'] . "'" . ($copy_status['id'] == hooks()->apply_filters('copy_task_default_status', 1) ? ' checked' : '') . "><label for='copy_task_status_" . $copy_status['id'] . "'>" . $copy_status['name'] . '</label></div>';
+								}
+				
+								// Add a confirmation button to copy the task
+								$copy_template .= "<div class='text-center'>";
+								$copy_template .= "<button type='button' data-task-copy-from='" . $task->id . "' class='btn btn-success copy_task_action'>" . _l('copy_task_confirm') . '</button>';
+								$copy_template .= '</div>';
+								?>
+								
+								<!-- Add a list item with a popover showing the task copy options -->
+								<li> 
+									<a href="#" onclick="return false;" data-placement="bottom"
+										data-toggle="popover"
+										data-content="<?php echo htmlspecialchars($copy_template); ?>"
+										data-html="true">
+										<?php echo _l('task_copy'); ?>
+									</a>
+								</li>
+								<?php } ?>
+				
+								<?php if (staff_can('delete',  'tasks')) { ?>
+								<!-- Check if the staff member has permission to delete tasks -->
+								<li>
+									<!-- Provide a link to delete the task -->
+									<a href="<?php echo admin_url('tasks/delete_task/' . $task->id); ?>"
+										class="_delete task-delete">
+										<?php echo _l('task_single_delete'); ?>
+									</a>
+								</li>
+								<?php } ?>
+							</ul>
+						</div>
+				
+						<?php if (staff_can('delete',  'tasks') || staff_can('create',  'tasks')) { ?>
+						<!-- If the staff member can delete or create tasks, show a trigger for the menu -->
+						<a href="#" onclick="return false;" class="trigger manual-popover mright5">
+							<i class="fa-regular fa-circle fa-sm"></i>
+							<i class="fa-regular fa-circle fa-sm"></i>
+							<i class="fa-regular fa-circle fa-sm"></i>
+						</a>
+						<?php } ?>
+					</div>
+					<?php } ?>
                         <div class="checkbox checkbox-primary checkbox-inline task-add-edit-public tw-pt-2">
+							<!-- Checkbox for marking the task as public -->
                             <input type="checkbox" id="task_is_public" name="is_public" <?php if (isset($task)) {
                                if ($task->is_public == 1) {
                                    echo 'checked';
@@ -98,6 +136,7 @@
                                 title="<?php echo _l('task_public_help'); ?>"><?php echo _l('task_public'); ?></label>
                         </div>
                         <div class="checkbox checkbox-primary checkbox-inline task-add-edit-billable tw-pt-2">
+						<!-- Checkbox for marking the task as billable -->
                             <input type="checkbox" id="task_is_billable" name="billable" <?php if ((isset($task) && $task->billable == 1) || (!isset($task) && get_option('task_biillable_checked_on_creation') == 1)) {
                                echo ' checked';
                            }?>>
@@ -118,19 +157,36 @@
                             onclick="slideToggle('#new-task-attachments'); return false;">
                             <?php echo _l('attach_files'); ?>
                         </a>
-                        <div id="new-task-attachments" class="hide">
-                            <hr class="-tw-mx-3.5" />
-                            <div class="row attachments">
-                                <div class="attachment">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="attachment"
-                                                class="control-label"><?php echo _l('add_task_attachments'); ?></label>
-                                            <div class="input-group">
+                    <div id="new-task-attachments" class="hide">
+						<!-- This div contains the section for adding new task attachments, initially hidden -->
+					
+						<hr class="-tw-mx-3.5" />
+						<!-- A horizontal line to separate the attachments section -->
+					
+						<div class="row attachments">
+							<!-- Row that contains the attachment input field -->
+					
+							<div class="attachment">
+								<!-- Individual attachment container -->
+					
+								<div class="col-md-12">
+									<!-- Full-width column for the attachment input -->
+					
+									<div class="form-group">
+										<!-- Form group for the attachment input field -->
+					
+										<label for="attachment" class="control-label">
+											<!-- Label for the attachment input field -->
+											<?php echo _l('add_task_attachments'); ?>
+										</label>
+					
+										<div class="input-group">
+											<!-- Input group for the attachment input and button -->
                                                 <input type="file"
                                                     extension="<?php echo str_replace('.', '', get_option('allowed_files')); ?>"
                                                     filesize="<?php echo file_upload_max_size(); ?>"
                                                     class="form-control" name="attachments[0]">
+												<!-- Button group for additional actions -->
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-default add_more_attachments"
                                                         type="button"><i class="fa fa-plus"></i></button>
@@ -304,8 +360,12 @@
                             </div>
                         </div>
                         <div class="row">
+							<!-- Begin a row for form layout -->
                             <div class="col-md-6">
+								<!-- Column for selecting the related entity (project, invoice, etc.) -->
                                 <div class="form-group">
+									<!-- Form group for the related entity input -->
+									<!-- Label for the related entity dropdown -->
                                     <label for="rel_type"
                                         class="control-label"><?php echo _l('task_related_to'); ?></label>
                                     <select name="rel_type" class="selectpicker" id="rel_type" data-width="100%"
@@ -379,10 +439,15 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group<?php if ($rel_id == '') {
+							<!-- Column for selecting the related entity ID (based on the selected rel_type) -->
+                              
+							  <!-- Hide this field if no related entity ID is selected-->
+							  <div class="form-group<?php if ($rel_id == '') {
                                 echo ' hide';
                             } ?>" id="rel_id_wrapper">
+
                                     <label for="rel_id" class="control-label"><span class="rel_id_label"></span></label>
+									<!-- Label for the related entity ID dropdown -->
                                     <div id="rel_id_select">
                                         <select name="rel_id" id="rel_id" class="ajax-sesarch" data-width="100%"
                                             data-live-search="true"
