@@ -167,7 +167,6 @@ cursor: pointer;
 
 .chat-item {
     font-size: 16px;
-    justify-content: left;
     border-bottom: 2px solid #1e293b;
     padding: 5px;
 }
