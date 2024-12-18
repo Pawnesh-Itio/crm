@@ -48,7 +48,7 @@ foreach ($milestones as $milestone) {
         echo ' milestone-not-sortable'; // Disable sorting if user can't edit milestones or milestone id is 0
     }; ?>" data-col-status-id="<?php echo e($milestone['id']); ?>" data-total-pages="<?php echo e($total_pages); ?>">
     <li class="kan-ban-col-wrapper">
-		<h4><?php echo e($milestone['name']); ?></h4><!-- Display milestone name -->
+		<?php /*?><h4><?php echo e($milestone['name']); ?></h4><?php */?><!-- Display milestone name -->
         <div class="border-right panel_s">
             <div class="panel-heading <?php if ($milestone_color != '') {
         echo 'color-not-auto-adjusted color-white '; // Apply custom color if set
@@ -76,7 +76,7 @@ foreach ($milestones as $milestone) {
         echo 'color-white';
     } ?>">
                     <?php } ?>
-                    <span class="bold heading"><h1><?php echo e($milestone['name']); ?></h1></span>
+                    <span class="bold heading"><h3><?php echo e($milestone['name']); ?></h3></span>
                     <?php /*?><span class="tw-text-sm">
                         <?php echo  $milestone['id'] != 0 ? (' | ' . _d($milestone['start_date']) . ' - ' . _d($milestone['due_date'])) : ''; ?>
                     </span><?php */?>
@@ -133,7 +133,7 @@ foreach ($milestones as $milestone) {
                         <li class="text-center not-sortable"><button type='button' class='btn btn-success btn-block mtop10 new-task-to-short' return false; ><?php echo _l('new_task'); ?></button></li>
 
                         <!-- Option to load more tasks if there are more tasks available -->
-						<?php if ($total_tasks > 0) { ?>
+						<?php if ($total_tasks > 5) { ?>
                         <li class="text-center mtop10 not-sortable kanban-load-more"
                             data-load-status="<?php echo e($milestone['id']); ?>">
                             <a href="#" class="btn btn-default btn-block<?php if ($total_pages <= 1) {

@@ -37,13 +37,19 @@ if(!empty($email)&&!empty($mobile))
 
 //			$status = 'Online';
 
-			$insert_query = mysqli_query($conn, "INSERT INTO `it_crm_leads` (`client_id`, `name`,`email`, `phonenumber`, `source`, `status`,`dateadded`) VALUES({$ran_id}, '{$fullname}','{$email}', '{$mobile}', '{$source}', '{$status}', NOW())");
+			$insert_query = mysqli_query($conn, "INSERT INTO `it_crm_leads` (`client_id`, `name`,`email`, `phonenumber`, `source`, `status`,`dateadded`) VALUES({$ran_id}, '{$fullname}','{$email}', '{$mobile}', '{$source}', '{$status}', NOW())");		//execute query
+			
+			//if query executed successfully then execute following section 
 			if($insert_query)
 			{
 				$_SESSION['incoming_id']=mysqli_insert_id($conn);
 				$_SESSION['unique_id']	=$ran_id;
 				$_SESSION['fullname']	=$fullname;
 				echo 'success';
+
+				//insert message into notification table
+				$sqlStmt = "INSERT INTO `it_crm_notifications` (`isread`, `isread_inline`, `date`, `description`, `fromuserid`, `fromclientid`, `from_fullname`, `touserid`) VALUES(0, 0, NOW(), 'New Lead via chat', 0, '{$ran_id}', '{$fullname}', 1)";
+				mysqli_query($conn, $sqlStmt);	//execute query
 			}
 		}
 	}

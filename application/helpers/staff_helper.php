@@ -388,3 +388,17 @@ function is_staff_member($staff_id = '')
 
     return $CI->db->count_all_results(db_prefix() . 'staff') > 0 ? true : false;
 }
+
+function get_staff_role_name($roleid=NULL)
+{
+	$CI = & get_instance();
+	$CI->db->where('roleid', $roleid);
+	$roles_detail = $CI->db->get(db_prefix() . 'roles')->row();
+
+	if($roles_detail)
+	{
+		$role_name = $roles_detail->name;
+		return $role_name;
+	}
+	return;
+}
