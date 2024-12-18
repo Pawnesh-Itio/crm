@@ -1561,6 +1561,7 @@ $lang['customer_permissions']         = 'Permissions';
 $lang['customer_permission_invoice']  = 'Invoices';
 $lang['customer_permission_estimate'] = 'Estimates';
 $lang['customer_permission_proposal'] = 'Proposals';
+$lang['customer_permission_quotation']= 'Quotations';
 $lang['customer_permission_contract'] = 'Contracts';
 $lang['customer_permission_support']  = 'Support';
 
@@ -1731,7 +1732,7 @@ $lang['proposal_for_lead']                      = 'Lead';
 $lang['proposal_for_customer']                  = 'Customer';
 $lang['proposal']                               = 'Proposal';
 $lang['proposal_lowercase']                     = 'proposal';
-$lang['proposals']                              = 'Proposals';
+$lang['proposals']                              = 'Quotation';
 $lang['proposals_lowercase']                    = 'proposals';
 $lang['new_proposal']                           = 'New Proposal';
 $lang['proposal_currency']                      = 'Currency';
@@ -2253,6 +2254,8 @@ $lang['discussion_attachments_drop']                         = 'Drag and drop to
 $lang['project_note']                                        = 'Note';
 $lang['project_note_private']                                = 'Personal notes';
 $lang['project_save_note']                                   = 'Save note';
+$lang['project_user']										 = 'Users';
+
 
 # Project Activity
 $lang['project_activity_created']                      = 'Created the project';

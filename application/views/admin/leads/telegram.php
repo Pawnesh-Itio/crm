@@ -20,26 +20,40 @@
 						<hr style="border: 1px solid #1e293b">
 					</div>
 					<div class="sidebar-body">
+						<!-- Creating a list of navigation items (tabs) -->
 						<ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked">
 							<?php
-							// Get the chat_id from the URL (assuming it's the last segment of the URL)
+							// Get the 'chat_id' from the URL (assuming it's the fourth segment of the URL)
+							// This is used to identify which chat is currently active
 							$chat_id = $this->uri->segment(4); // Adjust the segment number if needed
+					
+							// Initialize a counter variable
 							$i = 0;
+					
+							// Check if the 'tabs' variable is set (it should contain data to generate the tabs)
 							if (isset($tabs)) 
 							{
+								// Loop through each 'group' in the 'tabs' array
 								foreach ($tabs as $group) 
 								{ 
-									// Check if the current group client_id matches the chat_id from the URL
-									$is_active = ($group['client_id']==$chat_id)?' active-chat':''; 
+									// Check if the current group's 'client_id' matches the 'chat_id' from the URL
+									// If it matches, mark this tab as active by adding the 'active-chat' class
+									$is_active = ($group['client_id'] == $chat_id) ? ' active-chat' : ''; 
 									?>
-										<a class="chat-link" href="<?php echo admin_url('leads/telegram/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
-											<li class="chat-item settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
-												<i class="fa-brands fa-telegram menu-icon"></i>
-												<?php echo e($group['name']); ?>
-											</li>
-										</a>
-
+									
+									<!-- Create a clickable link for the chat item -->
+									<a class="chat-link" href="<?php echo admin_url('leads/telegram/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
+										<!-- Create the list item with the appropriate class for styling and activation -->
+										<li class="chat-item settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
+											<!-- Add a Telegram icon to represent the chat -->
+											<i class="fa-brands fa-telegram menu-icon"></i>
+											<!-- Display the name of the group -->
+											<?php echo e($group['name']); ?>
+										</li>
+									</a>
+					
 									<?php 
+									// Increment the counter
 									$i++;
 								}
 							}
@@ -63,33 +77,33 @@
 						}
 					?>
 					<div class="chat-top-bar">
-						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram') ?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?= $chat_name ?></span>
+						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram');?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?php echo $chat_name;?></span>
 					</div>
 					<?php
 					}?>
-				<div class="chat-screen"
-					style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
-					<?php
-					$telegram_token = get_option('telegram_token');
-					$response = '<div id="message-container" class="chat-container">';
-
-					$response .= '</div>';
-					echo $response;
-					if(isset($chat_id)&&$chat_id)
-					{
-					?>
-					<div class="button">
-						<div class="message-input">
-							<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
-							<button  type="submit" class="btn wa-btn" id="send-button" onclick="sendMessage()">
-								<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-							</button>	
+					<div class="chat-screen"
+						style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
+						<?php
+						$telegram_token = get_option('telegram_token');
+						$response = '<div id="message-container" class="chat-container">';
+	
+						$response .= '</div>';
+						echo $response;
+						if(isset($chat_id)&&$chat_id)
+						{
+						?>
+						<div class="button">
+							<div class="message-input">
+								<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
+								<button type="submit" class="btn wa-btn" id="send-button" onclick="sendMessage()">
+									<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+								</button>	
+							</div>
 						</div>
+						<?php
+						}
+						?>
 					</div>
-					<?php
-					}
-					?>
-				</div>
 				</div>
 			</div>
 			<!-- Input box with 'Send' button inside the border -->
@@ -193,7 +207,7 @@ if(isset($chat_id)&&$chat_id)
 			$('#message-container').html(data); // Update the content of the message container
 			scrollToBottom(); // Scroll to the bottom if needed
 		}).fail(function(jqXHR, textStatus, errorThrown) {
-    		//console.error("Failed to fetch data:", textStatus, errorThrown);
+			//console.error("Failed to fetch data:", textStatus, errorThrown);
 		});
 	}
 

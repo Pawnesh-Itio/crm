@@ -1,35 +1,50 @@
 <?php 
+// Include the database configuration file for establishing database connection
 include_once "../application/config/db.php";
+
+// Include the header file for the layout
 include_once "header.php";
 
-if(!isset($_SESSION['unique_id']))
-{
-	header("location: login.php");
+// Check if the session is set for the 'unique_id' (to verify if the user is logged in)
+// If not logged in, redirect to the login page
+if(!isset($_SESSION['unique_id'])) {
+    header("location: login.php");
 }
-
 ?>
 
 <body>
 
 <div class="wrapper">
-	<section class="chat-area">
-		<header>
-			<div class="details">
-				<span><?php echo @$_SESSION['fullname'];?></span>
-				<p><?php echo @$row['status'];?></p>
-			</div>
-			<button id="closeBtn" class="close-btn">X</button>
-		</header>
+    <!-- Chat area section where the chat UI components will be rendered -->
+    <section class="chat-area">
+        <header>
+            <div class="details">
+                <!-- Display the user's full name (retrieved from session) -->
+                <span><?php echo @$_SESSION['fullname'];?></span>
+                <!-- Display the user's status (retrieved from database row) -->
+                <p><?php echo @$row['status'];?></p>
+            </div>
+            <!-- Close button to exit or close the chat area -->
+            <button id="closeBtn" class="close-btn">X</button>
+        </header>
 
-		<div class="chat-box"> </div>
+        <!-- Chat box where messages will be displayed -->
+        <div class="chat-box"> 
+            <!-- Messages will dynamically load here via JavaScript -->
+        </div>
 
-		<form action="#" class="typing-area">
-			<input type="text" name="incoming_id" class="incoming_id" value="<?php echo $_SESSION['incoming_id'];?>" hidden>
-			<input type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
-			<button><i class="fas fa-arrow-circle-right"></i></button>
-			<!--<i class="fas fa-angle-right"></i><i class="fas fa-angle-double-right"></i> -->
-		</form>
-	</section>
+        <!-- Form for sending messages -->
+        <form action="#" class="typing-area">
+            <!-- Hidden input field to store the 'incoming_id' of the recipient (from session) -->
+            <input type="text" name="incoming_id" class="incoming_id" value="<?php echo $_SESSION['incoming_id'];?>" hidden>
+            <!-- Input field for typing the message -->
+            <input type="text" name="message" class="input-field" placeholder="Type a message here..." autocomplete="off">
+            <!-- Send button with an icon for submitting the message -->
+            <button><i class="fas fa-arrow-circle-right"></i></button>
+            <!-- Icon options for different styles of buttons (commented out) -->
+            <!--<i class="fas fa-angle-right"></i><i class="fas fa-angle-double-right"></i> -->
+        </form>
+    </section>
 </div>
 
 <!-- Modal -->

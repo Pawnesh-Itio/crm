@@ -181,6 +181,14 @@ function app_init_project_tabs()
         'position'                  => 60,
         'linked_to_customer_option' => ['view_activity_log'],
     ]);
+
+    $CI->app_tabs->add_project_tab('project_user', [
+        'name'     => _l('project_user'),
+        'icon'     => 'fa-regular fa-user',
+        'view'     => 'admin/projects/project_user',
+        'position' => 70,
+    ]);
+
 }
 
 /**
