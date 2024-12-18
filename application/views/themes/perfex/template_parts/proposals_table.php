@@ -1,7 +1,7 @@
 <table class="table dt-table table-proposals" data-order-col="3" data-order-type="desc">
   <thead>
     <tr>
-      <th class="th-proposal-number"><?php echo _l('proposal') . ' #'; ?></th>
+      <th class="th-proposal-number"><?php echo _l('quotation') . ' #'; ?></th>
       <th class="th-proposal-subject"><?php echo _l('proposal_subject'); ?></th>
       <th class="th-proposal-total"><?php echo _l('proposal_total'); ?></th>
       <th class="th-proposal-open-till"><?php echo _l('proposal_open_till'); ?></th>

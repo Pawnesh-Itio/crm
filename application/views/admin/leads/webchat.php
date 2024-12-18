@@ -21,27 +21,27 @@
 					<div class="sidebar-body">
 						<ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked">
 							<?php
-								// Get the chat_id from the URL (assuming it's the last segment of the URL)
-								$chat_id = $this->uri->segment(4); // Adjust the segment number if needed
-								$i = 0;
-								if (isset($tabs)) 
-								{
-									foreach ($tabs as $group) 
-									{ 
-										// Check if the current group client_id matches the chat_id from the URL
-										$is_active = ($group['client_id']==$chat_id)?' active-chat':''; 
-										?>
-											<a class="chat-link" href="<?php echo admin_url('leads/webchat/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
-												<li class="chat-item settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
-													<i class="fa-solid fa-comment menu-icon"></i>
-													<?php echo e($group['name']); ?>
-												</li>
-											</a>
+							// Get the chat_id from the URL (assuming it's the last segment of the URL)
+							$chat_id = $this->uri->segment(4); // Adjust the segment number if needed
+							$i = 0;
+							if (isset($tabs)) 
+							{
+								foreach ($tabs as $group) 
+								{ 
+									// Check if the current group client_id matches the chat_id from the URL
+									$is_active = ($group['client_id']==$chat_id)?' active-chat':''; 
+									?>
+									<a class="chat-link" href="<?php echo admin_url('leads/webchat/' . $group['client_id']); ?>" data-group="<?php echo e($group['client_id']); ?>">
+										<li class="chat-item settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
+										<i class="fa-solid fa-comment menu-icon"></i>
+											<?php echo e($group['name']); ?>
+										</li>
+									</a>
 
-										<?php 
-										$i++;
-									}
+									<?php 
+									$i++;
 								}
+							}
 							?>
 						</ul>
 					</div>
@@ -60,9 +60,9 @@
 							break;
 						}
 					}
-				?>
+					?>
 					<div class="chat-top-bar">
-						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/webchat') ?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"><?= $chat_name ?></span>
+						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/webchat') ?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"><?php echo $chat_name ?></span>
 					</div>
 				<?php
 				}?>
@@ -95,7 +95,6 @@
 			</div>
 			<!-- Input box with 'Send' button inside the border -->
 			<div class="clearfix"></div>
-			
 
 		</div>
 	</div>
@@ -188,7 +187,6 @@ if(isset($chat_id)&&$chat_id)
 			url: "/crm/show-webchat-discuss.php",
 			data: { chat_id: chat_id }
 		}).done(function(data) {
-//			alert(1111+data);
 
 			$('#message-container').html(data); // Update the content of the message container
 			scrollToBottom(); // Scroll to the bottom if needed
