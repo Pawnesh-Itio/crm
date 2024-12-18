@@ -389,16 +389,28 @@ function is_staff_member($staff_id = '')
     return $CI->db->count_all_results(db_prefix() . 'staff') > 0 ? true : false;
 }
 
-function get_staff_role_name($roleid=NULL)
+// Function to get the name of a staff role based on the provided role ID.
+function get_staff_role_name($roleid = NULL)
 {
+	// Get the CodeIgniter instance to access database and other libraries
 	$CI = & get_instance();
+
+	// Add a WHERE condition to filter roles based on the given roleid
 	$CI->db->where('roleid', $roleid);
+
+	// Execute the query to get the row from the 'roles' table where roleid matches
 	$roles_detail = $CI->db->get(db_prefix() . 'roles')->row();
 
-	if($roles_detail)
+	// Check if the query returned a result
+	if ($roles_detail)
 	{
+		// If a role is found, retrieve the role name
 		$role_name = $roles_detail->name;
+
+		// Return the role name
 		return $role_name;
 	}
+
+	// If no matching role is found, return nothing (NULL)
 	return;
 }
