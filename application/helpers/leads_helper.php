@@ -244,6 +244,7 @@ function fetch_lead_detail($lead_id=NULL)
 		{
 			$lead_detail['source']		= $lead->source;
 			$lead_detail['client_id']	= $lead->client_id;
+			$lead_detail['assigned']	= $lead->assigned;
 		
 			return $lead_detail;
 		}
