@@ -4899,6 +4899,13 @@ function validate_lead_convert_to_client_form() {
   var rules_convert_lead = {
     firstname: "required",
     lastname: "required",
+	address: "required",
+	city: "required",
+	state: "required",
+	phonenumber: "required",
+	country: "required",
+	zip: "required",
+	
     password: {
       required: {
         depends: function (element) {

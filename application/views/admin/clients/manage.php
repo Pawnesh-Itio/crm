@@ -188,8 +188,8 @@
                          'th_attrs' => ['class' => 'toggleable', 'id' => 'th-active'],
                         ],
                         [
-                         'name'     => _l('customer_groups'),
-                         'th_attrs' => ['class' => 'toggleable', 'id' => 'th-groups'],
+                         'name'     => _l('leads_dt_assigned'),
+                         'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
                         ],
                         [
                          'name'     => _l('date_created'),
