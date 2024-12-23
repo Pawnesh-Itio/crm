@@ -11,10 +11,9 @@ if(isset($_SESSION['unique_id']))
 	{
 		//$sqlStmt= "INSERT INTO messages (incoming_msg_id, outgoing_msg_id, msg) VALUES ('{$incoming_id}', '{$outgoing_id}', '{$message}')";
 		$sqlStmt= "INSERT INTO `it_crm_messages` (`incoming_msg_id`, `outgoing_msg_id`, `msg`,`msg_type`) VALUES ('{$incoming_id}', '{$outgoing_id}', '{$message}',2)";
-		
+
 		$sql = mysqli_query($conn, $sqlStmt) or die();
 	}
-	
 }
 else
 {

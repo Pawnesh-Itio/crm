@@ -1364,7 +1364,7 @@ class Projects_model extends App_Model
         if ($with_name) {
             $this->db->select('firstname,lastname,email,project_id,staff_id');
         } else {
-            $this->db->select('email,project_id,staff_id');
+            $this->db->select('email,project_id,staff_id,admin,role,last_login');
         }
         $this->db->join(db_prefix() . 'staff', db_prefix() . 'staff.staffid=' . db_prefix() . 'project_members.staff_id');
         $this->db->where('project_id', $id);

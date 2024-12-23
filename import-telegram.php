@@ -78,7 +78,13 @@ if (isset($web_data->message->chat->id) && ($web_data->message->chat->id)) {
 			// 'source' is hardcoded as 4 to indicate this lead came from Telegram
 			$sqlStmt = "INSERT INTO `it_crm_leads` (`name`, `dateadded`, `description`, `client_id`, `email`, `source`, `status`) 
 				VALUES ('$name', NOW(), '$text', '$chat_id', '$username', 4, 2)";
-			mysqli_query($conn, $sqlStmt);
+
+			if(mysqli_query($conn, $sqlStmt))	//if query executed successfully then execute following section 
+			{
+				//insert message into notification table
+				$sqlStmt = "INSERT INTO `it_crm_notifications` (`isread`, `isread_inline`, `date`, `description`, `fromuserid`, `fromclientid`, `from_fullname`, `touserid`) VALUES(0, 0, NOW(), 'New Lead via Telegram', 0, '{$chat_id}', '{$name}', 1)";
+				mysqli_query($conn, $sqlStmt);	//execute query
+			}
 		}
 	}
 }
