@@ -443,4 +443,9 @@ class Staff extends AdminController
             update_staff_meta(get_staff_user_id(), 'task-hide-completed-items-'. $post_data['task_id'], $post_data['hideCompleted']);
         }
     }
+    public function getAllStaff(){
+        $staff = $this->staff_model->get();
+        echo json_encode($staff);
+        die;
+    }
 }

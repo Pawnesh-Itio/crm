@@ -249,7 +249,7 @@ function get_project($id = null)
 
     // Client global object not set
     if (empty($id)) {
-        return null;
+        return "null";
     }
 
     if (!class_exists('projects_model', false)) {
@@ -260,6 +260,7 @@ function get_project($id = null)
 
     return $project;
 }
+
 
 /**
  * Get project status by passed project id
@@ -474,4 +475,8 @@ function total_project_finished_tasks_by_milestone($milestone_id, $project_id)
              'status'    => 5,
              'milestone' => $milestone_id,
              ]);
+}
+function getAllProject(){
+    $project = get_instance()->projects_model->getAllproject();
+    return $project;
 }

@@ -1197,4 +1197,17 @@ class Leads_model extends App_Model
 		$query = $this->db->get('leads'); // Get data from leads
 		return $query->result_array(); // Return the result as an associative array
     }
+    public function updateAssignedUser($lead_id, $assigned_id){
+        $current_lead_data = $this->get($lead_id);
+        $this->db->where('id', $lead_id);
+        $this->db->update(db_prefix() . 'leads', [
+            'assigned' =>  $assigned_id
+        ]);
+        if (isset($assigned_id)) {
+            if ($current_lead_data->assigned != $assigned_id && (!empty($assigned_id) && $assigned_id != 0)) {
+                $this->lead_assigned_member_notification($lead_id, $assigned_id);
+            }
+        }
+        return true;
+    }
 }

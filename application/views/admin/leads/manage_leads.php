@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-sm-5 ">
                             <a href="#" class="btn btn-default btn-with-tooltip" data-toggle="tooltip"
-                                data-title="<?php echo _l('leads_summary'); ?>" data-placement="top"
+                                data-title="<?php echo _l(''); ?>" data-placement="top"
                                 onclick="slideToggle('.leads-overview'); return false;"><i
                                     class="fa fa-bar-chart"></i></a>
                             <a href="<?php echo admin_url('leads/switch_kanban/' . $switch_kanban); ?>"
@@ -62,7 +62,9 @@
                         </h4>
                         <div class="tw-flex tw-flex-wrap tw-flex-col lg:tw-flex-row tw-w-full tw-gap-3 lg:tw-gap-6">
                             <?php
-                           foreach ($summary as $status) { ?>
+                           foreach ($summary as $status) {
+                            if($status['name'] !="Customer"){
+                            ?>
                             <div
                                 class="lg:tw-border-r lg:tw-border-solid lg:tw-border-neutral-300 tw-flex-1 tw-flex tw-items-center last:tw-border-r-0">
                                 <span class="tw-font-semibold tw-mr-3 rtl:tw-ml-3 tw-text-lg">
@@ -80,7 +82,7 @@
                                     <?php echo e($status['name']); ?>
                                 </span>
                             </div>
-                            <?php } ?>
+                            <?php } } ?>
                         </div>
 
                     </div>
@@ -324,7 +326,35 @@
         </div>
     </div>
 </div>
-
+<!-- Lead Assign Model -->
+ <!-- Modal -->
+<div class="modal fade bd-example-modal-sm" id="leadAssignModel" tabindex="-1" role="dialog" aria-labelledby="leadAssignModel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Lead Assign</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form id="assignLeadForm" action="<?= admin_url('leads/updateAssignedUser') ?>" method="post">
+        <div class="modal-body">
+            <div class="form-group">
+                <input type="hidden" name="lead_id" id="lead_id">
+                <label>Assigned</label>
+                    <select name="assigned_id" class="custom-select form-control" id="mySelect">
+                    <!-- Dynamically Populate Here -->
+                    </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button name="assignSubmit" type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+ <!-- End Lead Assign Model -->
 <!-- MySocket logic -->
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
@@ -476,6 +506,37 @@ $(document).ready(function() {
         });
     });
 });
+// LeadAssigned
+function leadAssign(id, Assigned_id=0){
+console.log("Lead Id:"+id);
+console.log("Assigned Id:"+Assigned_id);
+let att ;
+$.ajax({
+    url: '<?= admin_url('staff/getAllStaff') ?>',  // URL to send the request to
+    type: 'GET',  // Request method, e.g., GET or POST
+    dataType: 'json',  // Expected data format from the server
+    success: function(response) {
+        // Initialize id field.
+        $('#lead_id').val(id);
+        // Clear existing options
+        $('#mySelect').empty();
+        // Populate options from the server response
+
+        response.forEach(function(item) {
+            if(item.staffid == Assigned_id){
+                att = "selected";
+            }else{
+                att="";
+            }
+            $('#mySelect').append('<option value="' + item.staffid + '" '+att+' >' + item.full_name + '</option>');
+        });
+    },
+    error: function(xhr, status, error) {
+        // Handle any errors that occur
+        console.error('An error occurred: ' + error);
+    }
+});
+}
 </script>
 </body>
 </html>

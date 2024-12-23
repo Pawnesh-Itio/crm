@@ -1403,4 +1403,16 @@ class Leads extends AdminController
         // Pass the data to the view
         $this->load->view('admin/leads/webchat', $data);
     }
+    public function updateAssignedUser(){
+        $lead_id = $_POST['lead_id'];
+        $assigned_id = $_POST['assigned_id'];
+        $update = $this->leads_model->updateAssignedUser($lead_id, $assigned_id);
+        if($update){
+            set_alert('success', 'Member assigned successfully');
+            redirect(admin_url('leads'));
+        }else{
+            set_alert('warning','Member assigned failed');
+            redirect(admin_url('leads'));
+        }
+    }
 }

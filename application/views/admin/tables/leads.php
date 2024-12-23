@@ -219,7 +219,9 @@ return App_table::find('leads')
                 ]) . '</a>';
 
                 // For exporting
-                $assignedOutput .= '<span class="hide">' . $full_name . '</span>';
+                $assignedOutput .= '<span class="text-success" style="padding-left:15px;"><a onclick="leadAssign('.$aRow['id'].','.$aRow['assigned'].')" data-toggle="modal" data-target="#leadAssignModel"><i class="fa fa-plus" aria-hidden="true" style="font-size: 20px;"></i></a></span>';
+            }else{
+                $assignedOutput = '<span class="text-success " style=""><a onclick="leadAssign('.$aRow['id'].')" data-toggle="modal" data-target="#leadAssignModel"><i class="fa fa-plus" aria-hidden="true"style="font-size: 20px;position:relative;left:25px;top:10px"></i></a></span>';
             }
 
             $row[] = $assignedOutput;

@@ -499,7 +499,7 @@ if (isset($app_csrf_exclude_uris)) {
 }
 
 // Exclude CSRF protection for the 'wa-server' route
-$config['csrf_exclude_uris'] = array_merge($config['csrf_exclude_uris'], ['wa-server']);
+$config['csrf_exclude_uris'] = array_merge($config['csrf_exclude_uris'], ['wa-server'],['admin/leads/updateAssignedUser']);
 $config['csrf_exclude_uris'] = array_unique($config['csrf_exclude_uris']);
 
 // Disable CSRF protection for gateways

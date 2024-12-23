@@ -2650,4 +2650,8 @@ class Projects_model extends App_Model
             ->excludeMilestonesFromCustomer(isset($type_where['hide_from_customer']) && $type_where['hide_from_customer'] == 1)
             ->get();
     }
+    public function getAllproject(){
+        $this->db->select('name, description, status, deadline, id');
+        return $this->db->get(db_prefix() . 'projects')->result_array();
+    }
 }

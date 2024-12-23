@@ -77,7 +77,7 @@
                             <hr class="hr-panel-separator" />
                             <div class="panel-table-full">
                                 <?php echo form_hidden('custom_view'); ?>
-                                <?php $this->load->view('admin/projects/table_html'); ?>
+                                <?php $this->load->view('admin/projects/card_view'); ?>
                             </div>
                         </div>
                     </div>
