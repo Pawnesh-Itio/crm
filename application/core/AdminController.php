@@ -110,7 +110,7 @@ class AdminController extends App_Controller
         ]);
 
         $this->app->add_quick_actions_link([
-            'name'       => _l('proposal'),
+            'name'       => _l('quotation'),
             'permission' => 'proposals',
             'url'        => 'proposals/proposal',
             'position'   => 15,
