@@ -235,8 +235,8 @@
                                 <?php echo render_input('ticket_size', 'ticket_size', $value); ?>
                                 <?php $value = (isset($client) ? $client->processing_duration : ''); ?>
                                 <?php echo render_input('processing_duration', 'processing_duration', $value); ?>
-                                <?php $value = (isset($client) ? $client->valume_of_transaction : ''); ?>
-                                <?php echo render_input('valume_of_transaction', 'valume_of_transaction', $value); ?>
+                                <?php $value = (isset($client) ? $client->volume_of_transaction : ''); ?>
+                                <?php echo render_input('volume_of_transaction', 'volume_of_transaction', $value); ?>
                                 <?php $value = (isset($client) ? $client->chargeback_ratio : ''); ?>
                                 <?php echo render_input('chargeback_ratio', 'chargeback_ratio', $value); ?>
                                 <?php $value = (isset($client) ? $client->reason_to_switch : ''); ?>
@@ -304,13 +304,6 @@
 						</div>
                     </div>
                 </div>
-				
-				
-				
-				
-				
-				
-                
             </div>
 			<?php
 			}
@@ -423,12 +416,12 @@
                                     <p class="tw-ml-7 tw-mb-0">
                                         <?php echo _l('customer_update_address_info_on_invoices_help'); ?>
                                     </p>
-                                    <div class="checkbox checkbox-default">
+                                    <?php /*?><div class="checkbox checkbox-default">
                                         <input type="checkbox" name="update_credit_notes" id="update_credit_notes">
                                         <label for="update_credit_notes">
                                             <?php echo _l('customer_profile_update_credit_notes'); ?>
                                         </label>
-                                    </div>
+                                    </div><?php */?>
                                 </div>
                             </div>
                             <?php } ?>

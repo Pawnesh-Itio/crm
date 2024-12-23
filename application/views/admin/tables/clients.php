@@ -139,6 +139,7 @@ return App_table::find('clients')
             $row[] = $toggleActive;
 
             // Customer groups parsing
+			/*
             $groupsRow = '';
             if ($aRow['customerGroups']) {
                 $groups = explode(',', $aRow['customerGroups']);
@@ -148,6 +149,20 @@ return App_table::find('clients')
             }
 
             $row[] = $groupsRow;
+			*/
+			
+			//fetch the data from lead table via (leadid if exists)
+			if(isset($aRow['leadid']) && !empty($aRow['leadid']))
+				$lead_detail=fetch_lead_detail($aRow['leadid']);
+
+			$assignee_name='';
+			if(isset($lead_detail['assigned'])&&$lead_detail['assigned'])
+			{
+				$assigned=$lead_detail['assigned'];
+				$assignee_name=get_staff_full_name($assigned);
+			}
+			$row[] = $assignee_name;
+
             $whatsappLink ='';
             if($aRow['phonenumber'] && !empty($aRow['phonenumber'])){
                 $whatsappLink .= '<li>
@@ -160,7 +175,7 @@ return App_table::find('clients')
                                 }
 
 			if(isset($aRow['leadid']) && !empty($aRow['leadid'])){
-				$lead_detail=fetch_lead_detail($aRow['leadid']);
+				//$lead_detail=fetch_lead_detail($aRow['leadid']);
 				
 				if(isset($lead_detail['source'])&&$lead_detail['source']==4)
 				{
