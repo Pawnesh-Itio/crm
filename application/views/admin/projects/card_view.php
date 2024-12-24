@@ -91,7 +91,7 @@ $projects = array_values($projects);
         <div class="p-card">    
         <!-- Header Section -->
         <div class="p-header">
-            <div class="p-circle" style="background-color:<?=$color; ?>"><?= $firstProjectLetter.$secondProjectLetter ?></div>
+            <div class="p-circle" style="background-color:<?=$color; ?>"><?= $finalShortName ?></div>
             <div>
                 <a href="<?php echo admin_url('projects/view/' . $d['project_id']) ?>">
                 <h4 style="margin:0;"><?= $d['project_name'] ?> <span class="glyphicon glyphicon-eye-open" style="color: #3bc37b;"></span></h4>
