@@ -73,13 +73,25 @@ $projects = array_values($projects);
 // print_r($projects);
 ?>
 <div class="row">
-    <?php foreach($projects as $d){ 
+    <?php 
+    // Array of 4 colors
+    $colorsProject = ['#FF5733', '#33FF57', '#3357FF', '#F0E130'];
+    foreach($projects as $index => $d){ 
+        $arrProjectName = explode(" ", $d['project_name']);
+        $color = $colorsProject[$index % count($colorsProject)];
+        $firstProjectLetter = strtoupper($arrProjectName[0][0]);
+        if(sizeof($arrProjectName)>1){
+        $secondProjectLetter = strtoupper($arrProjectName[1][0]);
+        $finalShortName = $firstProjectLetter.$secondProjectLetter;
+        }else{
+            $finalShortName = $firstProjectLetter;
+        }
     ?>
     <div class="col-sm-4">
         <div class="p-card">    
         <!-- Header Section -->
         <div class="p-header">
-            <div class="p-circle">UD</div>
+            <div class="p-circle" style="background-color:<?=$color; ?>"><?= $firstProjectLetter.$secondProjectLetter ?></div>
             <div>
                 <a href="<?php echo admin_url('projects/view/' . $d['project_id']) ?>">
                 <h4 style="margin:0;"><?= $d['project_name'] ?> <span class="glyphicon glyphicon-eye-open" style="color: #3bc37b;"></span></h4>
