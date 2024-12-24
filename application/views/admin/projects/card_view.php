@@ -1,6 +1,12 @@
 <?php 
 // SQL query
-$query ="
+if (staff_cant('view', 'projects')) {
+    $where_clause = " AND p.id IN (SELECT project_id FROM " . db_prefix() . "project_members WHERE staff_id = " . get_staff_user_id() . ")";
+} else {
+    $where_clause = ""; // No restriction
+}
+
+$query = "
 SELECT 
     p.id AS project_id,
     p.name AS project_name,
@@ -14,22 +20,25 @@ SELECT
     s.firstname AS staff_name,
     s.profile_image AS staff_image
 FROM 
-    it_crm_projects p
+    " . db_prefix() . "projects p
 LEFT JOIN 
-    it_crm_tasks t 
+    " . db_prefix() . "tasks t 
 ON 
     t.rel_id = p.id AND t.rel_type = 'project'
 LEFT JOIN 
-    it_crm_project_members pm 
+    " . db_prefix() . "project_members pm 
 ON 
     pm.project_id = p.id
 LEFT JOIN 
-    it_crm_staff s 
+    " . db_prefix() . "staff s 
 ON 
     s.staffid = pm.staff_id
+WHERE 
+    1 = 1 $where_clause
 GROUP BY 
     p.id, s.staffid;
 ";
+
 
 // Execute the query
 $result = $this->db->query($query);
