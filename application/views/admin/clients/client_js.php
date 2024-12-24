@@ -273,8 +273,9 @@ function saveCustomerProfileExternalFile(files, externalType) {
 
 function validate_contact_form() {
     appValidateForm('#contact-form', {
-        firstname: 'required',
+		firstname: 'required',
         lastname: 'required',
+        phonenumber: 'required',
         password: {
             required: {
                 depends: function(element) {

@@ -98,7 +98,7 @@
                     <?php if ($group == 'profile') { ?>
                     <div class="panel-footer text-right tw-space-x-1" id="profile-save-section">
                         <?php if (!isset($client)) { ?>
-                        <button class="btn btn-default save-and-add-contact customer-form-submiter">
+                        <button class="btn btn-primary save-and-add-contact customer-form-submiter">
                             <?php echo _l('save_customer_and_add_contact'); ?>
                         </button>
                         <?php } 
