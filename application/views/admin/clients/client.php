@@ -101,10 +101,15 @@
                         <button class="btn btn-default save-and-add-contact customer-form-submiter">
                             <?php echo _l('save_customer_and_add_contact'); ?>
                         </button>
-                        <?php } ?>
+                        <?php } 
+						else
+						{?>
                         <button class="btn btn-primary only-save customer-form-submiter">
                             <?php echo _l('submit'); ?>
                         </button>
+						<?php
+						}
+						?>
                     </div>
                     <?php } ?>
                 </div>
