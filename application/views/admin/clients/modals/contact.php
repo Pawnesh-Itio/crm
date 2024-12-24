@@ -56,8 +56,10 @@
                         <?php echo render_input('firstname', 'client_firstname', $value); ?>
                         <?php $value = (isset($contact) ? $contact->lastname : ''); ?>
                         <?php echo render_input('lastname', 'client_lastname', $value); ?>
-                        <?php $value = (isset($contact) ? $contact->title : ''); ?>
+						<?php /*?>
+						<?php $value = (isset($contact) ? $contact->title : ''); ?>
                         <?php echo render_input('title', 'contact_position', $value); ?>
+						<?php */?>
                         <?php $value = (isset($contact) ? $contact->email : ''); ?>
                         <?php echo render_input('email', 'client_email', $value, 'email'); ?>
                         <?php

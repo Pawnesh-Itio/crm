@@ -127,7 +127,8 @@
                             </div>
                         </div>
                         <?php }
-                     $selected = [];
+                     /*
+					 $selected = [];
                      if (isset($customer_groups)) {
                          foreach ($customer_groups as $group) {
                              array_push($selected, $group['groupid']);
@@ -137,7 +138,7 @@
                          echo render_select_with_input_group('groups_in[]', $groups, ['id', 'name'], 'customer_groups', $selected, '<div class="input-group-btn"><a href="#" class="btn btn-default" data-toggle="modal" data-target="#customer_group_modal"><i class="fa fa-plus"></i></a></div>', ['multiple' => true, 'data-actions-box' => true], [], '', '', false);
                      } else {
                          echo render_select('groups_in[]', $groups, ['id', 'name'], 'customer_groups', $selected, ['multiple' => true, 'data-actions-box' => true], [], '', '', false);
-                     }
+                     }*/
                      ?>
                         <div class="row">
                             <div class="col-md-<?php echo !is_language_disabled() ? 6 : 12; ?>">
@@ -157,7 +158,8 @@
                              }
                          }
                      }
-                            // Do not remove the currency field from the customer profile!
+
+                     // Do not remove the currency field from the customer profile!
                      echo render_select('default_currency', $currencies, ['id', 'name', 'symbol'], 'invoice_add_edit_currency', $selected, $s_attrs);
                      ?>
                             </div>

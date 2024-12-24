@@ -4846,7 +4846,14 @@ function init_lead(id, isEdit) {
 function validate_lead_form() {
   var validationObject = {
     name: "required",
-    source: "required",
+	source: "required",
+    address: "required",
+	city: "required",
+	state: "required",
+	phonenumber: "required",
+	country: "required",
+	zip: "required",
+	
     status: {
       required: {
         depends: function (element) {
@@ -4855,6 +4862,20 @@ function validate_lead_form() {
           } else {
             return true;
           }
+        },
+      },
+    },
+	 email: {
+      required: true,
+      email: true,
+      remote: {
+        url: admin_url + "misc/lead_email_exists",
+        type: "post",
+        data: {
+          email: function () {
+            return $('#lead_form input[name="email"]').val();
+          },
+          userid: "",
         },
       },
     },

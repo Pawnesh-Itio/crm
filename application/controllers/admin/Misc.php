@@ -476,6 +476,33 @@ class Misc extends AdminController
         }
     }
 
+	/* Check if lead email exists/  ajax */
+	public function lead_email_exists()
+	{
+		if ($this->input->is_ajax_request()) {
+			if ($this->input->post()) {
+				// First we need to check if the email is the same
+				$userid = $this->input->post('userid');
+				if ($userid != '') {
+					$this->db->where('id', $userid);
+					$_current_email = $this->db->get(db_prefix() . 'leads')->row();
+					if ($_current_email->email == $this->input->post('email')) {
+						echo json_encode(true);
+						die();
+					}
+				}
+				$this->db->where('email', $this->input->post('email'));
+				$total_rows = $this->db->count_all_results(db_prefix() . 'leads');
+				if ($total_rows > 0) {
+					echo json_encode(false);
+				} else {
+					echo json_encode(true);
+				}
+				die();
+			}
+		}
+	}
+
     /* Goes blank page but with messagae access danied / message set from session flashdata */
     public function access_denied()
     {

@@ -80,7 +80,7 @@ foreach ($rResult as $aRow) {
 
     $row[] = '<a href="mailto:' . e($aRow['email']) . '">' . e($aRow['email']) . '</a>';
 
-    $row[] = e($aRow['title']);
+//    $row[] = e($aRow['title']);
 
     $row[] = '<a href="tel:' . e($aRow['phonenumber']) . '">' . e($aRow['phonenumber']) . '</a>';
 

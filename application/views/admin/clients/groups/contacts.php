@@ -16,15 +16,25 @@
     } ?>
 <div class="inline-block new-contact-wrapper" data-title="<?php echo _l('customer_contact_person_only_one_allowed'); ?>"
     <?php if ($disable_new_contacts) { ?> data-toggle="tooltip" <?php } ?>>
-    <a href="#" onclick="contact(<?php echo e($client->userid); ?>); return false;" class="btn btn-primary new-contact mbot15<?php if ($disable_new_contacts) {
-        echo ' disabled';
-    } ?>">
+
+	<?php
+	$total_contact = total_rows(db_prefix() . 'contacts', ['userid' => $client->userid, 'is_primary' => 1]);
+	
+	if(empty($total_contact)||$total_contact==NULL)
+	{
+	?>
+		<a href="#" onclick="contact(<?php echo e($client->userid); ?>); return false;" class="btn btn-primary new-contact mbot15<?php if ($disable_new_contacts) {
+			echo ' disabled';
+		} ?>">
         <i class="fa-regular fa-plus tw-mr-1"></i>
         <?php echo _l('new_contact'); ?>
     </a>
+	<?php
+	}?>
 </div>
 <?php
 } ?>
+
 <?php
    $table_data = [_l('clients_list_full_name')];
    if (is_gdpr() && get_option('gdpr_enable_consent_for_contacts') == '1') {
@@ -33,7 +43,7 @@
             'th_attrs' => ['id' => 'th-consent', 'class' => 'not-export'],
          ]);
    }
-  $table_data     = array_merge($table_data, [_l('client_email'), _l('contact_position'), _l('client_phonenumber'), _l('contact_active'), _l('clients_list_last_login')]);
+  $table_data     = array_merge($table_data, [_l('client_email'), _l('client_phonenumber'), _l('contact_active'), _l('clients_list_last_login')]);
    $custom_fields = get_custom_fields('contacts', ['show_on_table' => 1]);
    foreach ($custom_fields as $field) {
        array_push($table_data, [

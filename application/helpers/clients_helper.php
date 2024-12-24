@@ -193,7 +193,7 @@ function app_init_customer_profile_tabs()
         'badge'    => [],
     ]);
 
-	/*
+	
     $CI->app_tabs->add_customer_profile_tab('contacts', [
         'name'     => !is_empty_customer_company($client_id) || empty($client_id) ? _l('customer_contacts') : _l('contact'),
         'icon'     => 'fa fa-user',
@@ -201,7 +201,7 @@ function app_init_customer_profile_tabs()
         'position' => 10,
         'badge'    => [],
     ]);
-	*/
+	
 	
     $CI->app_tabs->add_customer_profile_tab('notes', [
         'name'     => _l('contracts_notes_tab'),
