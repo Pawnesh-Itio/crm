@@ -425,12 +425,12 @@
                         } ?>>
                                             <?php echo _l('lead'); ?>
                                         </option>
-                                        <option value="proposal" <?php if (isset($task) || $this->input->get('rel_type')) {
-                            if ($rel_type == 'proposal') {
+                                        <option value="quotation" <?php if (isset($task) || $this->input->get('rel_type')) {
+                            if ($rel_type == 'quotation') {
                                 echo 'selected';
                             }
                         } ?>>
-                                            <?php echo _l('proposal'); ?>
+                                            <?php echo _l('quotation'); ?>
                                         </option>
                                         <?php
                                 hooks()->do_action('task_modal_rel_type_select', ['task' => (isset($task) ? $task : 0), 'rel_type' => $rel_type]);

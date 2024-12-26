@@ -215,7 +215,7 @@
                     </ul>
                 </li>
 
-                <li class="icon header-timers timer-button tw-relative ltr:tw-mr-1.5 rtl:tw-ml-1.5"
+                <?php /*?><li class="icon header-timers timer-button tw-relative ltr:tw-mr-1.5 rtl:tw-ml-1.5"
                     data-placement="bottom" data-toggle="tooltip" data-title="<?php echo _l('my_timesheets'); ?>">
                     <a href="#" id="top-timers" class="top-timers !tw-px-0 tw-group" data-toggle="dropdown">
                         <span
@@ -235,7 +235,7 @@
                     <ul class="dropdown-menu animated fadeIn started-timers-top width300" id="started-timers-top">
                         <?php $this->load->view('admin/tasks/started_timers', ['startedTimers' => $startedTimers]); ?>
                     </ul>
-                </li>
+                </li><?php */?>
 
                 <li class="icon dropdown tw-relative tw-block notifications-wrapper header-notifications rtl:tw-ml-3"
                     data-toggle="tooltip" title="<?php echo _l('nav_notifications'); ?>" data-placement="bottom">

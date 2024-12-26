@@ -342,8 +342,12 @@ class Staff_model extends App_Model
         $select_str = '*,CONCAT(firstname,\' \',lastname) as full_name';
 
         // Used to prevent multiple queries on logged in staff to check the total unread notifications in core/AdminController.php
+
+		if (!is_admin()) $fetch_via_staff_id=" AND staffid='" . get_staff_user_id()."'";
+		else $fetch_via_staff_id="";
+
         if (is_staff_logged_in() && $id != '' && $id == get_staff_user_id()) {
-            $select_str .= ',(SELECT COUNT(*) FROM ' . db_prefix() . 'notifications WHERE touserid=' . get_staff_user_id() . ' and isread=0) as total_unread_notifications, (SELECT COUNT(*) FROM ' . db_prefix() . 'todos WHERE finished=0 AND staffid=' . get_staff_user_id() . ') as total_unfinished_todos';
+            $select_str .= ',(SELECT COUNT(*) FROM ' . db_prefix() . 'notifications WHERE isread=0'.$fetch_via_staff_id.') as total_unread_notifications, (SELECT COUNT(*) FROM ' . db_prefix() . 'todos WHERE finished=0'.$fetch_via_staff_id. ') as total_unfinished_todos';
         }
 
         $this->db->select($select_str);
