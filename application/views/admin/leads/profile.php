@@ -191,12 +191,13 @@
                         <?php echo _l('lead_add_edit_name'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 lead-name">
                         <?php echo(isset($lead) && $lead->name != '' ? e($lead->name) : '-') ?></dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_title'); ?>
+<?php /*?>                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_title'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->title != '' ? e($lead->title) : '-') ?>
                     </dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
+<?php */?>          
+					<dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l('lead_add_edit_email'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->email != '' ? '<a href="mailto:' . e($lead->email) . '">' . e($lead->email) . '</a>' : '-') ?>
@@ -211,11 +212,12 @@
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->phonenumber != '' ? '<a href="tel:' . e($lead->phonenumber) . '">' . e($lead->phonenumber) . '</a>' : '-') ?>
                     </dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_value'); ?>
+<?php /*?>                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_value'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->lead_value != 0 ? e(app_format_money($lead->lead_value, $base_currency->id)) : '-') ?>
                     </dd>
+<?php */?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_company'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
@@ -407,7 +409,7 @@
                 <?php $value = (isset($lead) ? $lead->name : ''); ?>
                 <?php echo render_input('name', 'lead_add_edit_name', $value); ?>
                 <?php $value = (isset($lead) ? $lead->title : ''); ?>
-                <?php echo render_input('title', 'lead_title', $value); ?>
+                <?php //echo render_input('title', 'lead_title', $value); ?>
                 <?php $value = (isset($lead) ? $lead->email : ''); ?>
                 <?php echo render_input('email', 'lead_add_edit_email', $value); ?>
                 <?php if ((isset($lead) && empty($lead->website)) || !isset($lead)) {
@@ -431,6 +433,8 @@
                 <?php }
                 $value = (isset($lead) ? $lead->phonenumber : ''); ?>
                 <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $value); ?>
+				<?php
+				/*?>
                 <div class="form-group">
                     <label for="lead_value"><?php echo _l('lead_value'); ?></label>
                     <div class="input-group" data-toggle="tooltip" title="<?php echo _l('lead_value_tooltip'); ?>">
@@ -443,6 +447,9 @@
                     </div>
                     </label>
                 </div>
+				<?php
+				*/
+				?>
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
                 <?php echo render_input('company', 'lead_company', $value); ?>
             </div>
@@ -496,7 +503,7 @@
                         <?php } else { ?>
                         <?php echo render_datetime_input('lastcontact', 'leads_dt_last_contact', _dt($lead->lastcontact), ['data-date-end-date' => date('Y-m-d')]); ?>
                         <?php } ?>
-                        <div class="checkbox-inline checkbox checkbox-primary<?php if (isset($lead)) {
+                        <?php /*?><div class="checkbox-inline checkbox checkbox-primary<?php if (isset($lead)) {
                    echo ' hide';
                } ?><?php if (isset($lead) && (is_lead_creator($lead->id) || staff_can('edit',  'leads'))) {
                    echo ' lead-edit';
@@ -507,13 +514,15 @@
                    }
                }; ?> id="lead_public">
                             <label for="lead_public"><?php echo _l('lead_public'); ?></label>
-                        </div>
-                        <?php if (!isset($lead)) { ?>
+                        </div><?php */?>
+                        <?php 
+						/*if (!isset($lead)) { ?>
                         <div class="checkbox-inline checkbox checkbox-primary">
                             <input type="checkbox" name="contacted_today" id="contacted_today" checked>
                             <label for="contacted_today"><?php echo _l('lead_add_edit_contacted_today'); ?></label>
                         </div>
-                        <?php } ?>
+                        <?php }
+						*/ ?>
                     </div>
                 </div>
             </div>

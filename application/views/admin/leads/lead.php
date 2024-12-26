@@ -65,7 +65,7 @@
 								</a>
 							</li>
 							<?php } ?>
-							<li role="presentation">
+							<?php /*?><li role="presentation">
 								<a href="#tab_proposals_leads"
 									onclick="initDataTable('.table-proposals-lead', admin_url + 'proposals/proposal_relations/' + <?php echo e($lead->id); ?> + '/lead','undefined', 'undefined','undefined',[6,'desc']);"
 									aria-controls="tab_proposals_leads" role="tab" data-toggle="tab">
@@ -87,7 +87,7 @@
 									}
 									?>
 								</a>
-							</li>
+							</li><?php */?>
 							<li role="presentation">
 								<a href="#attachments" aria-controls="attachments" role="tab" data-toggle="tab">
 									<?php echo _l('lead_attachments');
