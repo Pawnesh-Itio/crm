@@ -79,10 +79,55 @@
                                                 <input type="hidden" id="formUserId" value="<?= get_staff_user_id() ?>">
                                                 <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
                                                 <div class="message-input">
-                                                    <input type="text" class="form-control" id="messageInput" placeholder="Type a message...">	
-                                                    <button  type="submit" class="btn  wa-btn" id="sendMessageBtn">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-                                                    </button>
+                                                    <div class="row">
+                                                        <div class="col-sm-10">
+                                                            <div class="input-group">
+                                                                <span class="input-group-btn">
+                                                                    <div class="btn-group dropup">
+                                                                        <button class="btn wa-drop-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            <i class="fa fa-paperclip" aria-hidden="true"></i>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#" id="textMessageOption">Text Message</a></li>
+                                                                            <li><a href="#" id="mediaMessageOption">Media Message</a></li>
+                                                                            <li><a href="#" id="templateMessageOption">Template Message</a></li>
+                                                                            <li><a href="#" id="linkMessageOption">Link Message</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </span>
+                                                                <!-- Container for the fields -->
+                                                                    <!-- Default Text Message Field (shown by default) -->
+                                                                    <input type="text" class="form-control message-field message-input" id="textMessageField" placeholder="Type a message..." style="display: block;">
+                                                                    <!-- Media Message Field (hidden by default) -->
+                                                                            <input type="file" id="mediaMessageFileField" style="display:none">
+                                                                            <input type="text" id="mediaMessageCaptionField" class="form-control message-field message-input"placeholder="Image Caption" style="display:none">
+                                                                    <!-- Template Message Field (hidden by default) -->
+                                                                    <select class="form-select wa-form-select message-field" id="templateMessageField" style="display: none; aria-label="Default select example">
+                                                                        <option selected> Open this select menu</option>
+                                                                        <option value="1">One</option>
+                                                                        <option value="2">Two</option>
+                                                                        <option value="3">Three</option>
+                                                                    </select>
+                                                                    <!-- Link Message Field (hidden by default) -->
+                                                                    <input type="url" class="form-control message-field message-input" id="linkMessageField" style="display: none;" placeholder="Enter Link...">
+                                                                    <!-- Image Preview Div (Initially hidden) -->
+                                                                    <div id="imagePreviewContainer" style="display: none;">
+                                                                        <h5>Preview:</h5>
+                                                                        <img id="imagePreview" style="max-width: 100%; max-height: 200px;">
+                                                                            <!-- Overlay with Loader (Initially Hidden) -->
+                                                                        <div id="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center;">
+                                                                            <div id="loader" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite;"></div>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-2">
+                                                            <button  type="submit" class="btn  wa-btn" id="sendMessageBtn">
+                                                              <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </form>
                                         </div>
@@ -206,7 +251,7 @@ $(document).ready(function() {
         const to = $('#formNumber').val();
         const message = $('#messageInput').val();
         const type = 1;
-
+        // SendMessage Payload
         // Send the data via AJAX
         $.ajax({
             type: 'POST',
@@ -236,6 +281,80 @@ $(document).ready(function() {
         });
     });
 });
+document.getElementById('textMessageOption').addEventListener('click', function() {
+    changeMessageField('textMessageField');
+});
+
+document.getElementById('mediaMessageOption').addEventListener('click', function() {
+    changeMessageField('mediaMessageCaptionField');
+    document.getElementById('mediaMessageFileField').click();
+});
+
+document.getElementById('templateMessageOption').addEventListener('click', function() {
+    changeMessageField('templateMessageField');
+});
+
+document.getElementById('linkMessageOption').addEventListener('click', function() {
+    changeMessageField('linkMessageField');
+});
+
+// Function to switch the visible field
+function changeMessageField(fieldId) {
+    // Hide all fields
+    const fields = document.querySelectorAll('.message-field');
+    fields.forEach(function(field) {
+        field.style.display = 'none';
+    });
+
+    // Show the selected field
+    document.getElementById(fieldId).style.display = 'block';
+}$(document).ready(function() {
+    // Handle file selection
+    $('#mediaMessageFileField').on('change', function(event) {
+        const file = event.target.files[0]; // Get the selected file
+        const userId = $('#formUserId').val(); // Get user ID from input
+        const source = "crm";
+        if (file) {
+            // Show the image preview container
+            $('#imagePreviewContainer').show();
+            // Show the overlay with loader
+            $('#overlay').show();
+            
+            // Use FileReader to display the selected image
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Set the image source to the file reader result
+                $('#imagePreview').attr('src', e.target.result);
+            };
+            reader.readAsDataURL(file); // Read the image file as a data URL
+            
+            // Prepare the file data for upload (optional for immediate upload)
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('source', source);
+            formData.append('userId', userId);
+            
+            // AJAX request for file upload
+            $.ajax({
+                url: 'http://localhost:4000/api/messages/upload', // Corrected URL
+                type: 'POST',
+                data: formData,
+                contentType: false, // Prevent jQuery from setting content type
+                processData: false, // Don't process the data (FormData handles it)
+                success: function(data) {
+                    // Hide the overlay and loader after successful upload
+                    $('#overlay').hide();
+                    console.log(data);
+                },
+                error: function(error) {
+                    console.error('Error uploading file:', error);
+                }
+            });
+        }
+    });
+});
+
+
 </script>
 </body>
 
