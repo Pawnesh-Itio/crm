@@ -11,7 +11,7 @@
                             <a href="<?php echo admin_url('proposals/proposal'); ?>"
                                 class="btn btn-primary pull-left new">
                                 <i class="fa-regular fa-plus tw-mr-1"></i>
-                                <?php echo _l('new_proposal'); ?>
+                                <?php echo _l('new_quotes'); ?>
                             </a>
                             <?php } ?>
                             <a href="<?php echo admin_url('proposals/pipeline/' . $switch_pipeline); ?>"
