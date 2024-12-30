@@ -48,8 +48,7 @@
                                             <ul>
                                                 <?php foreach($chatData as $cd){ ?>
                                                 <a class="chat-link" >
-                                                    <li class="chat-item" onclick="getMessage(this,<?= $cd['phonenumber'] ?>,'<?= $cd['name'] ?>')" ><?= $cd['name']." (".$cd['phonenumber'].")" ?>
-                                                    </li>
+                                                    <li class="chat-item" onclick="getMessage(this,<?= $cd['phonenumber'] ?>,'<?= $cd['name'] ?>')" ><?= $cd['name']." (".$cd['phonenumber'].")" ?></li>
                                                 </a>
                                                 <?php } ?>
                                             </ul>
@@ -78,6 +77,9 @@
                                             <form id="messageForm" >
                                                 <input type="hidden" id="formUserId" value="<?= get_staff_user_id() ?>">
                                                 <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
+                                                <input type="hidden" id="formMediaUrl"/>
+                                                <input type="hidden" id="formMediaId" name="formMediaId"/>
+                                                <input type="text" id="formType" value="1">
                                                 <div class="message-input">
                                                     <div class="row">
                                                         <div class="col-sm-10">
@@ -104,21 +106,10 @@
                                                                     <!-- Template Message Field (hidden by default) -->
                                                                     <select class="form-select wa-form-select message-field" id="templateMessageField" style="display: none; aria-label="Default select example">
                                                                         <option selected> Open this select menu</option>
-                                                                        <option value="1">One</option>
-                                                                        <option value="2">Two</option>
-                                                                        <option value="3">Three</option>
+                                                                        <option value="hello_world">Hello Template</option>
                                                                     </select>
                                                                     <!-- Link Message Field (hidden by default) -->
-                                                                    <input type="url" class="form-control message-field message-input" id="linkMessageField" style="display: none;" placeholder="Enter Link...">
-                                                                    <!-- Image Preview Div (Initially hidden) -->
-                                                                    <div id="imagePreviewContainer" style="display: none;">
-                                                                        <h5>Preview:</h5>
-                                                                        <img id="imagePreview" style="max-width: 100%; max-height: 200px;">
-                                                                            <!-- Overlay with Loader (Initially Hidden) -->
-                                                                        <div id="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center;">
-                                                                            <div id="loader" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite;"></div>
-                                                                        </div>
-                                                                    </div>
+                                                                    <input type="text" class="form-control message-field message-input" id="linkMessageField" style="display: none;" placeholder="Enter Link...">
                                                             </div>
                                                         </div>
 
@@ -146,7 +137,7 @@
 <script>
 // Socket connection
 const URL = "wss://wa-business-api.onrender.com";
-const waURL = "https://wa-business-api.onrender.com";
+const waURL = "http://localhost:4000";
 const socket = io(URL);
 socket.on('connect', () => {
     console.log('Connected to Socket.io server');
@@ -189,14 +180,24 @@ socket.on('error', (error) => {
             $('.chat-container').html('');
             // Add Messages to chat box.
                 data.messages.forEach(function (message) {
-                    const messageClass = message.message_type === 'received' ? 'incoming-message' : 'sent-message';
+                    console.log(message);
+                const messageClass = message.message_type === 'received' ? 'incoming-message' : 'sent-message';
+                if(message.message_content !=4){
                 // Create a new div for each message
                 const messageDiv = $('<div>'+message.message_body+'</div>') // Create the div
                     .attr('id', message.message_id) // Set message_id as the id attribute
                     .addClass(messageClass); // Optionally add a class for styling
-
                 // Append the created message div to the body or a specific parent
                 $('#chatContainer').append(messageDiv); // Or append to a specific container if needed
+                }else if(message.message_content ==4){
+                    const mediaPath = waURL + '/' + message?.media_details?.path.replace('\\', '/');
+                    const mediaCaption = message.message_body;
+                    const messageDiv = $('<div style="width:50%"><a href="'+mediaPath+'" target="_blank"><img src="'+mediaPath+'" width="100%" alt="media" /></a></div>')
+                    .attr('id', message.message_id) // Set message_id as the id attribute
+                    .addClass(messageClass); // Optionally add a class for styling
+                 // Append the created message div to the body or a specific parent
+                $('#chatContainer').append(messageDiv); // Or append to a specific container if needed
+                }
             });
             autoScrollToBottom();
             // Add realtime incomming messages.
@@ -239,6 +240,7 @@ socket.on('error', (error) => {
 }
 // Function to automatically scroll the chat container to the bottom
 function autoScrollToBottom() {
+    console.log("Auto Scroll: Triggered");
     var chatContainer = $('#chatContainer');
     chatContainer.scrollTop(chatContainer[0].scrollHeight);  // Scroll to the bottom
 }
@@ -249,26 +251,72 @@ $(document).ready(function() {
         const source = "crm";
         const userId = $('#formUserId').val();
         const to = $('#formNumber').val();
-        const message = $('#messageInput').val();
-        const type = 1;
+        const type = $('#formType').val();
+        const message = $('#textMessageField').val();
+        const template = $('#templateMessageField').val();
+        const linkMessage = $('#linkMessageField').val();
+        const mediaId = $('#formMediaId').val()
+        const mediaCaption = $('#mediaMessageCaptionField').val();
+        const formMediaUrl = $('#formMediaUrl').val();
         // SendMessage Payload
+        const sendPayload = {
+            userId: userId,
+            source: source,
+            to: to,
+            type:type
+        }
+        if(type==1){
+            sendPayload.message = message;
+        }
+        if(type==2){
+            sendPayload.message = linkMessage;
+        }
+        if(type==3){
+            sendPayload.tempName = template;
+        }
+        if(type==4){
+            sendPayload.imageId = mediaId;
+            if(mediaCaption){
+            sendPayload.caption = mediaCaption;
+            }
+        }
+        console.log(sendPayload);
         // Send the data via AJAX
         $.ajax({
             type: 'POST',
             url: waURL+'/api/messages/send/', // Replace with your actual URL
             contentType: 'application/json',
-            data: JSON.stringify({
-                userId: userId,
-                source: source,
-                to: to,
-                message: message,
-                type: type
-            }),
+            data: JSON.stringify(sendPayload),
             success: function(response) {
                 // Handle success (e.g., clear input, display message, etc.)
                 const messageData = response.data.messages[0];
-                $('#messageInput').val(''); // Clear the input after sending
-                data = '<div id='+messageData.id+' class="sent-message">'+message+'</div>';
+                if(response.type==1){
+                    $('#textMessageField').val(''); // Clear the input after sending
+                    data = '<div id='+messageData.id+' class="sent-message">'+message+'</div>';
+                }
+                if(response.type==2){
+                    $('#linkMessageField').val(''); // Clear the input after sending
+                    data = '<div id='+messageData.id+' class="sent-message">'+linkMessage+'</div>';
+                }
+                if(response.type==3){
+                    $('#templateMessageField').val(''); // Clear the input after sending
+                    data = '<div id='+messageData.id+' class="sent-message">Template</div>';
+                }
+                if(response.type==4){
+                    $('.uploading-media').remove();
+                    $('#formMediaUrl').val('');
+                    $('#mediaMessageCaptionField').val('');
+                    // Remove upload box
+                    // Add Message box
+                    const mediaPath = formMediaUrl;
+                    if(mediaCaption){
+                    const mediaCaption = mediaCaption;
+                    }
+                    data = $('<div style="width:50%"><a href="'+mediaPath+'" target="_blank"><img src="'+mediaPath+'" width="100%" alt="media" /></a></div>')
+                    .attr('id', messageData.id) // Set message_id as the id attribute
+                    .addClass("sent-message"); // Optionally add a class for styling
+                 // Append the created message div to the body or a specific parent
+                }
                 //Appending chat data to UI
                 $('.chat-container').append(data);
                 // Automatically scroll to the bottom of the chat box
@@ -283,18 +331,22 @@ $(document).ready(function() {
 });
 document.getElementById('textMessageOption').addEventListener('click', function() {
     changeMessageField('textMessageField');
+    $('#formType').val(1);
 });
 
 document.getElementById('mediaMessageOption').addEventListener('click', function() {
+    $('#formType').val(4);
     changeMessageField('mediaMessageCaptionField');
     document.getElementById('mediaMessageFileField').click();
 });
 
 document.getElementById('templateMessageOption').addEventListener('click', function() {
+    $('#formType').val(3);
     changeMessageField('templateMessageField');
 });
 
 document.getElementById('linkMessageOption').addEventListener('click', function() {
+    $('#formType').val(2);
     changeMessageField('linkMessageField');
 });
 
@@ -308,23 +360,28 @@ function changeMessageField(fieldId) {
 
     // Show the selected field
     document.getElementById(fieldId).style.display = 'block';
-}$(document).ready(function() {
+}
+$(document).ready(function() {
     // Handle file selection
     $('#mediaMessageFileField').on('change', function(event) {
         const file = event.target.files[0]; // Get the selected file
         const userId = $('#formUserId').val(); // Get user ID from input
         const source = "crm";
         if (file) {
-            // Show the image preview container
-            $('#imagePreviewContainer').show();
-            // Show the overlay with loader
-            $('#overlay').show();
             
             // Use FileReader to display the selected image
             const reader = new FileReader();
             reader.onload = function(e) {
+                $('#formMediaUrl').val(e.target.result);
                 // Set the image source to the file reader result
-                $('#imagePreview').attr('src', e.target.result);
+                const uploadingImage = $('<div style="width:50%"><img src="'+e.target.result+'" width="100%" alt="media" /><div id="overlay" class="wa-overlay"><div class="wa-loader" id="loader"></div></div></div>')
+                    .addClass("uploading-media"); // Optionally add a class for styling
+                 // Append the created message div to the body or a specific parent
+                $('#chatContainer').append(uploadingImage); // Or append to a specific container if needed
+                    // Delay scrolling to ensure the DOM is updated
+                setTimeout(() => {
+                    autoScrollToBottom();
+                }, 50); // Adjust delay if necessary
             };
             reader.readAsDataURL(file); // Read the image file as a data URL
             
@@ -340,14 +397,30 @@ function changeMessageField(fieldId) {
                 type: 'POST',
                 data: formData,
                 contentType: false, // Prevent jQuery from setting content type
-                processData: false, // Don't process the data (FormData handles it)
+                processData: false, // Don't process the data (FormData handles it) 
                 success: function(data) {
-                    // Hide the overlay and loader after successful upload
-                    $('#overlay').hide();
-                    console.log(data);
+                    $('#formMediaId').val(data.media_id);
+                    const paragraph = $('<p class="succ-upload">').text('Image uploaded successfully, press send button to send!');
+                        $('#overlay').append(paragraph);
+                        $('#loader').hide();
+                        $(".uploading-media").css("border", "4px solid green");
+                        // Set position and related styles
+                        $(".uploading-media").css({
+                            position: "relative", // or "relative" based on your layout
+                            left: "-30px", // Distance from the left
+                        });
                 },
                 error: function(error) {
-                    console.error('Error uploading file:', error);
+                        const paragraph = $('<p class="err-upload">').text('Failed to upload, Please try again');
+                        $('#overlay').append(paragraph);
+                        $('#loader').hide();
+                        $(".uploading-media").css("border", "2px solid red");
+                        // Set position and related styles
+                        $(".uploading-media").css({
+                            position: "relative", // or "relative" based on your layout
+                            left: "-30px", // Distance from the left
+                        });
+                    console.error('Error uploading file:', error.responseJSON);
                 }
             });
         }
