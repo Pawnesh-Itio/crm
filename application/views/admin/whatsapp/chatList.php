@@ -137,7 +137,7 @@
 <script>
 // Socket connection
 const URL = "wss://wa-business-api.onrender.com";
-const waURL = "http://localhost:4000";
+const waURL = "https://wa-business-api.onrender.com";
 const socket = io(URL);
 socket.on('connect', () => {
     console.log('Connected to Socket.io server');
