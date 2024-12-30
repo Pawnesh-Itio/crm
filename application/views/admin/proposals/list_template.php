@@ -13,7 +13,7 @@
             <a href="<?php echo admin_url('proposals/proposal'); ?>"
                 class="btn btn-primary pull-left display-block new-proposal-btn">
                 <i class="fa-regular fa-plus tw-mr-1"></i>
-                <?php echo _l('new_proposal'); ?>
+                <?php echo _l('new_quotes'); ?>
             </a>
             <?php } ?>
             <a href="<?php echo admin_url('proposals/pipeline/' . $switch_pipeline); ?>"
@@ -48,7 +48,7 @@
                     <?php echo form_hidden('proposal_id', $proposal_id); ?>
                     <?php
                     $table_data = [
-                        _l('proposal') . ' #',
+                        _l('quotation') . ' #',
                         _l('proposal_subject'),
                         _l('proposal_to'),
                         _l('proposal_total'),
