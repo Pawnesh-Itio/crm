@@ -51,13 +51,15 @@
                      ?>
                         </a>
                     </li>
-                    <li role="presentation" class="tab-separator">
+					<?php /*?>
+					<li role="presentation" class="tab-separator">
                         <a href="#tab_tasks"
                             onclick="init_rel_tasks_table(<?php echo e($proposal->id); ?>,'proposal'); return false;"
                             aria-controls="tab_tasks" role="tab" data-toggle="tab">
                             <?php echo _l('tasks'); ?>
                         </a>
                     </li>
+					<?php */?>
                     <li role="presentation" class="tab-separator">
                         <a href="#tab_notes"
                             onclick="get_sales_notes(<?php echo e($proposal->id); ?>,'proposals'); return false"
@@ -213,13 +215,34 @@
                 </div>
                 <?php if ($proposal->estimate_id == null && $proposal->invoice_id == null) { ?>
                 <?php if (staff_can('create',  'estimates') || staff_can('create',  'invoices')) { ?>
+				
+					<?php
+                     $disable_convert = false;
+                     $not_related     = false;
+
+                     if ($proposal->rel_type == 'lead') {
+                         if (total_rows(db_prefix() . 'clients', ['leadid' => $proposal->rel_id]) == 0) {
+                             $disable_convert = true;
+                             $help_text       = 'proposal_convert_to_lead_disabled_help';
+                         }
+                     } elseif (empty($proposal->rel_type)) {
+                         $disable_convert = true;
+                         $help_text       = 'proposal_convert_not_related_help';
+                     }
+                     ?>
+					 
                 <div class="btn-group">
-                    <button type="button" class="btn btn-success dropdown-toggle<?php if ($proposal->rel_type == 'customer' && total_rows(db_prefix() . 'clients', ['active' => 0, 'userid' => $proposal->rel_id]) > 0) {
+                    <button type="button" class="btn <?php if ($proposal->rel_type == 'customer' && total_rows(db_prefix() . 'clients', ['active' => 0, 'userid' => $proposal->rel_id]) > 0) {
                                 echo ' disabled';
-                            } ?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php echo _l('proposal_convert'); ?> <span class="caret"></span>
+                            } ?>" aria-haspopup="true" aria-expanded="false">
+							<a href="#" <?php if ($disable_convert) {
+                         echo 'style="cursor:not-allowed;" onclick="return false;"';
+                     } else {
+                         echo 'data-template="invoice" onclick="proposal_convert_template(this); return false;"';
+                     } ?>><?php echo _l('proposal_convert_to_invoice'); ?></a>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-right">
+
+                    <?php /*?><ul class="dropdown-menu dropdown-menu-right">
                         <?php
                      $disable_convert = false;
                      $not_related     = false;
@@ -252,7 +275,7 @@
                          echo 'data-template="invoice" onclick="proposal_convert_template(this); return false;"';
                      } ?>><?php echo _l('proposal_convert_invoice'); ?></a></li>
                         <?php } ?>
-                    </ul>
+                    </ul><?php */?>
                 </div>
                 <?php } ?>
                 <?php } else {
