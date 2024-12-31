@@ -448,13 +448,13 @@ class Misc_model extends App_Model
 		{
 			$sql = 'SELECT COUNT(*) as total FROM ' . db_prefix() . 'notifications WHERE isread=' . $read;
 			$sql .= ' UNION ALL ';
-			$sql .= 'SELECT COUNT(*) as total FROM ' . db_prefix() . 'notifications WHERE isread_inline=' . $read;
+			$sql .= 'SELECT COUNT(*) as total FROM ' . db_prefix() . 'notifications WHERE isread_inline=' . $read. ' AND fromuserid!=' . $staff_id;
 		}
 		else
 		{
 			$sql = 'SELECT COUNT(*) as total FROM ' . db_prefix() . 'notifications WHERE isread=' . $read . ' AND touserid=' . $staff_id;
 			$sql .= ' UNION ALL ';
-			$sql .= 'SELECT COUNT(*) as total FROM ' . db_prefix() . 'notifications WHERE isread_inline=' . $read . ' AND touserid=' . $staff_id;		
+			$sql .= 'SELECT COUNT(*) as total FROM ' . db_prefix() . 'notifications WHERE isread_inline=' . $read . ' AND fromuserid!=' . $staff_id. ' AND touserid=' . $staff_id;		
 		}
         $res = $this->db->query($sql)->result();
 
@@ -472,6 +472,9 @@ class Misc_model extends App_Model
         $total = $total > 30 ? 30 : $total;
 
 		if (!is_admin()) $this->db->where('touserid', $staff_id);
+	
+		//self send notification not appear	
+		$this->db->where('fromuserid!=', $staff_id);
 
         $this->db->limit($total);
         $this->db->order_by('date', 'desc');
