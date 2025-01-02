@@ -321,7 +321,10 @@ class Staff extends AdminController
             $page   = $this->input->post('page');
             $offset = ($page * $this->misc_model->get_notifications_limit());
             $this->db->limit($this->misc_model->get_notifications_limit(), $offset);
-            $this->db->where('touserid', get_staff_user_id());
+            if (!is_admin()) $this->db->where('touserid', get_staff_user_id());
+
+			$this->db->where('fromuserid!=', get_staff_user_id());
+			
             $this->db->order_by('date', 'desc');
             $notifications = $this->db->get(db_prefix() . 'notifications')->result_array();
             $i             = 0;
@@ -338,7 +341,9 @@ class Staff extends AdminController
                     <img class="client-profile-image-small img-circle pull-left" src="' . contact_profile_image_url($notification['fromclientid']) . '"></a>';
                     }
                 } else {
-                    $notifications[$i]['profile_image'] = '';
+					$not_user = base_url('assets/images/not-user.jpg');
+                    $notifications[$i]['profile_image'] = '<img src="'. $not_user.'" class="client-profile-image-small img-circle pull-left notification-image">';
+
                     $notifications[$i]['full_name']     = '';
                 }
                 $additional_data = '';

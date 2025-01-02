@@ -37,6 +37,10 @@
                     echo '<img src="' . e(contact_profile_image_url($notification['fromclientid'])) . '" class="client-profile-image-small img-circle pull-left notification-image">';
                 }
             }
+			else {
+				$not_user = base_url('assets/images/not-user.jpg');
+				echo '<img src="'. $not_user.'" class="client-profile-image-small img-circle pull-left notification-image">';
+			}
             ?>
                 <div class="media-body">
                     <?php
