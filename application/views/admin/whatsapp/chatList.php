@@ -79,7 +79,7 @@
                                                 <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
                                                 <input type="hidden" id="formMediaUrl"/>
                                                 <input type="hidden" id="formMediaId" name="formMediaId"/>
-                                                <input type="text" id="formType" value="1">
+                                                <input type="hidden" id="formType" value="1">
                                                 <div class="message-input">
                                                     <div class="row">
                                                         <div class="col-sm-10">
