@@ -156,7 +156,6 @@ socket.on('error', (error) => {
           $('.wa-chat-col').show();
         }
         $('#formNumber').val(chatId);
-        console.log(name);
         $('.chat-title').html(name+' ('+ chatId +')');
         $('.initial-screen').css('display', 'none');
         $('.wa-chat-screen').show();
@@ -180,7 +179,6 @@ socket.on('error', (error) => {
             $('.chat-container').html('');
             // Add Messages to chat box.
                 data.messages.forEach(function (message) {
-                    console.log(message);
                 const messageClass = message.message_type === 'received' ? 'incoming-message' : 'sent-message';
                 if(message.message_content !=4){
                 // Create a new div for each message
@@ -306,6 +304,7 @@ $(document).ready(function() {
                     $('.uploading-media').remove();
                     $('#formMediaUrl').val('');
                     $('#mediaMessageCaptionField').val('');
+                    $('#mediaMessageFileField').val('');
                     // Remove upload box
                     // Add Message box
                     const mediaPath = formMediaUrl;
@@ -364,6 +363,7 @@ function changeMessageField(fieldId) {
 $(document).ready(function() {
     // Handle file selection
     $('#mediaMessageFileField').on('change', function(event) {
+        console.log("Media message file triggered");
         const file = event.target.files[0]; // Get the selected file
         const userId = $('#formUserId').val(); // Get user ID from input
         const source = "crm";
@@ -393,7 +393,7 @@ $(document).ready(function() {
             
             // AJAX request for file upload
             $.ajax({
-                url: 'http://localhost:4000/api/messages/upload', // Corrected URL
+                url: waURL+'/api/messages/upload', // Corrected URL
                 type: 'POST',
                 data: formData,
                 contentType: false, // Prevent jQuery from setting content type
