@@ -137,7 +137,7 @@
 <script>
 // Socket connection
 const URL = "wss://wa-business-api.onrender.com";
-const waURL = "https://wa-business-api.onrender.com";
+const waURL = "http://localhost:4000/";
 const socket = io(URL);
 socket.on('connect', () => {
     console.log('Connected to Socket.io server');
@@ -213,12 +213,16 @@ socket.on('error', (error) => {
     }
 </script>
 <script>
-    // Setup socket 
+    // Incomming messages socket
     function setupChatSocketListener(chatId){
-
+        activeChatId = chatId; // Track the active chat
 	// Remove any exisiting listener before adding new one
-	socket.off('chat-' + chatId);
+	socket.off('chat-' + chatId); // Remove previous listeners
 	socket.on('chat-' + chatId, (data)=>{
+            if (chatId !== activeChatId) {
+            // Ignore messages for other chats
+            return;
+        }
 	console.log(data);//Checking.
 	var type = data.type;
 	var messageData = data.messageToInsert;//getting message body
@@ -242,6 +246,7 @@ function autoScrollToBottom() {
     var chatContainer = $('#chatContainer');
     chatContainer.scrollTop(chatContainer[0].scrollHeight);  // Scroll to the bottom
 }
+// Sending messages function
 $(document).ready(function() {
     $('#messageForm').on('submit', function(e) {
         e.preventDefault(); // Prevent the default form submission
@@ -278,7 +283,6 @@ $(document).ready(function() {
             sendPayload.caption = mediaCaption;
             }
         }
-        console.log(sendPayload);
         // Send the data via AJAX
         $.ajax({
             type: 'POST',
@@ -338,7 +342,6 @@ document.getElementById('mediaMessageOption').addEventListener('click', function
     changeMessageField('mediaMessageCaptionField');
     document.getElementById('mediaMessageFileField').click();
 });
-
 document.getElementById('templateMessageOption').addEventListener('click', function() {
     $('#formType').val(3);
     changeMessageField('templateMessageField');
@@ -360,6 +363,7 @@ function changeMessageField(fieldId) {
     // Show the selected field
     document.getElementById(fieldId).style.display = 'block';
 }
+// Media Upload function
 $(document).ready(function() {
     // Handle file selection
     $('#mediaMessageFileField').on('change', function(event) {
