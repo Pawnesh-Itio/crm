@@ -65,11 +65,11 @@ echo theme_head_view();
         <div class="container-fluid">
             <?php hooks()->do_action('customers_content_container_start'); ?>
             <div class="row">
-                <div class="col-md-3 col-lg-2">
+                <div id="vsidebar" class="col-md-3 col-lg-2">
                     <!-- Sidebar -->
                     <?= get_template_part($navigationEnabled ? 'sidebar' : ''); ?>
                 </div>
-                <div class=" col-sm-12 col-md-9 col-lg-10">
+                <div id="varea" class=" col-sm-12 col-md-9 col-lg-10">
                     <?php
                     if (is_client_logged_in() && $subMenuEnabled && !isset($knowledge_base_search)) { ?>
                     <ul class="submenu customer-top-submenu">

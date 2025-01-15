@@ -23,6 +23,7 @@ function add_default_theme_menu_items()
             'name'     => _l('clients_nav_kb'),
             'href'     => site_url('knowledge-base'),
             'position' => 5,
+			'icon'     => 'fa-solid fa-globe  menu-icon',
         ]);
     }
 
@@ -39,7 +40,7 @@ function add_default_theme_menu_items()
                     'name'     => _l('clients_nav_login'),
                     'href'     => site_url('authentication/login'),
                     'position' => 100,
-                    'icon'     => 'fa-regular fa-user',
+                    'icon'     => 'fa-regular fa-user  menu-icon',
                 ]);
     } else {
         if (has_contact_permission('projects')) {
@@ -47,6 +48,8 @@ function add_default_theme_menu_items()
                     'name'     => _l('clients_nav_projects'),
                     'href'     => site_url('clients/projects'),
                     'position' => 10,
+					'icon'     => 'fa-solid fa-chart-gantt menu-icon',
+					'badge'    => [],
                 ]);
         }
         if (has_contact_permission('invoices')) {
@@ -54,6 +57,8 @@ function add_default_theme_menu_items()
                     'name'     => _l('clients_nav_invoices'),
                     'href'     => site_url('clients/invoices'),
                     'position' => 15,
+					'icon'     => 'fa-solid fa-receipt menu-icon',
+					'badge'    => [],
                 ]);
         }
         if (has_contact_permission('contracts')) {
@@ -75,6 +80,9 @@ function add_default_theme_menu_items()
                     'name'     => _l('clients_nav_proposals'),
                     'href'     => site_url('clients/proposals'),
                     'position' => 30,
+					'icon'     => 'fa-solid fa-notes-medical menu-icon',
+					'badge'    => [],
+					
                 ]);
         }
         if (can_logged_in_contact_view_subscriptions()) {
@@ -89,6 +97,7 @@ function add_default_theme_menu_items()
                     'name'     => _l('clients_nav_support'),
                     'href'     => site_url('clients/tickets'),
                     'position' => 45,
+					'icon'     => 'fa-solid fa-envelope-open-text  menu-icon',
                 ]);
         }
     }

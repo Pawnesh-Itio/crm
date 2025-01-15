@@ -9,7 +9,12 @@ Version: 2.3.0
 Requires at least: 2.3.*
 */
 
-require(__DIR__ . '/vendor/autoload.php');
+
+if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
+    require('D:/xampp/htdocs/crm-live/application/vendor/autoload.php');
+}else{
+require(__DIR__ . '/vendor/autoload.php');   
+}
 
 define('BACKUP_MODULE_NAME', 'backup');
 

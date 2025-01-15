@@ -1,18 +1,18 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <div class="mtop40">
-    <div class="col-md-4 col-md-offset-4 text-center">
-        <h1 class="tw-font-semibold mbot20 login-heading">
-            <?php
-         echo _l(get_option('allow_registration') == 1 ? 'clients_login_heading_register' : 'clients_login_heading_no_register');
-         ?>
-        </h1>
-    </div>
+    <div class="company-logo text-center">
+            <?php get_dark_company_logo('', 'navbar-brand logo'); ?>       </div>
     <div class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">
         <?php echo form_open($this->uri->uri_string(), ['class' => 'login-form']); ?>
         <?php hooks()->do_action('clients_login_form_start'); ?>
         <div class="panel_s">
             <div class="panel-body">
-
+<h1 class="tw-font-semibold text-center mt-0 pt-0">
+            <?php
+         echo _l(get_option('allow_registration') == 1 ? 'clients_login_heading_register' : 'clients_login_heading_no_register');
+         ?>
+        </h1>
                 <?php if (!is_language_disabled()) { ?>
                 <div class="form-group">
                     <label for="language" class="control-label"><?php echo _l('language'); ?>
