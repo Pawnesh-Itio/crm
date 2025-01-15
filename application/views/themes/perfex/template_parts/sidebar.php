@@ -7,7 +7,7 @@
         <div class="navbar-header">   
                         <?php get_dark_company_logo('', 'navbar-brand logo'); ?>
         </div>
-            <ul class="nav navbar-nav my-nav-ul">
+            <ul class="nav navbar-nav my-nav-ul text-clr" style="width:100%">
                 <?php hooks()->do_action('customers_navigation_start'); ?>
                 <?php if (is_client_logged_in()) { ?>
                     <li class="dropdown customers-nav-item-profile">
@@ -26,33 +26,33 @@
                             </li>
                             <?php if ($contact->is_primary == 1) { ?>
                                 <?php if (can_loggged_in_user_manage_contacts()) { ?>
-                                    <li class="customers-nav-item-edit-profile side-nav-item">
+                                    <li class="customers-nav-item-edit-profile side-nav-itemx">
                                         <a href="<?php echo site_url('contacts'); ?>">
                                             <?php echo _l('clients_nav_contacts'); ?>
                                         </a>
                                     </li>
                                 <?php } ?>
-                                <li class="customers-nav-item-company-info side-nav-item">
+                                <li class="customers-nav-item-company-info side-nav-itemx">
                                     <a href="<?php echo site_url('clients/company'); ?>">
                                         <?php echo _l('client_company_info'); ?>
                                     </a>
                                 </li>
                             <?php } ?>
                             <?php if (can_logged_in_contact_update_credit_card()) { ?>
-                                <li class="customers-nav-item-stripe-card side-nav-item">
+                                <li class="customers-nav-item-stripe-card side-nav-itemx">
                                     <a href="<?php echo site_url('clients/credit_card'); ?>">
                                         <?php echo _l('credit_card'); ?>
                                     </a>
                                 </li>
                             <?php } ?>
                             <?php if (is_gdpr() && get_option('show_gdpr_in_customers_menu') == '1') { ?>
-                                <li class="customers-nav-item-announcements side-nav-item">
+                                <li class="customers-nav-item-announcements side-nav-itemx">
                                     <a href="<?php echo site_url('clients/gdpr'); ?>">
                                         <?php echo _l('gdpr_short'); ?>
                                     </a>
                                 </li>
                             <?php } ?>
-                            <li class="customers-nav-item-announcements side-nav-item">
+                            <li class="customers-nav-item-announcements side-nav-itemx">
                                 <a href="<?php echo site_url('clients/announcements'); ?>">
                                     <?php echo _l('announcements'); ?>
                                     <?php if ($total_undismissed_announcements != 0) { ?>
@@ -66,7 +66,7 @@
                                         <?php echo _l('language'); ?>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-left">
-                                        <li class="side-nav-item <?php if (get_contact_language() == '') {
+                                        <li class="side-nav-itemx <?php if (get_contact_language() == '') {
                                             echo 'active ';
                                         } ?>">
                                             <a href="<?php echo site_url('clients/change_language'); ?>">
@@ -94,9 +94,9 @@
                     </li>
                 <?php } ?>
                 <li class="customers-nav-item-projects side-nav-item">
-                    <a href="<?= base_url() ?>">
-                        Dashboard
-                    </a>
+                    <a href="<?= base_url() ?>"> <i class="fa fa-home menu-icon"></i> Dashboard </a>
+                        
+                    
                 </li>
                 <?php hooks()->do_action('customers_navigation_after_profile'); ?>
                 <?php foreach ($menu as $item_id => $item) { 

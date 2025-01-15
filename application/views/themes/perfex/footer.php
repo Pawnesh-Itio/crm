@@ -1,4 +1,15 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<style>
+@media (max-width: 1024px) {
+    .side-cont {
+        display: none !important;
+    }
+	.navbar {
+        background-color: #1e293b;
+        display: block;
+    }
+}
+</style>
 <footer class="footer">
     <div class="container">
         <div class="row">
@@ -20,3 +31,18 @@
         </div>
     </div>
 </footer>
+<?php
+$page_name = basename($_SERVER['REQUEST_URI']);
+if($page_name=="login" || $page_name=="forgot_password"){ 
+?>
+<script> 
+$('#vsidebar').hide();
+$('#varea').removeClass("col-sm-12 col-md-9 col-lg-10");
+$('#varea').addClass("col-sm-12 col-md-12 col-lg-12");
+//alert("Hide");
+</script>
+
+<?php
+}
+
+?>
