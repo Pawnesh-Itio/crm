@@ -9,5 +9,8 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Studio-42/elFinder.git"
+	},
+	"dependencies": {
+		"elfinder": "file:"
 	}
 }

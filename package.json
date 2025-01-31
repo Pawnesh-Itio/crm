@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.4.1",
+    "perfex": "file:",
     "vue": "^3.3.9"
   }
 }

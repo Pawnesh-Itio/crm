@@ -191,6 +191,38 @@ function app_init_admin_sidebar_menu_items()
 		]);
     }
 
+    if (is_staff_member()) {
+		$CI->app_menu->add_sidebar_menu_item('webmail', [
+			'name'     => _l('Webmail'),
+			'href'     => admin_url('webmail'),
+			'icon'     => 'fa-regular fa-envelope',
+			'position' => 45,
+			'badge'    => [],
+		]);
+    }
+
+    if (is_staff_member()) {
+		$CI->app_menu->add_sidebar_menu_item('webmail-setup', [
+			'name'     => _l('Webmail Setup'),
+			'href'     => admin_url('webmail_setup'),
+			'icon'     => 'fa-solid fa-at',
+			'position' => 45,
+			'badge'    => [],
+		]);
+    }
+
+    if (is_staff_member()) {
+		$CI->app_menu->add_sidebar_menu_item('ai-content-generator', [
+			'name'     => _l('Generate Content AI'),
+			'href'     => admin_url('ai_content_generator'),
+			'icon'     => 'fa-regular fa-newspaper',
+			'position' => 45,
+			'badge'    => [],
+		]);
+    }
+
+    
+
 
     if (is_staff_member()) {
 		$CI->app_menu->add_sidebar_menu_item('conversion', [

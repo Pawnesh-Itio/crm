@@ -66,6 +66,8 @@ $route['admin'] = 'admin/dashboard';
 $route['admin/access_denied'] = 'admin/misc/access_denied';
 $route['admin/not_found']     = 'admin/misc/not_found';
 
+
+
 /**
  * Staff Routes
  */
