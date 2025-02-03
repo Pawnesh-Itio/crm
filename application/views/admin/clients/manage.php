@@ -4,6 +4,7 @@
     <div class="content">
         <div class="row">
             <div class="col-md-12">
+            <div id="ajaxAlert" class="alert d-none" role="alert"></div>
                 <div class="_buttons">
                     <?php if (staff_can('create',  'customers')) { ?>
                     <a href="<?php echo admin_url('clients/client'); ?>"
@@ -194,6 +195,10 @@
                         [
                          'name'     => _l('date_created'),
                          'th_attrs' => ['class' => 'toggleable', 'id' => 'th-date-created'],
+                        ],
+                        [
+                         'name'     => 'Under Writing',
+                         'th_attrs' => ['class' => 'toggleable', 'id' => 'th-underwriting'],
                         ],
                         [
                         'name'     => _l('chatBtn'),
@@ -428,7 +433,45 @@ $(document).ready(function() {
     });
 });
 
+function underWriting(userId){
+        let button = $("#underwritingBtn"); // Select the button using its ID
+        button.prop("disabled", true).addClass("disabled"); // Disable button
+        // Send the data via AJAX
+        $.ajax({
+        type: 'POST',
+        url:'clients/under_writing', // Replace with your actual URL
+        data: {
+            userId: userId
+        },
+        success: function(response) {
+            let jsonResponse = JSON.parse(response);
+            button.prop("disabled", false).removeClass("disabled"); // Re-enable on error
+            if(jsonResponse.status){
+                showAlert(jsonResponse.message, jsonResponse.status === "success" ? "alert-success" : "alert-danger");
+            }else{
+                showAlert("Somthing went wrong please try again later!", "alert-danger");
+            }
+        },
+        error: function(error) {
+            button.prop("disabled", false).removeClass("disabled"); // Re-enable on error
+            // Handle error
+            showAlert("Somthing went wrong please try again later!", "alert-danger");
+            console.error('Error sending message:', error.message);
+        }
+    });
+}
+// Function to show and auto-hide the alert
+function showAlert(message, alertType) {
+    var alertBox = $("#ajaxAlert");
+    alertBox.removeClass("d-none alert-success alert-danger") // Remove previous styles
+           .addClass(alertType) // Add success or error class
+           .html(message) // Set message
+           .fadeIn(); // Show alert
 
+    setTimeout(function() {
+        alertBox.fadeOut(); // Hide after 5 sec
+    }, 5000);
+}
 </script>
 </body>
 

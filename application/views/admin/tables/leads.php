@@ -249,7 +249,7 @@ return App_table::find('leads')
                              ' . e($leadChangeStatus['name']) . '
                           </a>
                        </li>';
-                        }
+                        } 
                     }
                     $outputStatus .= '</ul>';
                     $outputStatus .= '</div>';

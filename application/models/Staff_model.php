@@ -869,4 +869,30 @@ class Staff_model extends App_Model
 
         return $result;
     }
+    public function getWebMails($id){
+        $this->db->select('id, mailer_name, mailer_email');
+        $this->db->where('NOT FIND_IN_SET(' . $this->db->escape($id) . ', assignto)', NULL, FALSE);
+        $this->db->where('departmentid',0);
+        $this->db->where('staffid',0);
+        $webMails = $this->db->get(db_prefix() . 'webmail_setup')->result_array();
+        return $webMails;
+    }
+    public function getSpecificMailer($mailerId){
+        $this->db->select('id, assignto');
+        $this->db->where('id',$mailerId);
+        $webMail = $this->db->get(db_prefix() . 'webmail_setup')->result_array();
+        return $webMail;
+    }
+    public function updateAssignedUser($mailerId,$staffId){
+        // Update query to append the new user ID if it doesn't already exist
+        $this->db->set('assignto', "IF(assignto = '', '$staffId', CONCAT(assignto, ',$staffId'))", FALSE);
+        $this->db->where('id', $mailerId);
+        $this->db->update(db_prefix() .'webmail_setup'); // Replace with your actual table name
+        // Check if the update was successful
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

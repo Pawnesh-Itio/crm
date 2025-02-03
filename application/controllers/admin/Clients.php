@@ -1,5 +1,7 @@
 <?php
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Clients extends AdminController
@@ -1081,5 +1083,72 @@ class Clients extends AdminController
         $viewData['html'] = $this->load->view('admin/clients/groups/_statement', $data, true);
 
         echo json_encode($viewData);
+    }
+    public function under_writing(){
+        $userId = $_POST['userId'];
+        $companyData = $this->clients_model->get($userId);
+        $LeadId = $companyData->leadid;
+        $attachmentData = $this->clients_model->getAttachmentData($userId, $LeadId);
+        // Company Details
+        $MailBody = "<h3 style='text-align:center'>Company & Shipping Details</h3><ul>";
+        $MailBody .= "<li>Company Name: $companyData->company </li>"
+                    ."<li>VAT: $companyData->vat</li>"
+                    ."<li>Website: $companyData->website</li>"
+                    ."<li>Address: $companyData->address</li>"
+                    ."<li>City: $companyData->city</li>"
+                    ."<li>Sate: $companyData->state </li>"
+                    ."<li>Country: $companyData->country</li>"
+                    ."<li>Zip: $companyData->zip </li>"
+                    ."<li>Billing City: $companyData->billing_city</li>"
+                    ."<li>Billing State: $companyData->billing_state</li>"
+                    ."<li>Billing Country: $companyData->billing_country</li>"
+                    ."<li>Billing Street:$companyData->billing_street</li>"
+                    ."<li>Billing Zip:$companyData->billing_zip </li>"
+                    ."<li>Shipping City: $companyData->business_desc </li>"
+                    ."<li>Shipping State: $companyData->business_desc </li>"
+                    ."<li>Shipping Country: $companyData->business_desc </li>"
+                    ."<li>Shipping Street: $companyData->business_desc </li>"
+                    ."<li>Shipping Zip: $companyData->business_desc </li>"
+                    ."<li>Business Description: $companyData->business_desc </li>";
+        $MailBody .="</ul>";
+        // Contact Details
+        $MailBody .="<h3 style='text-align:center'>Contact Details</h3><ul>"
+        ."<li>Contact Name: $companyData->firstname $companyData->lastname</li>"
+        ."<li>Title: $companyData->title</li>"
+        ."<li>Contact Eamil: $companyData->email</li>"
+        ."<li>Contact Phone: $companyData->phonenumber</li>"
+        ."<li>Date Created: $companyData->datecreated</li>";
+        $MailBody .="</ul>";
+
+        // Send Email 
+        $mail = new PHPMailer(true);
+        //Server settings
+        $mail->isSMTP();                                                 //Send using SMTP
+        $mail->Host       = 'smtp.gmail.com';                            //Set the SMTP server to send through
+        $mail->SMTPAuth   = true;                                        //Enable SMTP authentication
+        $mail->Username   = 'pawneshkitio@gmail.com';                    //SMTP username
+        $mail->Password   = 'gcvpvnmdncvgsxyc';                          //SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;                 //Enable implicit TLS encryption
+        $mail->Port       = 465;                                         //TCP port to connect to; use 587 if you have set `SMTPSecure = 
+            //Recipients
+        $mail->setFrom('pawneshkitio@gmail.com', 'Dev Pawnesh');
+        $mail->addAddress('pawnesh1999@gmail.com', 'Pawnesh Kumar');     //Add a recipient
+            //Attachments
+        foreach($attachmentData as $ad){
+        $mail->addAttachment('uploads/clients/'.$userId.'/'.$ad->file_name,'Attachment'); 
+        } 
+        //Content
+        $mail->isHTML(true);                                             //Set email format to HTML
+        $mail->Subject = $companyData->firstname.' Details for Under Writing';
+        $mail->Body    = $MailBody;
+        $mail->AltBody = 'Underwriting Content';
+
+        if($mail->send()){
+            http_response_code(200); // Success
+            echo json_encode(['status' => 'success', 'message' => 'Underwriting email sent successfully']);
+        }else{
+            http_response_code(400); // Bad request
+            echo json_encode(['status' => 'error', 'message' => 'Something went wrong']);
+        }
     }
 }

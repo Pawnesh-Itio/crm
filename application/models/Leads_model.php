@@ -1,7 +1,12 @@
 <?php
 
 use app\services\AbstractKanban;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
+//Load Composer's autoloader
+require APPPATH .'vendor/autoload.php';
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Leads_model extends App_Model
@@ -799,6 +804,69 @@ class Leads_model extends App_Model
      */
     public function update_lead_status($data)
     {
+        if($data['status']==4){
+            // Fetch All Details
+            $this->db->select('*');
+            $this->db->where('id', $data['leadid']);
+            $leadData = $this->db->get(db_prefix() . 'leads')->row();
+            // Prepare Mail Body
+            $sourceName='';
+            if($leadData->source==1){
+                $sourceName = "Google";
+            }
+            if($leadData->source==2){
+                $sourceName = "Facebook";
+            }
+            if($leadData->source==3){
+                $sourceName = "Whatsapp";
+            }
+            if($leadData->source==4){
+                $sourceName = "Telegram";
+            }
+            if($leadData->source==5){
+                $sourceName = "Live Chat";
+            }
+            $MailBody = "<ul>";
+            $MailBody .= "<li>Name: $leadData->name</li>"
+                        ."<li>Title: $leadData->title</li>"
+                        ."<li>E-Mail: $leadData->email</li>"
+                        ."<li>Phone Number: $leadData->phonenumber</li>"
+                        ."<li>Source: $sourceName</li>"
+                        ."<li>Company: $leadData->company</li>"
+                        ."<li>Description: $leadData->description</li>"
+                        ."<li>Country: $leadData->country</li>"
+                        ."<li>Zip: $leadData->zip</li>"
+                        ."<li>City: $leadData->city</li>"
+                        ."<li>State: $leadData->state</li>"
+                        ."<li>Address: $leadData->address</li>"
+                        ."<li>Date Added: $leadData->dateadded</li>"
+                        ."<li>Last Contacted: $leadData->lastcontact</li>"
+                        ."<li>Date Assigned: $leadData->dateassigned</li>"
+                        ."<li>Last Status Changed: $leadData->last_status_change</li>";
+            $MailBody .="</ul>";
+                            // Send Email 
+                        $mail = new PHPMailer(true);
+                            //Server settings
+                        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                           //Enable verbose debug output
+                        $mail->isSMTP();                                                 //Send using SMTP
+                        $mail->Host       = 'smtp.gmail.com';                            //Set the SMTP server to send through
+                        $mail->SMTPAuth   = true;                                        //Enable SMTP authentication
+                        $mail->Username   = 'pawneshkitio@gmail.com';                    //SMTP username
+                        $mail->Password   = 'gcvpvnmdncvgsxyc';                          //SMTP password
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;                 //Enable implicit TLS encryption
+                        $mail->Port       = 465;                                         //TCP port to connect to; use 587 if you have set `SMTPSecure = 
+                            //Recipients
+                        $mail->setFrom('pawneshkitio@gmail.com', 'Dev Pawnesh');
+                        $mail->addAddress('pawnesh1999@gmail.com', 'Pawnesh Kumar');     //Add a recipient
+                            //Content
+                        $mail->isHTML(true);                                             //Set email format to HTML
+                        $mail->Subject = $leadData->name.' Lead to Under Writing';
+                        $mail->Body    = $MailBody;
+                        $mail->AltBody = 'Underwriting Content';
+
+                        $mail->send();
+        }
+
         $this->db->select('status');
         $this->db->where('id', $data['leadid']);
         $_old = $this->db->get(db_prefix() . 'leads')->row();
@@ -1199,10 +1267,19 @@ class Leads_model extends App_Model
     }
     public function updateAssignedUser($lead_id, $assigned_id){
         $current_lead_data = $this->get($lead_id);
-        $this->db->where('id', $lead_id);
-        $this->db->update(db_prefix() . 'leads', [
-            'assigned' =>  $assigned_id
-        ]);
+        // Check if the current lead status is 2
+        if ($current_lead_data->status == 2) {
+            $this->db->where('id', $lead_id);
+            $this->db->update(db_prefix() . 'leads', [
+                'assigned' => $assigned_id,
+                'status' => 3, // Update status to 3 only when it is 2
+            ]);
+        } else {
+            $this->db->where('id', $lead_id);
+            $this->db->update(db_prefix() . 'leads', [
+                'assigned' => $assigned_id,
+            ]);
+        }
         if (isset($assigned_id)) {
             if ($current_lead_data->assigned != $assigned_id && (!empty($assigned_id) && $assigned_id != 0)) {
                 $this->lead_assigned_member_notification($lead_id, $assigned_id);

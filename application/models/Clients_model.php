@@ -25,7 +25,7 @@ class Clients_model extends App_Model
      */
     public function get($id = '', $where = [])
     {
-        $this->db->select(implode(',', prefixed_table_fields_array(db_prefix() . 'clients')) . ',' . get_sql_select_client_company());
+        $this->db->select(implode(',', prefixed_table_fields_array(db_prefix() . 'clients')) . ',' . get_sql_select_client_company(). ',' . db_prefix() . 'contacts.*');
 
         $this->db->join(db_prefix() . 'countries', '' . db_prefix() . 'countries.country_id = ' . db_prefix() . 'clients.country', 'left');
         $this->db->join(db_prefix() . 'contacts', '' . db_prefix() . 'contacts.userid = ' . db_prefix() . 'clients.userid AND is_primary = 1', 'left');
@@ -1715,5 +1715,19 @@ class Clients_model extends App_Model
         }
 
         return $this->db->get(db_prefix() . 'contacts')->result_array();
+    }
+    public function getAttachmentData($userId, $LeadId){
+        $this->db->group_start()
+         ->where('rel_id', $LeadId)
+         ->where('rel_type', 'lead')
+         ->group_end()
+         ->or_group_start()
+         ->where('rel_id', $userId)
+         ->where('rel_type', 'customer')
+         ->group_end();
+
+        $query = $this->db->get(db_prefix() . 'files');
+        $result = $query->result();
+        return $result;
     }
 }

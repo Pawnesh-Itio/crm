@@ -15,6 +15,9 @@ class Staff extends AdminController
         }
         $data['staff_members'] = $this->staff_model->get('', ['active' => 1]);
         $data['title']         = _l('staff_members');
+        // Retrive Mail Boxs
+        // $id = get_staff_user_id();
+        // $data['webmails'] = $this->staff_model->getWebMails();
         $this->load->view('admin/staff/manage', $data);
     }
 
@@ -452,5 +455,34 @@ class Staff extends AdminController
         $staff = $this->staff_model->get();
         echo json_encode($staff);
         die;
+    }
+    public function getUnassignedWebMails(){
+        $id = $_POST['id'];
+        $webmails = $this->staff_model->getWebMails($id);
+        if($webmails){
+            http_response_code(200); // Success
+            echo json_encode(['status' => 'success', 'message' => 'Data Fetched', 'data'=>$webmails]);
+        }else{
+            http_response_code(400); // Faliure
+            echo json_encode(['status' => 'error', 'message' => 'Fetching Mailer failed or Mailer Not Available!']);
+        }
+    }
+    public function assignedTo(){
+        if($_POST['mailerId'] && $_POST['mailerId'] !=0){
+            $mailerId = $_POST['mailerId'];
+            $staffId = $_POST['staffId'];
+            $updateValue = $this->staff_model->updateAssignedUser($mailerId,$staffId);
+            if($updateValue){
+                set_alert('success', 'Mailer Assigned Successfully');
+                redirect(admin_url('staff'));
+            }else{
+                set_alert('warning','Update failed or User ID already exists.');
+                redirect(admin_url('staff'));
+            }
+        }else{
+            http_response_code(400); // Faliure
+            echo json_encode(['status' => 'error', 'message' => 'Somthing went wrong!']);
+        }
+        
     }
 }
