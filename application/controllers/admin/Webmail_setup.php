@@ -67,7 +67,7 @@ class Webmail_setup extends AdminController
          //print_r($data);
         $this->webmail_setup_model->create($data);
         set_alert('success', _l('added_successfully', _l('Webmail Setup')));
-        redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
+        redirect(admin_url('webmail_setup'));
     }
 	
 	
@@ -96,7 +96,7 @@ class Webmail_setup extends AdminController
             $this->webmail_setup_model->update($entry_id, $data);
             set_alert('success', _l('updated_successfully', _l('Webmail Setup')));
         }
-        redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
+        redirect(admin_url('webmail_setup'));
     }
 	
 	//Delete Webmail Setup from database 
