@@ -3,7 +3,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 $rootDir = str_replace("","",realpath(__DIR__));
 //echo $rootDir;
-require_once 'https://xeyso.com/crm/vendor/vendor/autoload.php';
+require_once APPPATH .'vendor/vendor/autoload.php';
 
 use Webklex\PHPIMAP\ClientManager;
 use PHPMailer\PHPMailer\PHPMailer;
