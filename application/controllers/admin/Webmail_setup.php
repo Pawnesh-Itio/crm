@@ -12,7 +12,7 @@ class Webmail_setup extends AdminController
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Webmail_setup_model');
+        $this->load->model('webmail_setup_model');
         if (!is_admin()) {
             //access_denied('Access Webmail Setup');
 			//$sid=get_staff_user_id();
