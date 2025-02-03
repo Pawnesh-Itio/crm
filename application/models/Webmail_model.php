@@ -1,9 +1,9 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-$rootDir = str_replace("\models","",realpath(__DIR__));
+$rootDir = str_replace("","",realpath(__DIR__));
 //echo $rootDir;
-require_once $rootDir.'/vendor/vendor/autoload.php';
+require_once 'https://xeyso.com/crm/vendor/vendor/autoload.php';
 
 use Webklex\PHPIMAP\ClientManager;
 use PHPMailer\PHPMailer\PHPMailer;
