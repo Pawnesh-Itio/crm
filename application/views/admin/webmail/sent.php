@@ -1,0 +1,311 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php init_head(); ?>
+<?php //print_r($webmaillist);?>
+<style>
+@media (min-width: 768px) {
+    .modal-dialog {
+        width: unset !important;
+    }
+}
+</style>
+
+<div id="wrapper">
+    <div class="content">
+        <div class="row">
+		<?php if(!empty($_SESSION['mailersdropdowns'])){ ?>
+            <div class="col-md-12">
+                <div class="tw-mb-3">
+   <span class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><?=$_SESSION['webmail']['mailer_email'];?>
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+	<?php  foreach ($_SESSION['mailersdropdowns'] as $item) { ?>
+	<li><a href="?mt=<?=$item['id'];?>"><?=$item['mailer_email'];?></a></li>
+	<?php  } ?>
+  </ul>
+</span>
+    <a href="<?php echo site_url('admin/webmail/inbox'); ?>" class="btn btn-primary new-ticket">
+        <i class="fa-solid fa-envelope tw-mr-1"></i>
+        <?php echo _l('Inbox')."(".@$_SESSION['inbox-total-email'].")"; ?><span class="badge text-bg-primary rounded-pill inbox-count"></span>
+    </a>
+	<a href="<?php echo site_url('admin/webmail/sent'); ?>" class="btn btn-primary new-ticket">
+        <i class="fa-solid fa-envelope-circle-check tw-mr-1"></i>
+        <?php echo _l('Sent Item')."(".@$_SESSION['outbox-total-email'].")"; ?><span class="badge text-bg-primary rounded-pill inbox-count"></span>
+    </a>
+	<a href="<?php echo site_url('admin/webmail/compose'); ?>" class="btn btn-primary new-ticket">
+        <i class="fa-regular fa-paper-plane tw-mr-1"></i>
+        <?php echo _l('New Mail'); ?>
+    </a>
+	
+	
+</div>
+                <div class="panel_s">
+                    <div class="panel-body panel-table-full">
+
+<?php if (count($outboxemail) == 0) { ?>
+<div class="alert alert-info text-center">
+    <?php echo _l('No Webmail Setup Entries'); ?>
+</div>
+<?php } ?>
+<div class="table-responsive">
+ <table class="table table-clients number-index-2 dataTable no-footer">
+
+<?php $cnt=101; foreach ($outboxemail as $message) { $cnt++; ?>
+<tr>
+	<td class="hrefmodal" data-tid="<?=$message->subject;?>" data-id="msg<?=$cnt;?>" title="<?=$message->subject;?>" mailto="<?=$message->from;?>"><span class="bold"> <?=$message->subject;?></span><br><span><?=htmlspecialchars($message->from);?></span></td>
+	<td class="w-25 text-end"><?=$message->date;?></td>
+</tr>
+<tr><td colspan="2" style="display:none;">
+<textarea id="msg<?=$cnt;?>"><?=$message->getHtmlBody();?></textarea>
+
+<?php
+// Directory to save attachments
+$attachmentDir = 'attachments';
+// Create directory if it doesn't exist
+if (!file_exists($attachmentDir)) {
+mkdir($attachmentDir, 0777, true);
+}
+// Retrieve and save attachments
+$attachments = $message->getAttachments();
+foreach ($attachments as $attachment) {
+$fileName = $attachment->name;
+$filePath = site_url('attachments') . '/' . $fileName;
+// Save the attachment
+$attachment->save($attachmentDir);
+?>
+<i class="fa-solid fa-paperclip"></i> - <a href="<?=$filePath;?>" target="_blank" title="Click to view"><?=$fileName;?></a><br>
+<?php
+} 
+//====================================== 
+
+
+?>
+
+
+
+</td></tr>
+<?php } ?>
+
+  </tbody>
+  </table>
+  </div>
+  <div class="dataTables_paginate paging_simple_numbers" id="clients_paginate"><ul class="pagination">
+<?php
+// Paging
+// Configuration
+$totalRecords = $_SESSION['outbox-total-email']; // Total number of records (replace with your DB query result)
+$recordsPerPage = 10; // Records per page
+$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page from URL
+$current_page = max(1, $current_page); // Ensure current page is at least 1
+
+// Calculate total pages and boundaries
+$totalPages = ceil($totalRecords / $recordsPerPage);
+$startPage = max(1, $current_page - 5); // Start page for display
+$endPage = min($totalPages, $startPage + 9); // End page for display
+
+// Ensure proper range of start and end pages
+if ($endPage - $startPage < 9) {
+    $startPage = max(1, $endPage - 9);
+}
+
+// Generate Previous and Next page numbers
+$prevPage = $current_page > 1 ? $current_page - 1 : null;
+$nextPage = $current_page < $totalPages ? $current_page + 1 : null;
+
+// Display the pagination
+//echo '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center ">';
+
+// Previous Button
+if ($prevPage) {
+    echo '<li class="paginate_button previous" id="clients_previous"><a class="page-link " href="?page=' . $prevPage . '">Previous</a></li>';
+}
+
+// Page Links
+for ($i = $startPage; $i <= $endPage; $i++) {
+    if ($i == $current_page) {
+        echo '<li class="paginate_button active 44"><a class="page-link">' . $i . '</a></li>';
+    } else {
+        echo '<li class="paginate_button 11"><a class="page-link"  href="?page=' . $i . '">' . $i . '</a></li>';
+    }
+}
+
+// Next Button
+if ($nextPage) {
+    echo '<li class="paginate_button next" id="clients_next"><a class="page-link" href="?page=' . $nextPage . '">Next</a></li>';
+}
+
+//echo '</ul></nav>';
+
+// Styling for pagination (optional, Bootstrap 5 example)
+?>
+</ul></div>
+  
+
+
+
+                    </div>
+                </div>
+            </div>
+		<?php }else{?>
+		<div class="alert alert-info text-center">
+        <?php echo _l('No Webmail Setup Entries'); ?>
+        </div>
+		<?php } ?>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="myModal12">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <!--Heading-->
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div id="messageDisplay" class="p-4"></div>
+		<div id="replyform p-2 border rounded">
+  <p class="d-inline-flex gap-1 text-end">
+ 
+  <a class="btn btn-warning" id="reply-button"><i class="fa-solid fa-reply"></i> Reply</a>
+</p>
+<div class="collapse" id="reply-box">
+  <div class="card card-body">
+  
+  
+  
+    <form action="<?=  admin_url('webmail/Reply') ?>" method="post" enctype="multipart/form-data">
+	<!-- CSRF Token -->
+        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" 
+               value="<?= $this->security->get_csrf_hash(); ?>">
+	<input type="hidden" name="redirect" value="inbox.php">
+      <div class="mb-3">
+        <label for="recipientEmail" class="form-label">Recipient Email</label>
+        <input type="text" class="form-control" id="recipientEmailIT" name="recipientEmail" value="" placeholder="Enter recipient email" required>
+      </div>
+      <div class="mb-3">
+        <label for="emailSubject" class="form-label">Subject</label>
+        <input type="text" class="form-control" id="emailSubjectIT" name="emailSubject" value="" placeholder="Enter email subject" required>
+      </div>
+      <div class="mb-3">
+        <label for="emailBody" class="form-label">Email Body</label>
+       <?php /*?> <textarea id="emailBody" name="emailBody" class="form-control" rows="5"></textarea><?php */?>
+	   <?php echo render_textarea('emailBody', '', '', [], [], '', 'tinymce'); ?>
+                                <div class="attachments_area">
+                                    <div class="row attachments">
+                                        <div class="attachment">
+                                            <div class="col-md-4 mtop10">
+                                                <div class="form-group">
+                                                    <label for="attachment"
+                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
+                                                    <div class="input-group">
+<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment1" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
+                                                    </div>
+                                                </div>
+                                            </div>
+											<div class="col-md-4 mtop10">
+                                                <div class="form-group">
+                                                    <label for="attachment"
+                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
+                                                    <div class="input-group">
+<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment2" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
+                                                    </div>
+                                                </div>
+                                            </div>
+											<div class="col-md-4 mtop10">
+                                                <div class="form-group">
+                                                    <label for="attachment"
+                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
+                                                    <div class="input-group">
+<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment3" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+      </div>
+      <button type="submit" name="send" class="btn btn-primary mtop20">Send Email</button>
+    </form>
+    <div id="resultMessage" class="mt-4"></div>
+  </div>
+</div>
+  </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
+                
+            </div>
+    </div>
+  </div>
+</div>
+
+<?php init_tail(); ?>
+<script>
+
+  
+  $('.hrefmodal').click(function(){ 
+
+         //alert(11111);
+         var tid=$(this).attr('data-tid');
+		 var mailto=$(this).attr('mailto');
+		 var did=$(this).attr('data-id');
+		 //alert(tid);alert(mailto);alert(did);
+		 
+		 $('#myModal12').modal('show');
+		  $('#myModal12 .modal-dialog').css({"max-width":"80%", "margin-top": "20px"});
+		 //$('#myModal12').modal('show').find('.modal-body').load(urls);
+	     $('#myModal12 .modal-title').html(tid + mailto);
+		// $('#emailSubject').val(tid);
+		 $('#emailSubjectIT').val(tid);
+		 $('#recipientEmailIT').val(mailto);
+		 
+		 var contents=$('#'+did).val();
+		 $('#messageDisplay').html(contents);
+
+		 
+
+	});
+	
+	$( "#reply-button" ).click(function() {
+    $( "#reply-box" ).toggle();
+});
+  </script>
+  <script>
+    tinymce.init({
+    selector: 'textarea',
+    plugins: [
+      // Core editing features
+      'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+      // Your account includes a free trial of TinyMCE premium features
+      // Try the most popular premium features until Jan 30, 2025:
+      'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+    ],
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+    tinycomments_mode: 'embedded',
+    tinycomments_author: 'Author name',
+    mergetags_list: [
+      { value: 'First.Name', title: 'First Name' },
+      { value: 'Email', title: 'Email' },
+    ],
+    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+  });
+
+ 
+  </script>
+<script>
+$(function() {
+    //initDataTable('.table-custom-fields', window.location.href);
+});
+</script>
+
+
+</body>
+
+</html>
