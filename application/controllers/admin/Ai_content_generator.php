@@ -37,7 +37,7 @@ class Ai_content_generator extends AdminController
 		$data['user_id']      = get_staff_user_id();
         $data['added_by'] = get_staff_full_name($data['user_id']);
         $data['ai_content']=$this->ai_content_generator_model->generate($data);
-		//print_r($data['ai_content']);
+		//print_r($data['ai_content']);exit;
 		
 		if(isset($data['ai_content']['error'])&&!empty($data['ai_content']['error'])){
 		//echo $data['ai_content']['error'];

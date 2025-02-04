@@ -19,7 +19,7 @@ class Ai_content_generator_model extends App_Model
 	   if(isset($content_title)&&!empty($content_title)){
 	   $content_title=nl2br(htmlspecialchars($content_title));
 		///////////////CHAT GTP API///////////////
-$secKey = "Bearer XXX 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"; //mailers@itio.in
+$secKey = "Bearer  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"; //mailers@itio.in
 $post_url = 'https://api.openai.com/v1/chat/completions';
 $requestJson='{
      "model": "gpt-4o-mini",
@@ -68,7 +68,9 @@ $data['completion_tokens']=$res['usage']['completion_tokens'];
 $data['total_tokens']=$res['usage']['total_tokens'];
 $this->db->insert(db_prefix().'content_master', $data);
         if ($this->db->affected_rows() > 0) {
+		//print_r($data);exit;
 		return $data;
+		
 		}else{
 		log_activity('Data Not Submitted');
 		return false;
