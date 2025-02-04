@@ -1,17 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-$rootDir = str_replace("\models","",realpath(__DIR__));
-//$rootDir = str_replace("/models","",realpath(__DIR__));
-
-//echo $rootDir;
-
-
 use Webklex\PHPIMAP\ClientManager;
 use Webklex\PHPIMAP\Client;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once $rootDir.'/vendor/vendor/autoload.php';
+require_once APPPATH.'/vendor/vendor/autoload.php';
 
 class Webmail_model extends App_Model
 {
