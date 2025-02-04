@@ -38,10 +38,21 @@ class Ai_content_generator extends AdminController
         $data['added_by'] = get_staff_full_name($data['user_id']);
         $data['ai_content']=$this->ai_content_generator_model->generate($data);
 		//print_r($data['ai_content']);
+		
+		if(isset($data['ai_content']['error'])&&!empty($data['ai_content']['error'])){
+		//echo $data['ai_content']['error'];
+		$data['content_description']=$data['ai_content']['error'];
+		set_alert('danger', _l('Error : Content Not Generated'));
+		$this->load->view('admin/ai-content-generator', $data);
+		//exit;
+		
+		}else{
+		
 		$data['content_description']=$data['ai_content']['content'];
 		//exit;
         set_alert('success', _l('added_successfully', _l('AI Content')));
 		$this->load->view('admin/ai-content-generator', $data);
+		}
     }
 	
 

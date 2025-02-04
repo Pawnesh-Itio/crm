@@ -13,10 +13,12 @@
     <div class="content">
         <div class="row">
 		<?php if(!empty($_SESSION['mailersdropdowns'])){ ?>
-            <div class="col-md-12">
-                <div class="tw-mb-3">
-   <span class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><?=$_SESSION['webmail']['mailer_email'];?>
+		
+		    <div class="col-md-2 picker">
+
+<div>			
+<span class="dropdown">
+  <button class="btn btn-default buttons-collection btn-default-dt-options dropdown-toggle" type="button" data-toggle="dropdown" style="width: 180px !important;"><span title="<?=$_SESSION['webmail']['mailer_email'];?>"><?=substr($_SESSION['webmail']['mailer_email'],0,18);?></span>
   <span class="caret"></span></button>
   <ul class="dropdown-menu">
 	<?php  foreach ($_SESSION['mailersdropdowns'] as $item) { ?>
@@ -24,21 +26,35 @@
 	<?php  } ?>
   </ul>
 </span>
-    <a href="<?php echo site_url('admin/webmail/inbox'); ?>" class="btn btn-primary new-ticket">
-        <i class="fa-solid fa-envelope tw-mr-1"></i>
-        <?php echo _l('Inbox')."(".@$_SESSION['inbox-total-email'].")"; ?><span class="badge text-bg-primary rounded-pill inbox-count"></span>
-    </a>
-	<a href="<?php echo site_url('admin/webmail/sent'); ?>" class="btn btn-primary new-ticket">
-        <i class="fa-solid fa-envelope-circle-check tw-mr-1"></i>
-        <?php echo _l('Sent Item')."(".@$_SESSION['outbox-total-email'].")"; ?><span class="badge text-bg-primary rounded-pill inbox-count"></span>
-    </a>
-	<a href="<?php echo site_url('admin/webmail/compose'); ?>" class="btn btn-primary new-ticket">
+</div>
+<div>
+<a href="<?php echo site_url('admin/webmail/compose'); ?>" class="btn btn-primary mtop10" style="width: 180px !important;">
         <i class="fa-regular fa-paper-plane tw-mr-1"></i>
         <?php echo _l('New Mail'); ?>
     </a>
-	
-	
 </div>
+                <ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked mtop10" id="theme_styling_areas">
+				
+				<?php  foreach ($_SESSION['folderlist'] as $item => $val) { ?>
+                    <li role="presentation" class="menu-item-leads">
+                        <a href="inbox?fd=<?=$val;?>"><?=$val;?></a>
+                    </li>
+					<?php  if(!empty($_SESSION['subfolderlist'][$val])){ 
+					foreach ($_SESSION['subfolderlist'][$val] as $sitem => $sval) {
+					?>
+					<li role="presentation" class="menu-item-leads">
+                        <a href="inbox?fd=<?=$val;?>/<?=$sval;?>"><i class="fa-solid fa-arrow-right-long tw-mx-2 "></i> <?=$sval;?></a>
+                    </li>
+					<?
+					
+					}} ?>
+				  <?php  } ?>  
+                </ul>
+            </div>
+            <div class="col-md-10">
+                <div class="tw-flex tw-items-center tw-mb-2">
+                    <h4 class="tw-my-0 tw-font-semibold tw-text-lg tw-text-neutral-700 tw-mr-4">Sent New Email</h4>
+             </div>
 <div class="panel_s">
 <div class="panel-body panel-table-full">
 
@@ -102,6 +118,8 @@
 </div>
 </div>
             </div>
+			
+			
 		<?php }else{?>
 		<div class="alert alert-info text-center">
         <?php echo _l('No Webmail Setup Entries'); ?>
@@ -144,33 +162,8 @@
     $( "#reply-box" ).toggle();
 });
   </script>
-  <script>
-    tinymce.init({
-    selector: 'textarea',
-    plugins: [
-      // Core editing features
-      'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-      // Your account includes a free trial of TinyMCE premium features
-      // Try the most popular premium features until Jan 30, 2025:
-      'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
-    ],
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-    tinycomments_mode: 'embedded',
-    tinycomments_author: 'Author name',
-    mergetags_list: [
-      { value: 'First.Name', title: 'First Name' },
-      { value: 'Email', title: 'Email' },
-    ],
-    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-  });
+  
 
- 
-  </script>
-<script>
-$(function() {
-    //initDataTable('.table-custom-fields', window.location.href);
-});
-</script>
 
 
 </body>

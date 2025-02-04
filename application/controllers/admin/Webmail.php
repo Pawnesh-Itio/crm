@@ -6,7 +6,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Webmail extends AdminController
 {
-    
 
     public function __construct()
     {
@@ -24,14 +23,12 @@ class Webmail extends AdminController
 		$data['departmentid']  = $this->webmail_model->departmentid(get_staff_user_id(), $wheredata);
 		//print_r($data['departmentid']);
 		//
-		
 		if(isset($data['departmentid'][0]['departmentid'])&&$data['departmentid'][0]['departmentid']){
 		$wheredata='('.$wheredata.' OR departmentid='.$data['departmentid'][0]['departmentid'].' OR FIND_IN_SET('.$staffid.', assignto))';
 		}else{
 		$wheredata=$wheredata.' OR FIND_IN_SET('.$staffid.', assignto)';
 		}
 		//echo $wheredata;exit;
-		
 		}else{
 		$wheredata='staffid=0';
 		}
@@ -39,12 +36,6 @@ class Webmail extends AdminController
 		$wheredata=$wheredata.' AND mailer_status=1';
 		//echo $wheredata;exit;
 		$_SESSION['mailersdropdowns']   = $this->webmail_model->getemaillist('', $wheredata);
-		
-		//print_r($_SESSION['mailersdropdowns']);exit;
-		//if(!empty($_SESSION['mailersdropdowns'])){
-		//echo "================>";
-		//print_r($_SESSION['webmail']);
-		
 		
 		
 		if(isset($_GET['mt'])&&$_GET['mt']){
@@ -56,19 +47,18 @@ class Webmail extends AdminController
 		//echo $wheredata;exit;
 		$_SESSION['inbox-total-email']="";
 		$_SESSION['outbox-total-email']="";
+		$_SESSION['folderlist']="";
+		$_SESSION['subfolderlist']="";
 		$data['webmailsetup']= $this->webmail_model->webmailsetup('', $wheredata);
 		//print_r($data['webmailsetup']);
 		$_SESSION['webmail']=$data['webmailsetup'][0];
 		$_SESSION['webmail']['login-staffid']=$data['staffid'];
 		$_SESSION['webmail']['login-departmentid']=$data['departmentid'][0]['departmentid'];
 		$_SESSION['webmail']['login-staffid']=$data['staffid'];
+		redirect(admin_url('webmail/inbox'));
 		}else{
 		//echo "Old Session";
 		}
-		//}
-		
-		//print_r($_SESSION['webmail']);
-		//echo "=====================>>>";//exit;
         
     }
     /* Redirect Index to Inbox page */
@@ -83,13 +73,10 @@ class Webmail extends AdminController
 	{
 	    $data['title'] = _l('Webmail Setup');
 		
-		
-		
-		
 		//print_r($_SESSION['mailersdropdowns']);
 		if(empty($_SESSION['mailersdropdowns'])){
 		$data['errormessage']="Account not Assigned, Please add your webmail setup or contact web admin";
-		$this->load->view('admin/webmail/inbox22', $data);
+		$this->load->view('admin/webmail/inbox', $data);
 		}else{
 		
 		$data['inboxemail']=$this->webmail_model->getinboxemail();
@@ -97,24 +84,6 @@ class Webmail extends AdminController
 		$this->load->view('admin/webmail/inbox', $data);
 		}
 	}	
-	
-	//Display Inbox Listing 
-	public function sent()
-	{
-	    $data['title'] = _l('Send Box');
-		
-		//print_r($_SESSION['mailersdropdowns']);
-		if(empty($_SESSION['mailersdropdowns'])){
-		$data['errormessage']="Account not Assigned, Please add your webmail setup or contact web admin";
-		$this->load->view('admin/webmail/inbox44', $data);
-		}else{
-		
-		$data['outboxemail']=$this->webmail_model->getoutboxemail();
-		////////////////////////////////////////////
-		$this->load->view('admin/webmail/sent', $data);
-		}
-	}	
-	
 	
 	 
 	 public function reply()
@@ -145,8 +114,4 @@ class Webmail extends AdminController
 		}
 	}
 
-	
-
-
 }
- 

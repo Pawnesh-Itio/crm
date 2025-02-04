@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
-<?php //print_r($webmaillist);?>
+<?php //print_r($_SESSION['subfolderlist']);exit;?>
 <style>
 @media (min-width: 768px) {
     .modal-dialog {
@@ -13,10 +13,13 @@
     <div class="content">
         <div class="row">
 		<?php if(!empty($_SESSION['mailersdropdowns'])){ ?>
-            <div class="col-md-12">
-                <div class="tw-mb-3">
-   <span class="dropdown">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><?=$_SESSION['webmail']['mailer_email'];?>
+            
+			
+			<div class="col-md-2 picker">
+
+<div>			
+<span class="dropdown">
+  <button class="btn btn-default buttons-collection btn-default-dt-options dropdown-toggle" type="button" data-toggle="dropdown" style="width: 180px !important;"><span title="<?=$_SESSION['webmail']['mailer_email'];?>"><?=substr($_SESSION['webmail']['mailer_email'],0,18);?></span>
   <span class="caret"></span></button>
   <ul class="dropdown-menu">
 	<?php  foreach ($_SESSION['mailersdropdowns'] as $item) { ?>
@@ -24,27 +27,43 @@
 	<?php  } ?>
   </ul>
 </span>
-    <a href="<?php echo site_url('admin/webmail/inbox'); ?>" class="btn btn-primary new-ticket">
-        <i class="fa-solid fa-envelope tw-mr-1"></i>
-        <?php echo _l('Inbox')."(".@$_SESSION['inbox-total-email'].")"; ?><span class="badge text-bg-primary rounded-pill inbox-count"></span>
-    </a>
-	<a href="<?php echo site_url('admin/webmail/sent'); ?>" class="btn btn-primary new-ticket">
-        <i class="fa-solid fa-envelope-circle-check tw-mr-1"></i>
-        <?php echo _l('Sent Item')."(".@$_SESSION['outbox-total-email'].")"; ?><span class="badge text-bg-primary rounded-pill inbox-count"></span>
-    </a>
-	<a href="<?php echo site_url('admin/webmail/compose'); ?>" class="btn btn-primary new-ticket">
+</div>
+<div>
+<a href="<?php echo site_url('admin/webmail/compose'); ?>" class="btn btn-primary mtop10" style="width: 180px !important;">
         <i class="fa-regular fa-paper-plane tw-mr-1"></i>
         <?php echo _l('New Mail'); ?>
     </a>
-	
-	
 </div>
+                <ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked mtop10" id="theme_styling_areas">
+				
+				<?php  foreach ($_SESSION['folderlist'] as $item => $val) { ?>
+                    <li role="presentation" class="menu-item-leads">
+                        <a href="inbox?fd=<?=$val;?>"><?=$val;?></a>
+                    </li>
+					<?php  if(!empty($_SESSION['subfolderlist'][$val])){ 
+					foreach ($_SESSION['subfolderlist'][$val] as $sitem => $sval) {
+					?>
+					<li role="presentation" class="menu-item-leads">
+                        <a href="inbox?fd=<?=$val;?>/<?=$sval;?>"><i class="fa-solid fa-arrow-right-long tw-mx-2 "></i> <?=$sval;?></a>
+                    </li>
+					<?
+					
+					}} ?>
+				  <?php  } ?>  
+                </ul>
+            </div>
+            <div class="col-md-10">
+			<div class="tw-flex tw-items-center tw-mb-2">
+                    <h4 class="tw-my-0 tw-font-semibold tw-text-lg tw-text-neutral-700 tw-mr-4"><?php if(!empty($_SESSION['webmail']['folder'])){ echo $_SESSION['webmail']['folder'];}?> <?php if(isset($_SESSION['inbox-total-email'])&&!empty($_SESSION['inbox-total-email'])){?> (<?=$_SESSION['inbox-total-email'];?>) <?php } ?></h4>
+             </div>
+
+        
                 <div class="panel_s">
                     <div class="panel-body panel-table-full">
 
 <?php if (count($inboxemail) == 0) { ?>
 <div class="alert alert-info text-center">
-    <?php echo _l('No Webmail Setup Entries'); ?>
+    <?php echo _l('Account not Assigned, Please add your webmail setup or contact web admin'); ?>
 </div>
 <?php } ?>
 <div class="table-responsive">
@@ -53,12 +72,14 @@
 <?php $cnt=101; foreach ($inboxemail as $message) { $cnt++; ?>
 <tr>
 	<td class="hrefmodal" data-tid="<?=$message->subject;?>" data-id="msg<?=$cnt;?>" title="<?=$message->subject;?>" mailto="<?=$message->from;?>"><span > <?=$message->subject;?><br><?=htmlspecialchars($message->from);?></span></td>
-	<td class="w-25 text-end"><?=$message->date;?></td>
+	<td class="w-25 text-end" style="min-width: 140px;"><?=$message->date;?></td>
 </tr>
-<tr><td colspan="2" style="display:none;">
-<textarea id="msg<?=$cnt;?>"><?=$message->getHtmlBody();?></textarea>
+<tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>"><? //= html_entity_decode($message->getHtmlBody());?>
+<?php /*?><textarea ><?=$message->getHtmlBody();?></textarea><?php */?>
+
 
 <?php
+echo '<iframe srcdoc="' . htmlspecialchars($message->getHtmlBody()) . '" style="width: 100%; min-height:50px; border: none;" onload="adjustIframeHeight(this)"></iframe>';
 // Directory to save attachments
 $attachmentDir = 'attachments';
 // Create directory if it doesn't exist
@@ -89,12 +110,12 @@ $attachment->save($attachmentDir);
   </tbody>
   </table>
   </div>
-  <div class="dataTables_paginate paging_simple_numbers" id="clients_paginate"><ul class="pagination">
+<div class="dataTables_paginate paging_simple_numbers" id="clients_paginate"><ul class="pagination">
 <?php
 // Paging
 // Configuration
 $totalRecords = $_SESSION['inbox-total-email']; // Total number of records (replace with your DB query result)
-$recordsPerPage = 10; // Records per page
+$recordsPerPage = 30; // Records per page
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page from URL
 $current_page = max(1, $current_page); // Ensure current page is at least 1
 
@@ -266,7 +287,7 @@ if ($nextPage) {
 		 $('#emailSubjectIT').val(tid);
 		 $('#recipientEmailIT').val(mailto);
 		 
-		 var contents=$('#'+did).val();
+		 var contents=$('#'+did).html();
 		 $('#messageDisplay').html(contents);
 
 		 
@@ -277,32 +298,18 @@ if ($nextPage) {
     $( "#reply-box" ).toggle();
 });
   </script>
-  <script>
-    tinymce.init({
-    selector: 'textarea',
-    plugins: [
-      // Core editing features
-      'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-      // Your account includes a free trial of TinyMCE premium features
-      // Try the most popular premium features until Jan 30, 2025:
-      'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
-    ],
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-    tinycomments_mode: 'embedded',
-    tinycomments_author: 'Author name',
-    mergetags_list: [
-      { value: 'First.Name', title: 'First Name' },
-      { value: 'Email', title: 'Email' },
-    ],
-    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-  });
-
- 
-  </script>
+  
 <script>
 $(function() {
     //initDataTable('.table-custom-fields', window.location.href);
 });
+</script>
+<script>
+function adjustIframeHeight(iframe) {
+    setTimeout(() => {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+    }, 100);
+}
 </script>
 
 
