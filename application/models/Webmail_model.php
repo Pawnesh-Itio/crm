@@ -188,9 +188,12 @@ class Webmail_model extends App_Model
 		if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientEmail, $matches)){
 		$recipientEmail = $matches[0] ?? 'Email not found';
 		}
-        $recipientCC=$_POST['recipientCC'];
-		if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientCC, $matches)){
-		$recipientCC = $matches[0] ?? 'Email not found';
+		if(isset($_POST['recipientCC']) && $_POST['recipientCC'])
+		{
+			$recipientCC=$_POST['recipientCC'];
+			if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientCC, $matches)){
+			$recipientCC = $matches[0] ?? 'Email not found';
+			}
 		}
 		//echo $recipientEmail;exit;
 		// Form Post Data
