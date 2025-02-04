@@ -19,7 +19,7 @@ class Ai_content_generator_model extends App_Model
 	   if(isset($content_title)&&!empty($content_title)){
 	   $content_title=nl2br(htmlspecialchars($content_title));
 		///////////////CHAT GTP API///////////////
-$secKey = "Bearer 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"; //mailers@itio.in
+$secKey = "Bearer XXX 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"; //mailers@itio.in
 $post_url = 'https://api.openai.com/v1/chat/completions';
 $requestJson='{
      "model": "gpt-4o-mini",
@@ -46,6 +46,13 @@ $requestJson='{
 $response = curl_exec($curl);
 curl_close($curl);
 $res = json_decode($response,1);
+
+if(isset($res['error'])&&$res['error']){
+$data['error']=$res['error']['code']." ".$res['error']['message'];
+return $data;
+}
+
+
 
 if(isset($res['choices'][0]['message']['content'])&&$res['choices'][0]['message']['content']){
 $mysqli = $this->db->conn_id; // Get the MySQL connection instance

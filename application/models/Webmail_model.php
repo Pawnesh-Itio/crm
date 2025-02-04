@@ -1,14 +1,17 @@
 <?php
-
 defined('BASEPATH') or exit('No direct script access allowed');
-$rootDir = str_replace("","",realpath(__DIR__));
+$rootDir = str_replace("\models","",realpath(__DIR__));
+//$rootDir = str_replace("/models","",realpath(__DIR__));
+
 //echo $rootDir;
-require_once APPPATH .'vendor/vendor/autoload.php';
+
 
 use Webklex\PHPIMAP\ClientManager;
+use Webklex\PHPIMAP\Client;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+require_once $rootDir.'/vendor/vendor/autoload.php';
 
 class Webmail_model extends App_Model
 {
@@ -31,7 +34,19 @@ class Webmail_model extends App_Model
         $mailer_username=$_SESSION['webmail']['mailer_username'];
         $mailer_password=$_SESSION['webmail']['mailer_password'];
 		$encryption=$_SESSION['webmail']['encryption'];
+		
+		
+		if((isset($_GET['fd'])&&$_GET['fd'])){
+		$_SESSION['webmail']['folder']=$_GET['fd'];
+		$_SESSION['inbox-total-email']="";
+		$_SESSION['outbox-total-email']="";
+		redirect(admin_url('webmail/inbox'));
+		}elseif($_SESSION['webmail']['folder']==""){
+		$_SESSION['webmail']['folder']="INBOX";
+		redirect(admin_url('webmail/inbox'));
+		}
 		$folder=$_SESSION['webmail']['folder'];
+		
 		//exit;
 		
 		
@@ -54,6 +69,40 @@ class Webmail_model extends App_Model
 	
 	if ($client->connect()) {
        //echo "Connected to IMAP server successfully!";
+	 $folderList = []; // Initialize an empty array  
+	 $subfolderList = []; // Initialize an empty array 
+	   // Get a list of mail folders
+    $folderslist = $client->getFolders();
+	//print_r($folderslist);exit;
+	//$_SESSION['folderlist'] = !empty($_SESSION['folderlist']) ? $_SESSION['folderlist'] : "";
+	//if(empty($_SESSION['folderlist'])){
+	
+	$subfolders="";
+		foreach ($folderslist as $flist) {
+		//print_r($folderslist);exit;
+		 $folderList[]=$flist->name;
+		 $subfolders = $flist->getChildren();
+		 if($subfolders<>"[]"){
+		 // Decode JSON string into an associative array
+			$data = json_decode($subfolders, true);
+			//print_r($data);
+			
+			if ($data) {
+				foreach ($data as $item) {
+					//echo $item['name'] . "\n";
+					$subfolderList[$flist->name][]=$item['name'];
+				}
+			} else {
+				echo "Invalid JSON data.";
+			}
+		 //echo $subfolders;
+		 }
+		}
+		$_SESSION['folderlist']=$folderList;
+		$_SESSION['subfolderlist']=$subfolderList;
+	//}
+      //print_r($_SESSION['folderlist']);exit;
+    
 	   
 	    // Get the inbox folder
       $inbox = $client->getFolder($folder);
@@ -63,10 +112,12 @@ class Webmail_model extends App_Model
       }
       // Query to fetch emails
       //$messages = $inbox->query()->all()->get();  // Fetch all messages
+	 
 	  
-	  $limit=50;
+	  $limit=30;
 	  if(isset($_GET["page"])){ $pn = $_GET["page"]; }else{ $pn=1;};
 	  $messages = $inbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch all messages
+	  
 	  
 	  // Sort messages by descending date
 		$sortedMessages = $messages->sortByDesc(function ($message) {
@@ -95,83 +146,7 @@ class Webmail_model extends App_Model
         //return $this->db->get(db_prefix().'webmail_setup')->result_array();
       }
 	  
-	  
-	  // function for get inbox mail list
-        public function getoutboxemail()
-        {
-		
-		//print_r($_SESSION['webmail']);exit;
-		
-		$mailer_imap_host=$_SESSION['webmail']['mailer_imap_host'];
-        $mailer_imap_port=$_SESSION['webmail']['mailer_imap_port'];
-        $mailer_username=$_SESSION['webmail']['mailer_username'];
-        $mailer_password=$_SESSION['webmail']['mailer_password'];
-		//exit;
-		
-		
-		try {
-		 
-		 $cm = new ClientManager();
-
-    // Define the IMAP connection settings
-    $client = $cm->make([
-        'host'          => $mailer_imap_host,
-        'port'          => $mailer_imap_port,
-        'encryption'    => 'ssl',
-        'validate_cert' => true,
-        'username'      => $mailer_username,
-        'password'      => $mailer_password,
-        'protocol'      => 'imap', 
-		//'authentication' => "oauth"            // Protocol (imap/pop3)
-    ]);
-	
-	
-	if ($client->connect()) {
-       // echo "Connected to IMAP server successfully!";
-      // Get the inbox folder
-      if(strstr($mailer_imap_host,"gmail")){
-	  $inbox = $client->getFolder('[Gmail]/Sent Mail');
-	  }else{
-      $inbox = $client->getFolder('Sent');
-	  }
-      	  
-	  if ($inbox === null) {
-      die("The 'Sent' folder could not be found.");
-      }
-	
-      // Query to fetch emails
-      //$messages = $inbox->query()->all()->get();  // Fetch all messages
-	  
-	  $limit=10;
-	  if(isset($_GET["page"])){ $pn = $_GET["page"]; }else{ $pn=1;};
-	  $messages = $inbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch all messages
-	  
-	  // Sort messages by descending date
-		$sortedMessages = $messages->sortByDesc(function ($message) {
-			return $message->getDate();
-		});
-
-    
-			//$paginator = $sortedMessages->paginate($per_page = $limit, $page = $pn, $page_name = 'sent.php');
-			// Get the total number of messages
-			$_SESSION['outbox-total-email']=$total_records = $messages->total();
-			// Display the fetched emails
-			$cnt=101;
-			return $sortedMessages;
-	  
-	  }
-	
-   
-	
-		} catch (Exception $e) {
-		
-			echo "Error: " . $e->getMessage();exit;
-			}
-		exit;
-	
-       //echo "ERROR 103";exit;
-        //return $this->db->get(db_prefix().'webmail_setup')->result_array();
-      }
+	 
 	
 	   
 	
@@ -239,7 +214,7 @@ class Webmail_model extends App_Model
 		$mail = new PHPMailer(true);
 		
 		
-		try {
+	try {
     // SMTP configuration
     $mail->isSMTP();
     $mail->Host = $mailer_smtp_host; // Replace with your SMTP server
@@ -255,9 +230,7 @@ class Webmail_model extends App_Model
     $mail->Priority = 1; 
     $mail->setFrom($senderEmail, $senderName);
     $mail->addAddress($recipientEmail);
-	if(isset($recipientCC)&&$recipientCC<>""){
-	$mail->AddCC($recipientCC); 
-	}
+	if(isset($recipientCC)&&$recipientCC<>""){$mail->AddCC($recipientCC);}
     $mail->Subject = $subject;
     $mail->Body = $body;
 	
@@ -284,9 +257,6 @@ class Webmail_model extends App_Model
 
     $mail->send();
     //echo "Email sent successfully!";
-	
-	
-	
 	log_activity('Email Reply With Subject Line -  [ Subject: ' . $subject . ']');
     return true;
 	} catch (Exception $e) {
