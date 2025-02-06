@@ -14,6 +14,14 @@ return $txt;
     <div class="content">
         <div class="row">
             <div class="col-md-12">
+<?php if (is_admin()) {  ?>
+<div class="tw-mb-2 sm:tw-mb-2" title="Update AI API KEY">
+<a class="btn btn-primar" onclick="edit_key(); return false;" style="float:right">
+<i class="fa fa-cog menu-icon tw-mr-1"></i></a>
+
+</div>
+<div class="clearfix tw-mb-2"></div>
+<?php } ?>
                 
                 <div class="panel_s">
                     <div class="panel-body panel-table-full">
@@ -33,7 +41,6 @@ return $txt;
 
                     </div>
                 </div>
-				
 				
 	<?php if(isset($content_description)&&$content_description){?>			
 				<div class="panel_s">
@@ -76,8 +83,66 @@ return $txt;
     </div>
 </div>
 
+<div class="modal fade" id="entryModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <?php echo form_open(admin_url('ai_content_generator/ai_setup_create/'), ['data-create-url' => admin_url('ai_content_generator/ai_setup_create/'), 'data-update-url' => admin_url('ai_content_generator/ai_setup_update')]); ?>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><?php echo 'AI APIKey Update'; ?></h4>
+            </div>
+            <div class="modal-body">
+                <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+                <input type="text" class="fake-autofill-field" name="fakeusernameremembered" value='' tabindex="-1" />
+                <input type="password" class="fake-autofill-field" name="fakepasswordremembered" value='' tabindex="-1" />
+                 
+<div class="table-responsive">
+<span>All fields is required</span>
+  <table class="table table-bordered roles no-margin">
+    <tbody>
+	
+      <tr data-name="bulk_pdf_exporter">
+        <td><?php echo render_input('apikey', 'Name','', 'text', ['required' => 'true']); ?></td>
+      </tr>
+
+</tbody>
+</table>
+</div>   
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
+                <button type="submit" class="btn btn-primary"><?php echo _l('submit'); ?></button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+        <?php echo form_close(); ?>
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <?php init_tail(); ?>
 <script>
+
+var $entryModal = $('#entryModal');
+$(function() {
+
+    appValidateForm($entryModal.find('form'), {
+        server_address: 'required',
+        username: 'required',
+        password: 'required',
+    });
+    setTimeout(function() {
+        $($entryModal.find('form')).trigger('reinitialize.areYouSure');
+    }, 1000)
+    $entryModal.on('hidden.bs.modal', function() {
+        var $form = $entryModal.find('form');
+        $form.attr('action', $form.data('create-url'));
+        $form.find('input[type="text"]').val('');
+        $form.find('#share_in_projects').prop('checked', false);
+    });
+});
+
 $(function() {
     initDataTable('.table-custom-fields', window.location.href);
 });
@@ -97,6 +162,18 @@ $(function() {
 				alert("Copied : " + theLabel);
             }
 	}
+
+function edit_key() {
+    $.get(admin_url + 'ai_content_generator/ai_setup', function(response) {
+        //alert(JSON.stringify(response, null, "\t"))
+        var $form = $entryModal.find('form');
+        $form.attr('action', $form.data('update-url'));
+		$form.find('#apikey').val(response.apikey);
+        $entryModal.modal('show');
+    }, 'json');
+}
+
+
 </script>
 
 </body>

@@ -12,8 +12,6 @@ class Ai_content_generator_model extends App_Model
 
     public function generate($data)
     {
-	
-	   
 	   
 	   $content_title=trim($data['content_title']);
 	   if(isset($content_title)&&!empty($content_title)){
@@ -57,7 +55,6 @@ if(isset($res['error'])&&$res['error']){
 $data['error']=$res['error']['code']." ".$res['error']['message'];
 return $data;
 }
-
 
 
 if(isset($res['choices'][0]['message']['content'])&&$res['choices'][0]['message']['content']){
@@ -116,6 +113,23 @@ return false;
 			//return 
 			//echo $this->db->last_query();exit;
 	}
+	
+	//Update Webmail Setup
+    public function update($data)
+    {
+        
+        $this->db->update(db_prefix().'ai_details', $data);
+		//echo $this->db->last_query();exit;
+
+        if ($this->db->affected_rows() > 0) {
+		$_SESSION['ai-apikey']="";
+            return true;
+        }
+
+        return false;
+    }
+
+	
     
     
 }
