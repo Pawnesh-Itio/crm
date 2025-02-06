@@ -115,6 +115,23 @@ return false;
 			//return 
 			//echo $this->db->last_query();exit;
 	}
+	
+	//Update Webmail Setup
+    public function update($data)
+    {
+        
+        $this->db->update(db_prefix().'ai_details', $data);
+		//echo $this->db->last_query();exit;
+
+        if ($this->db->affected_rows() > 0) {
+		$_SESSION['ai-apikey']="";
+            return true;
+        }
+
+        return false;
+    }
+
+	
     
     
 }

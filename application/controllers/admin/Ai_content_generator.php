@@ -66,6 +66,39 @@ class Ai_content_generator extends AdminController
     }
 	
 
+    //Fetch for for update by id
+    public function ai_setup()
+    {
+        $entry=$this->ai_content_generator_model->getapikey();
+		echo json_encode($entry[0]);
+	}
+	
+	//Update Webmail Setup 
+    public function ai_setup_update()
+    {
+	
+       
+		
+        if (is_admin()) {
+            $data = $this->input->post();
+
+            if (isset($data['fakeusernameremembered'])) {
+                unset($data['fakeusernameremembered']);
+            }
+            if (isset($data['fakepasswordremembered'])) {
+                unset($data['fakepasswordremembered']);
+            }
+			//unset($_SESSION['webmail']);
+
+           
+
+           
+
+            $this->ai_content_generator_model->update($data);
+            set_alert('success', _l('updated_successfully', _l('AI APIKEY Setup')));
+        }
+        redirect(admin_url('ai_content_generator'));
+    }
 	
 
 
