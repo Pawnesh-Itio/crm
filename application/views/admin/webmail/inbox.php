@@ -40,16 +40,16 @@
                     <li role="presentation" class="menu-item-leads">
                         <a href="inbox?fd=<?=$val;?>"><?=$val;?></a>
                     </li>
-					<?php  if(!empty($_SESSION['subfolderlist'][$val])){ 
-					foreach ($_SESSION['subfolderlist'][$val] as $sitem => $sval) {
+					<?php if(count($_SESSION['subfolderlist'])>0 && isset($_SESSION['subfolderlist'][$val])){ ?>
+                    </li>
+                    <?php
+                    foreach ($_SESSION['subfolderlist'][$val] as $sitem => $sval) {
+
 					?>
 					<li role="presentation" class="menu-item-leads">
                         <a href="inbox?fd=<?=$val;?>/<?=$sval;?>"><i class="fa-solid fa-arrow-right-long tw-mx-2 "></i> <?=$sval;?></a>
                     </li>
-					<?
-					
-					}} ?>
-				  <?php  } ?>  
+				  <?php } } } ?>  
                 </ul>
             </div>
             <div class="col-md-10">
@@ -75,8 +75,7 @@
 	<td class="hrefmodal" data-tid="<?=$message->subject;?>" data-id="msg<?=$cnt;?>" title="<?=$message->subject;?>" mailto="<?=$message->from;?>"><span > <?=$message->subject;?><br><?=htmlspecialchars($message->from);?></span></td>
 	<td class="w-25 text-end" style="min-width: 140px;"><?=$message->date;?></td>
 </tr>
-<tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>"><? //= html_entity_decode($message->getHtmlBody());?>
-<?php /*?><textarea ><?=$message->getHtmlBody();?></textarea><?php */?>
+<tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>">
 
 
 <?php

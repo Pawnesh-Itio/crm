@@ -1,17 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-$rootDir = str_replace("\models","",realpath(__DIR__));
-//$rootDir = str_replace("/models","",realpath(__DIR__));
-
-//echo $rootDir;
-
-
 use Webklex\PHPIMAP\ClientManager;
 use Webklex\PHPIMAP\Client;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require_once $rootDir.'/vendor/vendor/autoload.php';
+require_once APPPATH.'/vendor/vendor/autoload.php';
 
 class Webmail_model extends App_Model
 {
@@ -194,9 +188,12 @@ class Webmail_model extends App_Model
 		if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientEmail, $matches)){
 		$recipientEmail = $matches[0] ?? 'Email not found';
 		}
-        $recipientCC=$_POST['recipientCC'];
-		if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientCC, $matches)){
-		$recipientCC = $matches[0] ?? 'Email not found';
+		if(isset($_POST['recipientCC']) && $_POST['recipientCC'])
+		{
+			$recipientCC=$_POST['recipientCC'];
+			if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientCC, $matches)){
+			$recipientCC = $matches[0] ?? 'Email not found';
+			}
 		}
 		//echo $recipientEmail;exit;
 		// Form Post Data
