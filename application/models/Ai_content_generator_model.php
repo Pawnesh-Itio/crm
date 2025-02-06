@@ -57,7 +57,6 @@ return $data;
 }
 
 
-
 if(isset($res['choices'][0]['message']['content'])&&$res['choices'][0]['message']['content']){
 $mysqli = $this->db->conn_id; // Get the MySQL connection instance
 $data['id']=$res['id'];

@@ -74,8 +74,7 @@ class Ai_content_generator extends AdminController
 	//Update Webmail Setup 
     public function ai_setup_update()
     {
-	
-       
+	       
 		
         if (is_admin()) {
             $data = $this->input->post();
