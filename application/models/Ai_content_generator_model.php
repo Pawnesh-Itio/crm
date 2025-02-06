@@ -12,8 +12,6 @@ class Ai_content_generator_model extends App_Model
 
     public function generate($data)
     {
-	
-	   
 	   
 	   $content_title=trim($data['content_title']);
 	   if(isset($content_title)&&!empty($content_title)){

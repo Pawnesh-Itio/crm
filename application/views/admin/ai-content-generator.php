@@ -42,7 +42,6 @@ return $txt;
                     </div>
                 </div>
 				
-				
 	<?php if(isset($content_description)&&$content_description){?>			
 				<div class="panel_s">
                     <div class="panel-body panel-table-full">
@@ -173,7 +172,6 @@ function edit_key() {
         $entryModal.modal('show');
     }, 'json');
 }
-
 
 </script>
 

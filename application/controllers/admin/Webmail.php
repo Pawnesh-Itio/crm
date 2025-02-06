@@ -14,7 +14,6 @@ class Webmail extends AdminController
         if (!is_admin()) {
             //access_denied('Access Webmail Setup');
         }
-		//echo "=====================>>>";
 		$wheredata="";
 		$staffid=get_staff_user_id();
 		if (!is_client_logged_in() && !is_admin() && is_staff_logged_in()) {

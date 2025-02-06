@@ -1,7 +1,5 @@
 <?php
 
-//use app\services\imap\Imap;
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Ai_content_generator extends AdminController
@@ -88,18 +86,13 @@ class Ai_content_generator extends AdminController
             if (isset($data['fakepasswordremembered'])) {
                 unset($data['fakepasswordremembered']);
             }
-			//unset($_SESSION['webmail']);
 
-           
-
-           
 
             $this->ai_content_generator_model->update($data);
             set_alert('success', _l('updated_successfully', _l('AI APIKEY Setup')));
         }
         redirect(admin_url('ai_content_generator'));
     }
-	
 
 
 }
