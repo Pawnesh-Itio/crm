@@ -25,6 +25,7 @@ class Ai_content_generator_model extends App_Model
 		redirect(admin_url('ai_content_generator'));
 		}
 $secKey = "Bearer $apikeys"; //mailers@itio.in
+
 $post_url = 'https://api.openai.com/v1/chat/completions';
 $requestJson='{
      "model": "gpt-4o-mini",
