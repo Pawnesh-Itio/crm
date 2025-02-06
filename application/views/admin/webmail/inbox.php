@@ -63,7 +63,8 @@
 
 <?php if (count($inboxemail) == 0) { ?>
 <div class="alert alert-info text-center">
-    <?php echo _l('Account not Assigned, Please add your webmail setup or contact web admin'); ?>
+
+    <?php echo _l('Records Not Found'); ?>
 </div>
 <?php } ?>
 <div class="table-responsive">

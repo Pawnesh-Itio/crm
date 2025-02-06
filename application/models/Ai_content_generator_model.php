@@ -19,7 +19,12 @@ class Ai_content_generator_model extends App_Model
 	   if(isset($content_title)&&!empty($content_title)){
 	   $content_title=nl2br(htmlspecialchars($content_title));
 		///////////////CHAT GTP API///////////////
-$secKey = "Bearer XXX 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"; //mailers@itio.in
+		$apikeys=$_SESSION['ai-apikey'];
+		if(empty($apikeys)){
+		$_SESSION['ai-apikey']="";
+		redirect(admin_url('ai_content_generator'));
+		}
+$secKey = "Bearer $apikeys"; //mailers@itio.in
 $post_url = 'https://api.openai.com/v1/chat/completions';
 $requestJson='{
      "model": "gpt-4o-mini",
@@ -68,7 +73,9 @@ $data['completion_tokens']=$res['usage']['completion_tokens'];
 $data['total_tokens']=$res['usage']['total_tokens'];
 $this->db->insert(db_prefix().'content_master', $data);
         if ($this->db->affected_rows() > 0) {
+		//print_r($data);exit;
 		return $data;
+		
 		}else{
 		log_activity('Data Not Submitted');
 		return false;
@@ -94,13 +101,20 @@ return false;
 			$this->db->select('content_id,content_title,content,');
 			$this->db->where($where);
 			$this->db->order_by('content_id', 'DESC');
-			$this->db->limit(5,1);
+			$this->db->limit(5,0);
 			return $this->db->get(db_prefix() . 'content_master')->result_array();
 			//return 
 			//echo $this->db->last_query();exit;
 	}
    
-
+    public function getapikey()
+	{
+			$this->db->select('apikey,');
+			$this->db->limit(1);
+			return $this->db->get(db_prefix() . 'ai_details')->result_array();
+			//return 
+			//echo $this->db->last_query();exit;
+	}
     
     
 }

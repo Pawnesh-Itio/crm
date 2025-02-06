@@ -15,6 +15,16 @@ class Ai_content_generator extends AdminController
         if (!is_admin()) {
             //access_denied('Access Webmail Setup');
         }
+		
+		/////////////////Get KEY/////////////
+		if(empty($_SESSION['ai-apikey']) ){  
+		$data['ai-apikey']= $this->ai_content_generator_model->getapikey();
+		$_SESSION['ai-apikey']=$data['ai-apikey'][0]['apikey'];
+		}
+		
+		////////////////////////////////////
+		
+		
 		$data['user_id']      = get_staff_user_id();
         $data['added_by'] = get_staff_full_name($data['user_id']);
 		$where=" user_id = '".$data['user_id']."' AND added_by ='".$data['added_by']."'";
@@ -37,7 +47,7 @@ class Ai_content_generator extends AdminController
 		$data['user_id']      = get_staff_user_id();
         $data['added_by'] = get_staff_full_name($data['user_id']);
         $data['ai_content']=$this->ai_content_generator_model->generate($data);
-		//print_r($data['ai_content']);
+		//print_r($data['ai_content']);exit;
 		
 		if(isset($data['ai_content']['error'])&&!empty($data['ai_content']['error'])){
 		//echo $data['ai_content']['error'];
