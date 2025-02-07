@@ -54,7 +54,9 @@ class Webmail extends AdminController
 		//print_r($data['webmailsetup']);
 		$_SESSION['webmail']=$data['webmailsetup'][0];
 		$_SESSION['webmail']['login-staffid']=$data['staffid'];
+		if(isset($data['departmentid'][0]['departmentid']) && $data['departmentid'][0]['departmentid']){
 		$_SESSION['webmail']['login-departmentid']=$data['departmentid'][0]['departmentid'];
+		}
 		$_SESSION['webmail']['login-staffid']=$data['staffid'];
 		redirect(admin_url('webmail/inbox'));
 		}else{
