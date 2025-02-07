@@ -77,7 +77,7 @@ class Webmail_setup extends AdminController
 	
         $entry = $this->webmail_setup_model->get($entry_id);
 		
-        if (($entry->creator == get_staff_user_id() || is_admin()) || ( !is_admin()&& get_staff_user_id())) {
+        if ((is_admin()) || ( !is_admin()&& get_staff_user_id())) {
             $data = $this->input->post();
 
             if (isset($data['fakeusernameremembered'])) {
