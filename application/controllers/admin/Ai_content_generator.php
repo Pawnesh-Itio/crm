@@ -1,7 +1,5 @@
 <?php
 
-//use app\services\imap\Imap;
-
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Ai_content_generator extends AdminController
@@ -15,6 +13,16 @@ class Ai_content_generator extends AdminController
         if (!is_admin()) {
             //access_denied('Access Webmail Setup');
         }
+		
+		/////////////////Get KEY/////////////
+		if(empty($_SESSION['ai-apikey']) ){  
+		$data['ai-apikey']= $this->ai_content_generator_model->getapikey();
+		$_SESSION['ai-apikey']=$data['ai-apikey'][0]['apikey'];
+		}
+		
+		////////////////////////////////////
+		
+		
 		$data['user_id']      = get_staff_user_id();
         $data['added_by'] = get_staff_full_name($data['user_id']);
 		$where=" user_id = '".$data['user_id']."' AND added_by ='".$data['added_by']."'";
@@ -56,7 +64,34 @@ class Ai_content_generator extends AdminController
     }
 	
 
+    //Fetch for for update by id
+    public function ai_setup()
+    {
+        $entry=$this->ai_content_generator_model->getapikey();
+		echo json_encode($entry[0]);
+	}
 	
+	//Update Webmail Setup 
+    public function ai_setup_update()
+    {
+	       
+		
+        if (is_admin()) {
+            $data = $this->input->post();
+
+            if (isset($data['fakeusernameremembered'])) {
+                unset($data['fakeusernameremembered']);
+            }
+            if (isset($data['fakepasswordremembered'])) {
+                unset($data['fakepasswordremembered']);
+            }
+
+
+            $this->ai_content_generator_model->update($data);
+            set_alert('success', _l('updated_successfully', _l('AI APIKEY Setup')));
+        }
+        redirect(admin_url('ai_content_generator'));
+    }
 
 
 }

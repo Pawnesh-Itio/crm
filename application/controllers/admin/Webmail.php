@@ -14,7 +14,7 @@ class Webmail extends AdminController
         if (!is_admin()) {
             //access_denied('Access Webmail Setup');
         }
-		//echo "=====================>>>";
+		
 		$wheredata="";
 		$staffid=get_staff_user_id();
 		if (!is_client_logged_in() && !is_admin() && is_staff_logged_in()) {
@@ -75,7 +75,7 @@ class Webmail extends AdminController
 		
 		//print_r($_SESSION['mailersdropdowns']);
 		if(empty($_SESSION['mailersdropdowns'])){
-		$data['errormessage']="@@Account not Assigned, Please add your webmail setup or contact web admin";
+		$data['errormessage']="Account not Assigned, Please add your webmail setup or contact web admin";
 		$this->load->view('admin/webmail/inbox', $data);
 		}else{
 		
@@ -106,7 +106,7 @@ class Webmail extends AdminController
 		
 		//print_r($_SESSION['mailersdropdowns']);
 		if(empty($_SESSION['mailersdropdowns'])){
-		$data['errormessage']="##Account not Assigned, Please add your webmail setup or contact web admin";
+		$data['errormessage']="Account not Assigned, Please add your webmail setup or contact web admin";
 		$this->load->view('admin/webmail/compose', $data);
 		}else{
 		////////////////////////////////////////////
