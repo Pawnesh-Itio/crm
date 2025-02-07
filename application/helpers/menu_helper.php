@@ -190,6 +190,17 @@ function app_init_admin_sidebar_menu_items()
 			'badge'    => [],
 		]);
     }
+    // Direct Email
+    if (is_staff_member()) {
+		$CI->app_menu->add_sidebar_menu_item('Direct-Email', [
+			'name'     => 'Direct-Email',
+			'href'     => admin_url('direct_email'),
+			'icon'     => 'fa-regular fa-envelope',
+			'position' => 45,
+			'badge'    => [],
+		]);
+    }
+    // End Direct Email
 
     if (is_staff_member()) {
 		$CI->app_menu->add_sidebar_menu_item('webmail', [
