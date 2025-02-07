@@ -16,6 +16,7 @@ class Webmail extends AdminController
         }
 		
 		$wheredata="";
+		$data['staffid']="";
 		$staffid=get_staff_user_id();
 		if (!is_client_logged_in() && !is_admin() && is_staff_logged_in()) {
 		$wheredata=' staffid=' . $staffid;
