@@ -328,6 +328,7 @@ function init_relation_tasks_table($table_attributes = [], $filtersWrapperId = '
     }
 
     $tasks_table = App_table::find('related_tasks');
+	
 
     $table      = '';
     $CI         = &get_instance();

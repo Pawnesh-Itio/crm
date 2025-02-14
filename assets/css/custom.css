@@ -345,6 +345,131 @@ background-color: #1e293bff;
 .wa-send-message{
     display:none;
 }
+
+
+.vikash .card {
+  max-width: 350px !important;
+  background-color: rgb(7 16 45) !important;
+  background: linear-gradient(to top right, rgb(7 16 45), rgb(58 60 84)) !important;
+  background: -webkit-linear-gradient(to top right, rgb(7 16 45), rgb(58 60 84)) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 20px !important;
+  border-radius: 20px !important;
+  border: 1px solid rgb(84 90 106) !important;
+  margin-bottom:20px !important;
+}
+
+.vikash .small-text, .title,.desc {
+  font-weight: 600 !important;
+}
+
+.vikash .title,.desc {
+  margin: 8px 0 !important;
+}
+
+.vikash .small-text {
+  color: #488aec !important;
+  font-size: 14px !important;
+}
+
+.vikash .title {
+  color: #fff !important;
+  font-size: 20px !important;
+  line-height: 20px !important;
+}
+
+.vikash .desc {
+  color: rgb(151 153 167) !important;
+  font-size: 13px !important;
+  
+}
+
+.vikash .buttons {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  margin-top: 10px !important;
+}
+
+.vikash .button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-radius: 10px !important;
+  padding: 6px !important;
+  text-decoration: none !important;
+}
+
+.vikash .button:first-child {
+  box-shadow: 0 4px 6px -1px #488aec31, 0 2px 4px -1px #488aec17 !important;
+  background-color: #488aec !important;
+}
+
+.vikash .button:last-child {
+  box-shadow: 0 4px 6px -1px #0b162531, 0 2px 4px -1px #0e192b17 !important;
+  background-color: #fff !important;
+}
+
+.vikash .icon {
+  height: 25px !important;
+  width: 25px !important;
+}
+
+.vikash .icon svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.vikash .icon svg:last-child {
+  fill: #000
+}
+
+.vikash .button-text {
+  display: flex !important;
+  flex-direction: column !important;
+  margin-left: 8px !important;
+}
+
+.vikash .button-text span:first-child {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.vikash .google span:first-child {
+  color: rgb(219 206 253) !important;
+}
+
+.vikash .apple span:first-child {
+  color: rgb(81 87 108) !important;
+}
+
+.vikash .google span:last-child {
+  color: #fff !important;
+  font-weight: 800 !important;
+}
+
+.vikash .apple span:last-child {
+  color: #000 !important;
+  font-weight: 800 !important;
+}
+.task-circle{
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    position: relative;
+    background-color: rgb(51, 102, 255);
+    color: rgb(255, 255, 255) !important;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+
 @media only screen and (min-width: 769px) and (max-width: 992px) {
 }
 @media only screen and (max-width: 768px) {
