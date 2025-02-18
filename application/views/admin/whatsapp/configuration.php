@@ -105,7 +105,7 @@
  <!-- End addNewPhone Model -->
 <?php init_tail(); ?>
 <script>
-const url = "http://localhost:4000";
+const url = "https://wa-business-api.onrender.com";
 $(document).ready(function() {
 
     const source = "crm";

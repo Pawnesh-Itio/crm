@@ -181,7 +181,7 @@
 
 // Socket connection
 const URL = "wss://wa-business-api.onrender.com";
-const waURL = "https://xeyso.com/crm";
+const waURL = "https://wa-business-api.onrender.com";
 const source = "crm";
 const socket = io(URL);
 socket.on('connect', () => {
