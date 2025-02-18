@@ -505,10 +505,16 @@ class Projects extends AdminController
 
     public function add_edit_members($project_id)
     {
-        if (staff_can('edit', 'projects')) {
+	
+        if (staff_can('edit', 'projects')) { 
             $this->projects_model->add_edit_members($this->input->post(), $project_id);
+			set_alert('success', _l('updated_successfully'));
             redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
-        }
+        }else{
+		set_alert('danger', _l('Not authorized'));
+               redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
+		
+		}
     }
 
     public function discussions($project_id)

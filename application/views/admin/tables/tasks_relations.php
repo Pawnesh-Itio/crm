@@ -2,7 +2,7 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-return App_table::find('related_tasks')
+return App_table::find('related_tasks') 
     ->outputUsing(function ($params) {
         extract($params);
 
@@ -103,13 +103,15 @@ return App_table::find('related_tasks')
 
         $output  = $result['output'];
         $rResult = $result['rResult'];
+		
+		
 
         foreach ($rResult as $aRow) {
             $row = [];
 
             $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
-            $row[] = '<a href="' . admin_url('tasks/view/' . $aRow['id']) . '" onclick="init_task_modal(' . $aRow['id'] . '); return false;">' . $aRow['id'] . '</a>';
+            $row[] = '<a vvv="'.$aRow['id'].'" href="' . admin_url('tasks/view/' . $aRow['id']) . '" vkg onclick="init_task_modal(' . $aRow['id'] . '); return false;">' . $aRow['id'] . '</a>';
 
             $outputName = '';
 
