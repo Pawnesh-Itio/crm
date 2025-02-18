@@ -14,6 +14,11 @@ class Whatsapp extends AdminController
         $data['chatData'] = $this->leads_model->get_all_whatsapp_data();
         $this->load->view('admin/whatsapp/chatList', $data);
     }
+    public function dmlist(){
+        $data['title'] = "Whatsapp DM's List";
+        $data['chatData'] = $this->leads_model->get_all_whatsapp_data();
+        $this->load->view('admin/whatsapp/dmList', $data);
+    }
     public function configuration(){
         // if (!is_admin()) {
         //     access_denied('Customer Groups');
@@ -21,6 +26,7 @@ class Whatsapp extends AdminController
         // if ($this->input->is_ajax_request()) {
         //     $this->app->get_table_data('customers_groups');
         // }
+        $data['departmentData'] = $this->leads_model->getAllDepartments(); 
         $data['title'] = 'Whatsapp-Configuration';
         $this->load->view('admin/whatsapp/configuration', $data);
     }

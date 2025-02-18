@@ -1225,4 +1225,11 @@ class Leads_model extends App_Model
         }
         return true;
     }
+    public function getAllDepartments(){
+        $this->db->select('departmentid, name');
+        $resultArray = $this->db->get(db_prefix() . 'departments')->result_array();
+        if($resultArray){
+            return $resultArray;
+        }
+    }
 }

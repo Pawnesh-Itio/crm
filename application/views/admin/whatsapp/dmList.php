@@ -86,7 +86,7 @@
                                                 <input type="hidden" id="formMediaUrl"/>
                                                 <input type="hidden" id="formMediaId" name="formMediaId"/>
                                                 <input type="hidden" id="formType" value="1">
-                                                <input type="hidden" id="ContactType" value="Regular">
+                                                <input type="hidden" id="ContactType" value="DMs">
                                                 <input type="hidden" id="confId">
                                                 <div class="message-input">
                                                     <div class="row">
@@ -140,6 +140,41 @@
         </div>
     </div>
 </div>
+<!-- DM Model -->
+ <!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" id="exampleModalLabel">Send Whatsapp DM</h4 >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="dmForm">
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Phone Number (With Country Code Ex: 919899999999)</label>
+                <input id="dmPhoneNumber" type="text" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Name </label>
+                <input id="dmName" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Message </label>
+                <input id="dmMessage" type="text" class="form-control" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      <form>
+    </div>
+  </div>
+</div>
+<!-- End DM Model -->
 <?php init_tail(); ?>
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
@@ -198,7 +233,7 @@ socket.on('error', (error) => {
         if (!phoneNumberId) return; // Prevent unnecessary requests
         console.log("Fetching data for:", phoneNumberId);
         $.ajax({
-            url: `${waURL}/api/chat/list/${phoneNumberId}/Regular`,
+            url: `${waURL}/api/chat/list/${phoneNumberId}/DMs`,
             method: 'GET',
             success: function (data) {  
                 console.log("Fetched data length:", data.length);
@@ -211,9 +246,18 @@ socket.on('error', (error) => {
                             </li>
                         </a>`
                     ).join(''); // Convert array to a string
+                    // Add adding button
+                    chatList += `<br><div class="text-center"><a href="#" class="btn btn-primary text-center" data-toggle="modal" data-target="#exampleModal">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </a></div>
+                                        `;
                     $('#chatList').html(chatList);
                 }else{
-                    let errMessage = `<p class="text-center text-danger">No contact found...</p>`;
+                    let errMessage = `<p class="text-center text-danger">No contact found...</p>
+                                        <div class="text-center"><a href="#" class="btn btn-primary text-center" data-toggle="modal" data-target="#exampleModal">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </a></div>
+                                        `;
                     $('#chatList').html(errMessage);
                 }
                 // Handle the response data
@@ -249,7 +293,7 @@ socket.on('error', (error) => {
         clickedLink.classList.add('active-chat');
         // Fetch chats
         $.ajax({
-        url: waURL+'/api/chat/messages/'+chatId+'/'+phoneNumberId+'/Regular',
+        url: waURL+'/api/chat/messages/'+chatId+'/'+phoneNumberId+'/DMs',
         method: 'GET',
         success: function (data) {
             $('.wa-send-message').show();
@@ -520,6 +564,45 @@ $(document).ready(function() {
     });
 });
 
+// Send DMs
+$(document).ready(function() {
+    $('#dmForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        //Gather form data.
+        const confData = $('#confDropdown').val().split(',');
+        const dmPhoneNumber = $('#dmPhoneNumber').val();
+        const dmName = $('#dmName').val();
+        const dmMessage = $('#dmMessage').val();
+        const source = "crm";
+        const confID = confData[1];
+        // SendMessage Payload
+        const sendPayload = {
+            source: "crm",
+            configurationId: confID,
+            ContactType:"DMs",
+            messageType:1,
+            to: dmPhoneNumber,
+            message:dmMessage,
+        }
+        if(dmName){
+            sendPayload.contactName = dmName; // Add dmName only if it exists
+        }
+        $.ajax({
+            type: 'POST',
+            url: waURL+'/api/messages/send/', // Replace with your actual URL
+            contentType: 'application/json',
+            data: JSON.stringify(sendPayload),
+            success: function(response) {
+                // Notify
+                console.log(response);
+            },
+            error: function(error) {
+                // Handle error
+                console.error('Error sending message:', error);
+            }
+        });
+    });
+});
 
 </script>
 </body>
