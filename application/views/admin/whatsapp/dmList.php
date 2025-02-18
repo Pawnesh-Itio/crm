@@ -143,7 +143,7 @@
 <!-- DM Model -->
  <!-- Button trigger modal -->
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -595,9 +595,20 @@ $(document).ready(function() {
             success: function(response) {
                 // Notify
                 console.log(response);
+                alert_float("success", "DM sent successfully");
+                $('#exampleModal').modal('hide');
+                setTimeout(function() {
+                    location.reload(); // Reload the page after 2 seconds
+                }, 2000); // 2000 milliseconds = 2 seconds
             },
             error: function(error) {
                 // Handle error
+                alert_float("danger", "Somthing went wrong, Please try Again later !");
+                $('#exampleModal').modal('hide');
+                setTimeout(function() {
+                    location.reload(); // Reload the page after 2 seconds
+                }, 2000); // 2000 milliseconds = 2 seconds
+                
                 console.error('Error sending message:', error);
             }
         });

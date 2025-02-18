@@ -165,6 +165,36 @@
                         </span>
                     </div>
                 </div>
+                <br>
+                <!-- Added Fields -->
+                <div id="selfAddedFields">
+                    <!-- Fields Populate Here -->
+                </div>
+                <!-- End Added Fields -->
+                <hr/>
+                <!-- Add Fields form  -->
+                 <h3 class="text-center">Add Custom fields</h3><br>
+                 <div class="row text-center">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>Field Type:</label>
+                            <input type="text" class="form-control" id="fieldType" placeholder="e.g., text, email, number">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-gorup">
+                            <label>Field Name:</label>
+                            <input type="text" class="form-control" id="fieldName" placeholder="Enter field name">
+                        </div>
+                    </div><br>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                           <button type="button" class="btn-sm btn-info" id="addField">Add Field</button>
+                        </div>
+                    </div>
+                 </div>
+                <!-- Add Fields form Ended  -->
+                   <hr/>
                 <?php if (is_email_template_active('contact-set-password')) { ?>
                 <div class="checkbox checkbox-primary">
                     <input type="checkbox" name="send_set_password_email" id="send_set_password_email">
@@ -207,4 +237,29 @@
 <script>
 validate_lead_convert_to_client_form();
 init_selectpicker();
+</script>
+<script>
+$(document).ready(function() {
+    $('#addField').click(function() {
+        var fieldType = $('#fieldType').val();
+        var fieldName = $('#fieldName').val();
+
+        if (fieldType && fieldName) {
+            var newField = `<div class="form-group">
+                                <label>${fieldName}:</label>
+                                <input type="${fieldType}" name="selfcreatedfield_${fieldName}" class="form-control">
+                                <button class="removeField">Remove</button>
+                            </div>`;
+            
+            $('#selfAddedFields').append(newField);
+        } else {
+            alert("Please enter both field type and field name.");
+        }
+    });
+
+    // Remove field
+    $(document).on('click', '.removeField', function() {
+        $(this).parent('.form-group').remove();
+    });
+});
 </script>

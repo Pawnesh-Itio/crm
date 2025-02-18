@@ -171,12 +171,17 @@ $(document).ready(function() {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function(response) {
-                alert('Data successfully sent to Node.js API!');
-                location.reload(); // Refresh the page after deletion
+                alert_float("success", "Configurtaion added successfully.");
+                setTimeout(function() {
+                            location.reload(); // Reload the page after 2 seconds
+                }, 2000); // 2000 milliseconds = 2 seconds
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);
-                alert('There was an error sending data.');
+                alert_float("danger", "Somthing went wrong, Please try again later!");
+                    setTimeout(function() {
+                                location.reload(); // Reload the page after 2 seconds
+                    }, 2000); // 2000 milliseconds = 2 seconds
             }
         });
 });
@@ -203,11 +208,16 @@ $.ajax({
     url: `${url}/api/configuration/delete/${confId}`, // Adjust the endpoint as per your route
     method: 'DELETE',
     success: function(response) {
-        alert(response.message); // Show success message
-        location.reload(); // Refresh the page after deletion
+        alert_float("success", "Configuration added successfully");
+        setTimeout(function() {
+                    location.reload(); // Reload the page after 2 seconds
+        }, 2000); // 2000 milliseconds = 2 seconds
     },
     error: function(xhr) {
-        alert(xhr.responseJSON?.message || "Error deleting configuration");
+        alert_float("danger", "Error deleting configuration");
+        setTimeout(function() {
+                    location.reload(); // Reload the page after 2 seconds
+        }, 2000); // 2000 milliseconds = 2 seconds
     }
 });
 }
