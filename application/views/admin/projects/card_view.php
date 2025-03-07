@@ -119,7 +119,7 @@ $projects = array_values($projects);
                       $color = $colors[$index % count($colors)];
                     // Output the div for each member with the first letter and background color
                       echo '<div class="p-member" data-toggle="tooltip" title="'.$member['staff_name'].'" style="background-color: ' . $color . ';">' . $firstLetter . '</div>';
-                    }else{ ?>
+                    } else{ ?>
                     <div class="p-member" data-toggle="tooltip" title="<?=$member['staff_name'] ?>">
                         <?php echo staff_profile_image($member['staff_id'], ['staff-profile-image-small'], 'thumb'); ?>
                     </div>
@@ -131,7 +131,7 @@ $projects = array_values($projects);
 
 	<div class="buttons">
   <span  class="button" style="background-color:<?=$clr;?> !important;">
-    <? if($status=="Completed"){ ?>
+    <?php if($status=="Completed"){ ?>
     <i class="fa-regular fa-circle-check fa-2x tw-text-white"></i>
 	<?php }else{ ?>
     <i class="fa-solid fa-cog fa-spin fa-2x tw-text-white"></i>

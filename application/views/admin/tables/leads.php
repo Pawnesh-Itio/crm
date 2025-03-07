@@ -127,7 +127,7 @@ return App_table::find('leads')
             $where[] = $filtersWhere;
         }
 
-		array_push($where, 'AND status != 1');	//if lead converted to contact/customer then lead will not appear in lead section
+		array_push($where);
  
         if (staff_cant('view', 'leads')) {
             array_push($where, 'AND (assigned =' . get_staff_user_id() . ' OR addedfrom = ' . get_staff_user_id() . ' OR is_public = 1)');

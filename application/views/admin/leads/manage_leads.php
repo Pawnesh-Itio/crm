@@ -63,7 +63,6 @@
                         <div class="tw-flex tw-flex-wrap tw-flex-col lg:tw-flex-row tw-w-full tw-gap-3 lg:tw-gap-6">
                             <?php
                            foreach ($summary as $status) {
-                            if($status['name'] !="Customer"){
                             ?>
                             <div
                                 class="lg:tw-border-r lg:tw-border-solid lg:tw-border-neutral-300 tw-flex-1 tw-flex tw-items-center last:tw-border-r-0">
@@ -82,7 +81,7 @@
                                     <?php echo e($status['name']); ?>
                                 </span>
                             </div>
-                            <?php } } ?>
+                            <?php  } ?>
                         </div>
 
                     </div>
