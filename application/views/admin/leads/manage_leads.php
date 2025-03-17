@@ -117,7 +117,9 @@
                                 </div>
                                 <div class="row">
                                     <div class="container-fluid leads-kan-ban">
-                                        <div id="kan-ban"></div>
+                                        <div id="kan-ban">
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>

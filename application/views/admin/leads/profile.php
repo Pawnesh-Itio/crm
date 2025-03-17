@@ -8,6 +8,9 @@
     <?php if (isset($lead)) { ?>
     <!-- Conversation Dropdown By TechWizard -->
     <div class="btn-group pull-right mleft5">
+        <a href="<?php echo admin_url('webmail/inbox'); ?>" class="btn btn-default lead-top-btn">E-mail</a>
+    </div>
+    <div class="btn-group pull-right mleft5">
         <a class="btn btn-default dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <?php echo _l('chatBtn'); ?>				
             <span class="caret"></span>

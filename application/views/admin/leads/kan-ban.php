@@ -2,7 +2,6 @@
 $is_admin = is_admin();
 $i        = 0;
 foreach ($statuses as $status) {
-     if($status['name'] !='Customer'){
     $kanBan = new \app\services\leads\LeadsKanban($status['id']);
     $kanBan->search($this->input->get('search'))
     ->sortBy($this->input->get('sort_by'), $this->input->get('sort'));
@@ -94,4 +93,4 @@ foreach ($statuses as $status) {
     </li>
 </ul>
 <?php $i++;
-} } ?>
+} ?>
