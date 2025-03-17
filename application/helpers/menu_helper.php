@@ -254,6 +254,14 @@ function app_init_admin_sidebar_menu_items()
 			'icon'     => 'fa-brands fa-whatsapp',
 			'badge'    => [],
 		]);
+        $CI->app_menu->add_sidebar_children_item('conversion', [
+			'slug'     => 'als_whatsapp_dm',
+			'name'     => 'Whatsapp DMs',
+			'href'     => admin_url('whatsapp/dmlist'),
+			'position' => 2,
+			'icon'     => 'fa-brands fa-whatsapp',
+			'badge'    => [],
+		]);
 		$CI->app_menu->add_sidebar_children_item('conversion', [
 			'slug'     => 'als_webchat',
 			'name'     => _l('als_webchat'),
