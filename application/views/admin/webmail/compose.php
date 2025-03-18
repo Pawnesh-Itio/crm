@@ -78,39 +78,11 @@
       <div class="mb-3">
         <label for="emailBody" class="form-label mtop10">Email Body</label>
 	   <?php echo render_textarea('emailBody', '', '', [], [], '', 'tinymce'); ?>
-                                <div class="attachments_area">
-                                    <div class="row attachments">
-                                        <div class="attachment">
-                                            <div class="col-md-4 mtop10">
-                                                <div class="form-group">
-                                                    <label for="attachment"
-                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
-                                                    <div class="input-group">
-<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment1" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
-                                                    </div>
-                                                </div>
-                                            </div>
-											<div class="col-md-4 mtop10">
-                                                <div class="form-group">
-                                                    <label for="attachment"
-                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
-                                                    <div class="input-group">
-<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment2" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
-                                                    </div>
-                                                </div>
-                                            </div>
-											<div class="col-md-4 mtop10">
-                                                <div class="form-group">
-                                                    <label for="attachment"
-                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
-                                                    <div class="input-group">
-<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment3" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
+      </div>
+	  <div class="mb-3">
+        <label for="recipientEmail" class="form-label">Attach Files:</label>
+        <input type="file" name="attachments[]"  class="form-control" multiple>
       </div>
       <button type="submit" name="send" class="btn btn-primary mtop20">Send Email</button>
     </form>
