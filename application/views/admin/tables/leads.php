@@ -218,10 +218,17 @@ return App_table::find('leads')
                     'staff-profile-image-small',
                 ]) . '</a>';
 
-                // For exporting
+                // For Assigning
+                $currentLoggedInUser = get_staff_user_id();
+                if(is_admin($currentLoggedInUser) || staff_can('view', 'leads')){
                 $assignedOutput .= '<span class="text-success" style="padding-left:15px;"><a onclick="leadAssign('.$aRow['id'].','.$aRow['assigned'].')" data-toggle="modal" data-target="#leadAssignModel"><i class="fa fa-plus" aria-hidden="true" style="font-size: 20px;"></i></a></span>';
+                }
             }else{
-                $assignedOutput = '<span class="text-success " style=""><a onclick="leadAssign('.$aRow['id'].')" data-toggle="modal" data-target="#leadAssignModel"><i class="fa fa-plus" aria-hidden="true"style="font-size: 20px;position:relative;left:25px;top:10px"></i></a></span>';
+                 // For Assigning
+                 $currentLoggedInUser = get_staff_user_id();
+                 if(is_admin($currentLoggedInUser)|| staff_can('view', 'leads')){
+                    $assignedOutput = '<span class="text-success " style=""><a onclick="leadAssign('.$aRow['id'].')" data-toggle="modal" data-target="#leadAssignModel"><i class="fa fa-plus" aria-hidden="true"style="font-size: 20px;position:relative;left:25px;top:10px"></i></a></span>';
+                 }
             }
 
             $row[] = $assignedOutput;
@@ -235,25 +242,7 @@ return App_table::find('leads')
             } else {
                 $outputStatus = '<span class="lead-status-' . $aRow['status'] . ' label' . (empty($aRow['color']) ? ' label-default' : '') . '" style="color:' . $aRow['color'] . ';border:1px solid ' . adjust_hex_brightness($aRow['color'], 0.4) . ';background: ' . adjust_hex_brightness($aRow['color'], 0.04) . ';">' . e($aRow['status_name']);
 
-                if (!$locked) {
-                    $outputStatus .= '<div class="dropdown inline-block mleft5 table-export-exclude">';
-                    $outputStatus .= '<a href="#" style="font-size:14px;vertical-align:middle;" class="dropdown-toggle text-dark" id="tableLeadsStatus-' . $aRow['id'] . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
-                    $outputStatus .= '<span data-toggle="tooltip" title="' . _l('ticket_single_change_status') . '"><i class="fa-solid fa-chevron-down tw-opacity-70"></i></span>';
-                    $outputStatus .= '</a>';
 
-                    $outputStatus .= '<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="tableLeadsStatus-' . $aRow['id'] . '">';
-                    foreach ($statuses as $leadChangeStatus) {
-                        if ($aRow['status'] != $leadChangeStatus['id']) {
-                            $outputStatus .= '<li>
-                          <a href="#" onclick="lead_mark_as(' . $leadChangeStatus['id'] . ',' . $aRow['id'] . '); return false;">
-                             ' . e($leadChangeStatus['name']) . '
-                          </a>
-                       </li>';
-                        } 
-                    }
-                    $outputStatus .= '</ul>';
-                    $outputStatus .= '</div>';
-                }
                 $outputStatus .= '</span>';
             }
 

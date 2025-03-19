@@ -178,11 +178,10 @@
         </a>
     </div>
     <?php } ?>
-    <?php echo form_open((isset($lead) ? admin_url('leads/lead/' . $lead->id) : admin_url('leads/lead')), ['id' => 'lead_form']); ?>
+    <?php echo form_open((isset($lead) ? admin_url('leads/lead/' . $lead->id) : admin_url('leads/lead')), ['id' => 'lead_form']); ?> 
     <div class="row">
         <div class="lead-view<?php if (!isset($lead)) {
-          echo ' hide';
-      } ?>" id="leadViewWrapper">
+          echo ' hide';} ?>" id="leadViewWrapper">
             <div class="col-md-4 col-xs-12 lead-information-col">
                 <div class="lead-info-heading">
                     <h4>
@@ -392,6 +391,9 @@
                   && staff_cant('view', 'leads')
                ) {
                    $assigned_attrs['disabled'] = true;
+               }
+               if(!isset($lead) && !is_admin($selected) ){
+                 $assigned_attrs['disabled'] = true;
                }
                echo render_select('assigned', $members, ['staffid', ['firstname', 'lastname']], 'lead_add_edit_assigned', $selected, $assigned_attrs); ?>
             </div>
