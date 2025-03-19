@@ -4,11 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Webmail_setup_model extends App_Model
 {
-    //private $pdf_fields = ['estimate', 'invoice', 'credit_note', 'items'];
-
-    //private $client_portal_fields = ['customers', 'estimate', 'invoice', 'proposal', 'contracts', 'tasks', 'projects', 'contacts', 'tickets', 'company', 'credit_note'];
-
-   // private $client_editable_fields = ['customers', 'contacts', 'tasks'];
 
     public function __construct()
     {

@@ -6,7 +6,16 @@
     .modal-dialog {
         width: unset !important;
     }
+	table.number-index-2 tbody>tr>td:nth-child(2), table.number-index-2 thead>tr>th:nth-child(2) {
+        text-align: left !important;
+    }
 }
+
+.folder-active {    
+color: #d3e0ed !important;
+background: #dc2626 !important;
+}
+
 </style>
 
 <div id="wrapper">
@@ -37,8 +46,8 @@
                 <ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked mtop10" id="theme_styling_areas">
 				
 				<?php  foreach ($_SESSION['folderlist'] as $item => $val) { ?>
-                    <li role="presentation" class="menu-item-leads">
-                        <a href="inbox?fd=<?=$val;?>"><?=$val;?></a>
+                    <li role="presentation" class="menu-item-leads ">
+                        <a href="inbox?fd=<?=$val;?>" class="mail-loader <?php if($_SESSION['webmail']['folder']==$val){ echo 'folder-active';} ?>"><?=$val;?></a>
                     </li>
 					<?php if(count($_SESSION['subfolderlist'])>0 && isset($_SESSION['subfolderlist'][$val])){ ?>
                     </li>
@@ -47,15 +56,40 @@
 
 					?>
                     <li role="presentation" class="menu-item-leads">
-                        <a href="inbox?fd=<?=$sval;?>"><i class="fa-solid fa-arrow-right-long tw-mx-2 "></i> <?=$sval;?></a>
+                        <a href="inbox?fd=<?=$sval;?>" class="mail-loader <?php if($_SESSION['webmail']['folder']==$sval){ echo 'folder-active';} ?>"><i class="fa-solid fa-arrow-right-long tw-mx-2 "></i> <?=$sval;?></a>
                     </li>
 				  <?php } } } ?>  
                 </ul>
             </div>
             <div class="col-md-10">
-			<div class="tw-flex tw-items-center tw-mb-2">
-                    <h4 class="tw-my-0 tw-font-semibold tw-text-lg tw-text-neutral-700 tw-mr-4"><?php if(!empty($_SESSION['webmail']['folder'])){ echo $_SESSION['webmail']['folder'];}?> <?php if(isset($_SESSION['inbox-total-email'])&&!empty($_SESSION['inbox-total-email'])){?> (<?=$_SESSION['inbox-total-email'];?>) <?php } ?></h4>
-             </div>
+			
+			 <div class="row">
+			 <form>
+			  <div class="col-md-7 mbot10"><div class="dt-buttons btn-group">
+			 <?php if(!empty($_SESSION['webmail']['folder'])){ ?>
+			  <button class="btn btn-default buttons-collection btn-sm btn-default-dt-options"  type="button" aria-haspopup="true"><span><?php echo $_SESSION['webmail']['folder'];?></span></button> <?php if(isset($_SESSION['inbox-total-email'])&&!empty($_SESSION['inbox-total-email'])){?><button class="btn btn-default btn-sm btn-default-dt-options bg-danger" type="button" ><span><?=$_SESSION['inbox-total-email'];?></span></button> <?php } ?>
+			  <?php } ?>
+			  
+			  </div></div>
+			  <div class="col-md-5 mbot10">
+			  <div class="dt-buttons btn-group55 tw-text-right">
+			  <div class="w-full tw-inline-flex sm:max-w-xs">
+			  <select name="stype" class="form-control input-sm input-group-addon" style="width:auto;border-top-left-radius: .375rem;border-bottom-left-radius: .375rem;" required>
+			  <option value="">Select type</option>
+			  <option value="FROM">FROM</option>
+			  <option value="TO">TO</option>
+			  <option value="CC">CC</option>
+			  <option value="BCC">BCC</option>
+			  <option value="SUBJECT">SUBJECT</option>
+			  <option value="TEXT">TEXT</option>
+			  </select>
+              <input type="text" class="form-control input-sm" name="skey" placeholder="Enter Search Keywords" required>
+              <button type="submit" class="input-group-addon" style="padding-right: 25px;"><span class="fa fa-search"></span></button>
+                </div>
+				</div>
+				</div>
+				</form>
+			  </div>
 
         
                 <div class="panel_s">
@@ -71,11 +105,18 @@
  <table class="table table-clients number-index-2 dataTable no-footer">
 
 <?php $cnt=101; foreach ($inboxemail as $message) { $cnt++; 
-
+//echo $message->getMessageId();//exit;
+//print_r($message);
+$string = "tw-bg-warning-600 tw-bg-primary-600 tw-bg-danger-600 tw-bg-danger-600 tw-bg-neutral-600 tw-bg-success-600 tw-bg-warning-800 tw-bg-primary-800 tw-bg-danger-800 tw-bg-danger-800 tw-bg-neutral-800 tw-bg-success-800";
+// Step 1: Convert string to array of words
+$words = preg_split('/\s+/', $string); // Split by spaces or multiple spaces
+// Step 2: Select a random word
+$randomWord = $words[array_rand($words)];
 
 ?>
 <tr>
-	<td class="hrefmodal tw-cursor-pointer" data-tid="<?=$message->subject;?>" data-id="msg<?=$cnt;?>" title="<?=$message->subject;?>" mailto="From : <?=htmlspecialchars($message->from);?>" data-date="<?=$message->date;?>"><span > <?=$message->subject;?><br><?=htmlspecialchars($message->from);?></span></td>
+<td class="w-10"><div class="tw-rounded-full <?php echo $randomWord;?> tw-text-white tw-inline-flex tw-items-center tw-justify-center tw-h-8 tw-w-8 -tw-mt-1 group-hover:!tw-bg-primary-700"><?=strtoupper(substr($message->from,0,2));?></div></td>
+	<td class="hrefmodal tw-cursor-pointer" data-tid="<?=$message->subject;?>" data-id="msg<?=$cnt;?>" title="<?=$message->subject;?>" mailto="<?=htmlspecialchars($message->from);?>" mailtox="<?=htmlspecialchars($message->to);?>" mailcc="<?=htmlspecialchars($message->cc);?>" mailbcc="<?=htmlspecialchars($message->bcc);?>" data-date="<?=$message->date;?>"><div class="w-36 h-36 bg-red-600 rounded-full"></div> <span> <b><?=$message->subject;?></b><br><?=htmlspecialchars($message->from);?></span></td>
 	<td class="w-25 text-end" style="min-width: 140px;"><?=$message->date;?></td>
 </tr>
 <tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>">
@@ -97,7 +138,7 @@ $filePath = site_url('attachments') . '/' . $fileName;
 // Save the attachment
 $attachment->save($attachmentDir);
 ?>
-<i class="fa-solid fa-paperclip"></i> - <a href="<?=$filePath;?>" target="_blank" title="Click to view"><?=$fileName;?></a><br>
+<i class="fa-solid fa-paperclip"></i> <a href="<?=$filePath;?>" target="_blank" title="Click to view"><?=$fileName;?></a><br>
 <?php
 } 
 //====================================== 
@@ -184,10 +225,11 @@ if ($nextPage) {
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
+	  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="modal-title"></span>
           
         
-<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
       </div>
       <!-- Modal body -->
       <div class="modal-body">
@@ -251,6 +293,9 @@ if ($nextPage) {
          //alert(11111);
          var tid=$(this).attr('data-tid');
 		 var mailto=$(this).attr('mailto');
+		 var mailtox=$(this).attr('mailtox');
+		 var mailcc=$(this).attr('mailcc');
+		 var mailbcc=$(this).attr('mailbcc');
 		 var did=$(this).attr('data-id');
 		 var ddate=$(this).attr('data-date');
 		 const formattedDate = moment(ddate).format('ddd, DD MMM YYYY h:mm:ss A Z');
@@ -259,7 +304,7 @@ if ($nextPage) {
 		 $('#myModal12').modal('show');
 		  $('#myModal12 .modal-dialog').css({"max-width":"80%", "margin-top": "20px"});
 		 //$('#myModal12').modal('show').find('.modal-body').load(urls);
-	     $('#myModal12 .modal-title').html('<span class="h4"><b>' + tid + '</b></span><br>' + '<span class="h6 text-primary">' + escapeHtml(mailto) +'<br>' + formattedDate +'</span>');
+	     $('#myModal12 .modal-title').html('<span class="h4"><b>' + tid + '</b></span><br>' + '<span class="h6 text-primary"> From : ' + escapeHtml(mailto) +'<br> To : ' + escapeHtml(mailtox) +'<br> CC :' + escapeHtml(mailcc) +' BCC :' + escapeHtml(mailbcc) +'<br>' + formattedDate +'</span>');
 		// $('#emailSubject').val(tid);
 		 $('#emailSubjectIT').val(tid);
 		 $('#recipientEmailIT').val(mailto);
@@ -267,6 +312,7 @@ if ($nextPage) {
 		 var contents=$('#'+did).html();
 		 $('#messageDisplay').html(contents);
 
+$('#emailBody_ifr').contents().find('#tinymce').html(content);
 		 
 
 	});

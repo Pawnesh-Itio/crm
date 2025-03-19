@@ -100,17 +100,35 @@ class Webmail_model extends App_Model
 	   
 	    // Get the inbox folder
       $inbox = $client->getFolder($folder);
+	  
+	  //for Delete
+	  if(isset($_GET['stype'])&&!empty($_GET['stype'])&&isset($_GET['skey'])&&!empty($_GET['skey'])){
+	  
+	  }
       	  
 	  if ($inbox === null) {
       die("The 'Sent' folder could not be found.");
       }
       // Query to fetch emails
       //$messages = $inbox->query()->all()->get();  // Fetch all messages
-	 
-	  
+	   
 	  $limit=30;
 	  if(isset($_GET["page"])){ $pn = $_GET["page"]; }else{ $pn=1;};
-	  $messages = $inbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch all messages
+		
+		if(isset($_GET['stype'])&&!empty($_GET['stype'])&&isset($_GET['skey'])&&!empty($_GET['skey'])){
+		$stype=trim($_GET['stype']);
+		$skey=trim($_GET['skey']);
+		
+		  $messages = $inbox->query()->where($stype , $skey)->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch with search data
+		}else{
+		 $messages = $inbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch all messages
+		}
+		
+		
+		$client->disconnect();
+	  
+	 
+	 
 	  
 	  
 	  // Sort messages by descending date
@@ -230,26 +248,6 @@ class Webmail_model extends App_Model
 	if(isset($recipientCC)&&$recipientCC<>""){$mail->AddCC($recipientCC);}
     $mail->Subject = $subject;
     $mail->Body = $body;
-	
-	/*// Attached 1 file
-    if (isset($_FILES['attachment1']) && $_FILES['attachment1']['error'] == UPLOAD_ERR_OK) {
-        $fileTmpPath1 = $_FILES['attachment1']['tmp_name'];
-        $fileName1 = $_FILES['attachment1']['name'];
-        $mail->addAttachment($fileTmpPath1, $fileName1); // Attach the uploaded file
-	}
-
-	// Attached 2 file
-    if (isset($_FILES['attachment2']) && $_FILES['attachment2']['error'] == UPLOAD_ERR_OK) {
-        $fileTmpPath2 = $_FILES['attachment2']['tmp_name'];
-        $fileName2 = $_FILES['attachment2']['name'];
-        $mail->addAttachment($fileTmpPath2, $fileName2); // Attach the uploaded file
-	}
-	// Attached 3 file
-    if (isset($_FILES['attachment3']) && $_FILES['attachment3']['error'] == UPLOAD_ERR_OK) {
-        $fileTmpPath3 = $_FILES['attachment3']['tmp_name'];
-        $fileName3 = $_FILES['attachment3']['name'];
-        $mail->addAttachment($fileTmpPath3, $fileName3); // Attach the uploaded file
-	}*/
 	
 	 $files = $_FILES['attachments'];
 	// Handle Multiple File Attachments
