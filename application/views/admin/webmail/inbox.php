@@ -70,9 +70,12 @@
 <div class="table-responsive">
  <table class="table table-clients number-index-2 dataTable no-footer">
 
-<?php $cnt=101; foreach ($inboxemail as $message) { $cnt++; ?>
+<?php $cnt=101; foreach ($inboxemail as $message) { $cnt++; 
+
+
+?>
 <tr>
-	<td class="hrefmodal" data-tid="<?=$message->subject;?>" data-id="msg<?=$cnt;?>" title="<?=$message->subject;?>" mailto="<?=$message->from;?>"><span > <?=$message->subject;?><br><?=htmlspecialchars($message->from);?></span></td>
+	<td class="hrefmodal tw-cursor-pointer" data-tid="<?=$message->subject;?>" data-id="msg<?=$cnt;?>" title="<?=$message->subject;?>" mailto="From : <?=htmlspecialchars($message->from);?>" data-date="<?=$message->date;?>"><span > <?=$message->subject;?><br><?=htmlspecialchars($message->from);?></span></td>
 	<td class="w-25 text-end" style="min-width: 140px;"><?=$message->date;?></td>
 </tr>
 <tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>">
@@ -181,11 +184,10 @@ if ($nextPage) {
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">
-          <!--Heading-->
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
+        <span class="modal-title"></span>
+          
+        
+<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <!-- Modal body -->
       <div class="modal-body">
@@ -217,39 +219,12 @@ if ($nextPage) {
         <label for="emailBody" class="form-label">Email Body</label>
        <?php /*?> <textarea id="emailBody" name="emailBody" class="form-control" rows="5"></textarea><?php */?>
 	   <?php echo render_textarea('emailBody', '', '', [], [], '', 'tinymce'); ?>
-                                <div class="attachments_area">
-                                    <div class="row attachments">
-                                        <div class="attachment">
-                                            <div class="col-md-4 mtop10">
-                                                <div class="form-group">
-                                                    <label for="attachment"
-                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
-                                                    <div class="input-group">
-<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment1" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
-                                                    </div>
-                                                </div>
-                                            </div>
-											<div class="col-md-4 mtop10">
-                                                <div class="form-group">
-                                                    <label for="attachment"
-                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
-                                                    <div class="input-group">
-<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment2" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
-                                                    </div>
-                                                </div>
-                                            </div>
-											<div class="col-md-4 mtop10">
-                                                <div class="form-group">
-                                                    <label for="attachment"
-                                                        class="control-label"><?php echo _l('Add Attachments'); ?> </label>
-                                                    <div class="input-group">
-<input type="file" extension="jpg,png,pdf,doc,zip,rar" filesize="83886080" class="form-control" name="attachment3" accept=".jpg,.png,.pdf,.doc,.zip,.rar,image/jpeg,image/png,application/pdf,application/msword,application/x-zip,application/x-rar">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
+      </div>
+	  
+	  <div class="mb-3">
+        <label for="recipientEmail" class="form-label">Attach Files:</label>
+        <input type="file" name="attachments[]"  class="form-control" multiple>
       </div>
       <button type="submit" name="send" class="btn btn-primary mtop20">Send Email</button>
     </form>
@@ -277,12 +252,14 @@ if ($nextPage) {
          var tid=$(this).attr('data-tid');
 		 var mailto=$(this).attr('mailto');
 		 var did=$(this).attr('data-id');
-		 //alert(tid);alert(mailto);alert(did);
+		 var ddate=$(this).attr('data-date');
+		 const formattedDate = moment(ddate).format('ddd, DD MMM YYYY h:mm:ss A Z');
+		 //alert(tid);alert(mailto);alert(formattedDate);
 		 
 		 $('#myModal12').modal('show');
 		  $('#myModal12 .modal-dialog').css({"max-width":"80%", "margin-top": "20px"});
 		 //$('#myModal12').modal('show').find('.modal-body').load(urls);
-	     $('#myModal12 .modal-title').html(tid + mailto);
+	     $('#myModal12 .modal-title').html('<span class="h4"><b>' + tid + '</b></span><br>' + '<span class="h6 text-primary">' + escapeHtml(mailto) +'<br>' + formattedDate +'</span>');
 		// $('#emailSubject').val(tid);
 		 $('#emailSubjectIT').val(tid);
 		 $('#recipientEmailIT').val(mailto);

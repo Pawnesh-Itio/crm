@@ -59,14 +59,13 @@ return $txt;
 	
 	<?php if (count($_SESSION['datalists']) > 0) { ?>
 	<div class="panel_s">
-	<h4>&nbsp;&nbsp;History</h4>
+	<h4>&nbsp;&nbsp;History (Last 5)</h4>
 	<?php foreach ($_SESSION['datalists'] as $rs) { ?>
                     <div class="panel-body panel-table-full">
 					<div id="vueApp" class="tw-inline pull-right tw-ml-0 sm:tw-ml-1.5" data-v-app=""><button type="button" class="btn btn-default " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $rs['content_title'];?> </button>&nbsp;<button class="btn btn-default" title="Copy Content" onClick='CopyValTestbox("vkg<?php echo $rs['content_id'];?>")'>&nbsp;<i class="fa-solid fa-copy" aria-hidden="true"></i>&nbsp;</button></div>
 					<div  style="clear:both;"></div>
 					
 					<div class="p-card" style="max-width:100% !important;" >
-					Content : <?php echo $rs['content_title'];?>
 					<?php 
 					echo cleartext($rs['content']);
 					?>

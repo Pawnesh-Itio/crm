@@ -231,7 +231,7 @@ class Webmail_model extends App_Model
     $mail->Subject = $subject;
     $mail->Body = $body;
 	
-	// Attached 1 file
+	/*// Attached 1 file
     if (isset($_FILES['attachment1']) && $_FILES['attachment1']['error'] == UPLOAD_ERR_OK) {
         $fileTmpPath1 = $_FILES['attachment1']['tmp_name'];
         $fileName1 = $_FILES['attachment1']['name'];
@@ -249,7 +249,22 @@ class Webmail_model extends App_Model
         $fileTmpPath3 = $_FILES['attachment3']['tmp_name'];
         $fileName3 = $_FILES['attachment3']['name'];
         $mail->addAttachment($fileTmpPath3, $fileName3); // Attach the uploaded file
-	}
+	}*/
+	
+	 $files = $_FILES['attachments'];
+	// Handle Multiple File Attachments
+        if (!empty($files['name'][0])) {
+            for ($i = 0; $i < count($files['name']); $i++) {
+                $fileTmpPath = $files['tmp_name'][$i];
+                $fileName = $files['name'][$i];
+                $fileType = $files['type'][$i];
+                $fileError = $files['error'][$i];
+                
+                if ($fileError === 0) {
+                    $mail->addAttachment($fileTmpPath, $fileName);
+                }
+            }
+        }
 
 
     $mail->send();
