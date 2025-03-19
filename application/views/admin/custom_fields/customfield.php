@@ -48,8 +48,7 @@
                                     ]); ?>
                         </div>
 
-====================
-                        <?php
+<?php
                                 $disable = '';
                                 if (isset($custom_field)) {
                                     if (total_rows(db_prefix() . 'customfieldsvalues', ['fieldid' => $custom_field->id, 'fieldto' => $custom_field->fieldto]) > 0) {
