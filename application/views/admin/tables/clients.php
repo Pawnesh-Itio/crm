@@ -23,6 +23,8 @@ return App_table::find('clients')
 			
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'customer_groups JOIN ' . db_prefix() . 'customers_groups ON ' . db_prefix() . 'customer_groups.groupid = ' . db_prefix() . 'customers_groups.id WHERE customer_id = ' . db_prefix() . 'clients.userid ORDER by name ASC) as customerGroups',
             db_prefix() . 'clients.datecreated as datecreated',
+            '(SELECT GROUP_CONCAT(staff_id SEPARATOR ", ") FROM ' . db_prefix() . 'customer_admins 
+             WHERE customer_id = ' . db_prefix() . 'clients.userid) as staff_ids',
         ];
 
         $sIndexColumn = 'userid';
@@ -151,17 +153,25 @@ return App_table::find('clients')
             $row[] = $groupsRow;
 			*/
 			
-			//fetch the data from lead table via (leadid if exists)
-			if(isset($aRow['leadid']) && !empty($aRow['leadid']))
-				$lead_detail=fetch_lead_detail($aRow['leadid']);
-
-			$assignee_name='';
-			if(isset($lead_detail['assigned'])&&$lead_detail['assigned'])
-			{
-				$assigned=$lead_detail['assigned'];
-				$assignee_name=get_staff_full_name($assigned);
-			}
-			$row[] = $assignee_name;
+			//Assign Data
+            $assignedOutput = '';
+            if(isset( $aRow['staff_ids'])){
+                $staffIdsArr = explode(",", $aRow['staff_ids']);
+                foreach( $staffIdsArr as $sa ){
+                    $assignee_name =get_staff_full_name($sa);
+                    $assignedOutput .= '<a data-toggle="tooltip" data-title="' . $assignee_name . '" href="' . admin_url('profile/' . $sa) . '">' . staff_profile_image($sa, [
+                        'staff-profile-image-small',
+                    ]) . '</a>';
+                }
+                // For exporting
+                // $assignedOutput .= '<span class="text-success" style="padding-left:15px;">
+                //     <a onclick="contactAssign('.$aRow['userid'].', \''.$aRow['staff_ids'].'\')" 
+                //     data-toggle="modal" data-target="#contactAssignModel">
+                //         <i class="fa fa-plus" aria-hidden="true" style="font-size: 20px;"></i>
+                //     </a>
+                // </span>';
+            }
+			$row[] = $assignedOutput;
 
             $whatsappLink ='';
             if($aRow['phonenumber'] && !empty($aRow['phonenumber'])){

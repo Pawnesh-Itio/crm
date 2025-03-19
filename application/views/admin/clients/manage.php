@@ -266,6 +266,36 @@
     </div>
 </div>
 
+<!-- Contact Assign Model -->
+ <!-- Modal -->
+ <div class="modal fade bd-example-modal-sm" id="contactAssignModel" tabindex="-1" role="dialog" aria-labelledby="leadAssignModel">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Contact's Assigned Staff</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form id="assignClientsForm" action="<?= admin_url('clients/assign_staff') ?>" method="post">
+        <div class="modal-body">
+            <div class="form-group">
+                <input type="hidden" name="contact_id" id="contact_id">
+                <label>Assign Staff</label>
+                    <select name="assigned_id" class="custom-select form-control" id="mySelect">
+                    <!-- Dynamically Populate Here -->
+                    </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button name="assignSubmit" type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+ <!-- End Contact Assign Model -->
+
 
 </div>
 <?php include_once(APPPATH . 'views/admin/leads/conversation.php'); ?>
@@ -471,6 +501,33 @@ function showAlert(message, alertType) {
     setTimeout(function() {
         alertBox.fadeOut(); // Hide after 5 sec
     }, 5000);
+}
+function contactAssign(id, Assigned_id){
+    console.log("Contact Id:"+id);
+    console.log("Assigned Id:"+Assigned_id);
+     // Split Assigned_id into an array for comparison
+    let assignedIds = Assigned_id.split(',').map(id => id.trim());
+    let att ;
+    $.ajax({
+        url: '<?= admin_url('staff/getAllStaff') ?>',  // URL to send the request to
+        type: 'GET',  // Request method, e.g., GET or POST
+        dataType: 'json',  // Expected data format from the server
+        success: function(response) {
+            // Clear existing options
+            $('#mySelect').empty();
+            $('#contact_id').val(id);
+            // Populate options from the server response
+            response.forEach(function(item) {
+                if(!assignedIds.includes(item.staffid.toString())){
+                $('#mySelect').append(`<option value="${item.staffid}">${item.full_name}</option>`);
+                }
+            });
+        },
+        error: function(xhr, status, error) {
+            // Handle any errors that occur
+            console.error('An error occurred: ' + error);
+        }
+    });
 }
 </script>
 </body>

@@ -244,7 +244,7 @@
                               $_table_data[] = [
                                'name'     => _l('leads_dt_assigned'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
-                              ];
+                              ]; 
                               $_table_data[] = [
                                'name'     => _l('leads_dt_status'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-status'],

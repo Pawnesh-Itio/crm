@@ -31,7 +31,7 @@
 <a href="<?php echo site_url('admin/webmail/compose'); ?>" class="btn btn-primary mtop10" style="width: 180px !important;">
         <i class="fa-regular fa-paper-plane tw-mr-1"></i>
         <?php echo _l('New Mail'); ?>
-    </a>
+</a>
 </div>
                 <ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked mtop10" id="theme_styling_areas">
 				
@@ -45,7 +45,7 @@
 					<li role="presentation" class="menu-item-leads">
                         <a href="inbox?fd=<?=$val;?>/<?=$sval;?>"><i class="fa-solid fa-arrow-right-long tw-mx-2 "></i> <?=$sval;?></a>
                     </li>
-					<?
+					<?php
 					
 					}} ?>
 				  <?php  } ?>  
@@ -65,7 +65,7 @@
 	<input type="hidden" name="redirect" value="inbox.php">
       <div class="mb-3">
         <label for="recipientEmail" class="form-label mtop10">To</label>
-        <input type="text" class="form-control" id="recipientEmailIT" name="recipientEmail" value="" placeholder="Enter recipient email" required>
+        <input type="text" class="form-control" id="recipientEmailIT" name="recipientEmail" value="<?php if(isset($_GET['id']) && !empty($_GET['id'])){ echo $_GET['id'] ; } ?>" placeholder="Enter recipient email" required>
       </div>
 	  <div class="mb-3">
         <label for="recipientEmail" class="form-label mtop10">CC</label>

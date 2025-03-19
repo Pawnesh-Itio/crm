@@ -13,7 +13,7 @@ function app_init_admin_sidebar_menu_items()
         'icon'     => 'fa fa-home',
         'badge'    => [],
     ]);
-    if (staff_can('view',  'customers') || (have_assigned_customers()|| (!have_assigned_customers() && staff_can('create',  'customers')))) {
+    if (staff_can('view',  'customers') || (have_assigned_customers() || (!have_assigned_customers() && staff_can('create',  'customers')))) {
         $CI->app_menu->add_sidebar_menu_item('customers', [
             'name'     => _l('als_clients'),
             'href'     => admin_url('clients'),

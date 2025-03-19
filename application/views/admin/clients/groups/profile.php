@@ -51,7 +51,6 @@
                     </li>
                     <?php hooks()->do_action('after_customer_billing_and_shipping_tab', isset($client) ? $client : false); ?>
                     <?php 
-					/*
 					if (isset($client)) { ?>
                     <li role="presentation">
                         <a href="#customer_admins" aria-controls="customer_admins" role="tab" data-toggle="tab">
@@ -63,7 +62,7 @@
                     </li>
                     <?php hooks()->do_action('after_customer_admins_tab', $client); ?>
                     <?php }
-					*/ ?>
+					?>
                 </ul>
             </div>
         </div>
