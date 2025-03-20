@@ -382,7 +382,7 @@ function getMessages(element){
     $('#formNumber').val(chatId);
 	$('.chat-container').html('');// Remove any exisiting listener before adding new one
     $.ajax({
-        url: waURL+'/api/chat/messages/'+chatId,
+        url: waURL+'/api/chat/messages/'+chatId+'/449778398215148/Regular',
         method: 'GET',
         success: function (data) {
             console.log(data);
@@ -478,6 +478,7 @@ $(document).ready(function() {
         const to = $('#formNumber').val();
         const message = $('#messageInput').val();
         const type = 1;
+        const ContactType = "Regular";
 
         // Send the data via AJAX
         $.ajax({
