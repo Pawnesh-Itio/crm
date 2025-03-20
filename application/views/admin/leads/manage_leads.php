@@ -488,9 +488,11 @@ $(document).ready(function() {
             data: JSON.stringify({
                 userId: userId,
                 source: source,
+                configurationId:"67af1e630019da2d1a185581",
                 to: to,
                 message: message,
-                type: type
+                type: type,
+                ContactType: ContactType
             }),
             success: function(response) {
                 // Handle success (e.g., clear input, display message, etc.)
