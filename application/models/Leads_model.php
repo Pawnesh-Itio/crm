@@ -1232,4 +1232,40 @@ class Leads_model extends App_Model
             return $resultArray;
         }
     }
+	
+	function getLocationFromIP() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        // IP from shared internet
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        // IP passed from proxy
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        // Direct IP address
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+	
+	if($ip=="::1" || $ip==""){
+	$ip="66.249.79.194";
+	}
+	
+	$apiURL = "http://ipinfo.io/{$ip}/json";
+	$response = @file_get_contents($apiURL);
+	$data = json_decode($response, true);
+    if (isset($data['country']) && isset($data['region'])) {
+        return [
+            'country' => $data['country'],
+            'region' => $data['region'],
+            'city' => $data['city'] ?? '',
+			'postal' => $data['postal'] ?? '',
+            'ip' => $ip
+        ];
+    } else {
+        return 1;
+    }
+	
+    
+   }
+   
+   
 }

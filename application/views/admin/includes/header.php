@@ -142,6 +142,7 @@
             </div>
 
             <ul class="nav navbar-nav navbar-right">
+			<li><a style="font-weight:bolder;color:#FFFFFF;" class="btn">Welcome <?php echo e(get_staff_full_name()); ?> !</a></li>
                 <li>
                 <a onclick="window.history.back()"><i class="fa fa-arrow-circle-left" data-toggle="tooltip" title="Go Back" data-placement="bottom" aria-hidden="true"></i></a>
                 </li>

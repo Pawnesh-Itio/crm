@@ -8,7 +8,8 @@
     <?php if (isset($lead)) { ?>
     <!-- Conversation Dropdown By TechWizard -->
     <div class="btn-group pull-right mleft5">
-        <a href="<?php echo admin_url('webmail/compose?id='.$lead->email); ?>" class="btn btn-default lead-top-btn">E-mail</a>
+        <?php /*?><a href="<?php echo admin_url('webmail/compose?id='.$lead->email); ?>" class="btn btn-default lead-top-btn">E-mail</a><?php */?>
+		<a data-toggle="modal" data-href="<?php echo admin_url('webmail/webmail_leads?stype=TEXT&skey='.$lead->email); ?>"  data-name="<?= $lead->name ?>" data-email= "<?= $lead->email ?>" onclick="getWebEmail(this)" class="btn btn-default lead-top-btn">E-mail</a>
     </div>
     <div class="btn-group pull-right mleft5">
         <a class="btn btn-default dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -228,7 +229,7 @@
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                     <?php echo(isset($lead) && $lead->address != '' ? process_text_content_for_display($lead->address) : '-') ?></dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_city'); ?>
+                    <?php /*?><dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_city'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->city != '' ? e($lead->city) : '-') ?></dd>
@@ -236,16 +237,16 @@
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->state != '' ? e($lead->state) : '-') ?>
-                    </dd>
+                    </dd><?php */?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_country'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->country != 0 ? e(get_country($lead->country)->short_name) : '-') ?>
                     </dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_zip'); ?></dt>
+                    <?php /*?><dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_zip'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->zip != '' ? e($lead->zip) : '-') ?></dd>
-                </dl>
+                </dl><?php */?>
             </div>
             <div class="col-md-4 col-xs-12 lead-information-col">
                 <div class="lead-info-heading">
@@ -417,27 +418,16 @@
                 <?php //echo render_input('title', 'lead_title', $value); ?>
                 <?php $value = (isset($lead) ? $lead->email : ''); ?>
                 <?php echo render_input('email', 'lead_add_edit_email', $value); ?>
-                <?php if ((isset($lead) && empty($lead->website)) || !isset($lead)) {
-                   $value = (isset($lead) ? $lead->website : '');
-                   echo render_input('website', 'lead_website', $value);
-               } else { ?>
-                <div class="form-group">
-                    <label for="website"><?php echo _l('lead_website'); ?></label>
-                    <div class="input-group">
-                        <input type="text" name="website" id="website" value="<?php echo e($lead->website); ?>"
-                            class="form-control">
-                        <div class="input-group-addon">
-                            <span>
-                                <a href="<?php echo e(maybe_add_http($lead->website)); ?>" target="_blank" tabindex="-1">
-                                    <i class="fa fa-globe"></i>
-                                </a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <?php }
-                $value = (isset($lead) ? $lead->phonenumber : ''); ?>
+                
+				<div class="col-md-4 tw-px-0">
+				<?php
+				
+                $value = (isset($lead) ? $lead->country_code : ''); ?>
+                <?php echo render_input('country_code', 'ISD Code', $value); ?>
+				</div><div class="col-md-8 tw-px-0">
+				<?php $value = (isset($lead) ? $lead->phonenumber : ''); ?>
                 <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $value); ?>
+				</div>
 				<?php
 				/*?>
                 <div class="form-group">
@@ -459,20 +449,39 @@
                 <?php echo render_input('company', 'lead_company', $value); ?>
             </div>
             <div class="col-md-6">
+			   <?php if ((isset($lead) && empty($lead->website)) || !isset($lead)) {
+                   $value = (isset($lead) ? $lead->website : '');
+                   echo render_input('website', 'lead_website', $value);
+               } else { ?>
+                <div class="form-group">
+                    <label for="website"><?php echo _l('lead_website'); ?></label>
+                    <div class="input-group">
+                        <input type="text" name="website" id="website" value="<?php echo e($lead->website); ?>"
+                            class="form-control">
+                        <div class="input-group-addon">
+                            <span>
+                                <a href="<?php echo e(maybe_add_http($lead->website)); ?>" target="_blank" tabindex="-1">
+                                    <i class="fa fa-globe"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <?php }?>
                 <?php $value = (isset($lead) ? $lead->address : ''); ?>
                 <?php echo render_textarea('address', 'lead_address', $value, ['rows' => 1, 'style' => 'height:36px;font-size:100%;']); ?>
-                <?php $value = (isset($lead) ? $lead->city : ''); ?>
-                <?php echo render_input('city', 'lead_city', $value); ?>
-                <?php $value = (isset($lead) ? $lead->state : ''); ?>
-                <?php echo render_input('state', 'lead_state', $value); ?>
+                <?php //$value = (isset($lead) ? $lead->city : ''); ?>
+                <?php //echo render_input('city', 'lead_city', $value); ?>
+                <?php //$value = (isset($lead) ? $lead->state : ''); ?>
+                <?php //echo render_input('state', 'lead_state', $value); ?>
                 <?php
                $countries                = get_all_countries();
                $customer_default_country = get_option('customer_default_country');
                $selected                 = (isset($lead) ? $lead->country : $customer_default_country);
                echo render_select('country', $countries, [ 'country_id', [ 'short_name']], 'lead_country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
                ?>
-                <?php $value = (isset($lead) ? $lead->zip : ''); ?>
-                <?php echo render_input('zip', 'lead_zip', $value); ?>
+                <?php //$value = (isset($lead) ? $lead->zip : ''); ?>
+                <?php //echo render_input('zip', 'lead_zip', $value); ?>
                 <?php if (!is_language_disabled()) { ?>
                 <div class="form-group">
                     <label for="default_language"

@@ -45,7 +45,7 @@ return $txt;
 	<?php if(isset($content_description)&&$content_description){?>			
 				<div class="panel_s">
                     <div class="panel-body panel-table-full">
-					<div id="vueApp" class="tw-inline pull-right tw-ml-0 sm:tw-ml-1.5" data-v-app=""><button type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $content_title;?> </button>&nbsp;<button class="btn btn-default"  title="Copy Content" onClick='CopyValTestbox("myInput")'>&nbsp;<i class="fa-solid fa-copy" aria-hidden="true"></i>&nbsp;</button></div>
+					<div id="vueApp" class="tw-inline pull-right tw-ml-0 sm:tw-ml-1.5" data-v-app=""><button type="button" class="btn btn-danger" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $content_title;?> </button>&nbsp;<button class="btn btn-default"  title="Copy Content" onClick='CopyValTestbox("myInput")'>&nbsp;<i class="fa-solid fa-copy  text-danger" aria-hidden="true"></i>&nbsp;</button></div>
 					<div  style="clear:both;"></div>
 					
 					<div class="p-card" style="max-width:100% !important;">
@@ -62,14 +62,15 @@ return $txt;
 	<h4>&nbsp;&nbsp;History (Last 5)</h4>
 	<?php foreach ($_SESSION['datalists'] as $rs) { ?>
                     <div class="panel-body panel-table-full">
-					<div id="vueApp" class="tw-inline pull-right tw-ml-0 sm:tw-ml-1.5" data-v-app=""><button type="button" class="btn btn-default " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $rs['content_title'];?> </button>&nbsp;<button class="btn btn-default" title="Copy Content" onClick='CopyValTestbox("vkg<?php echo $rs['content_id'];?>")'>&nbsp;<i class="fa-solid fa-copy" aria-hidden="true"></i>&nbsp;</button></div>
+					<div id="vueApp" class="tw-inline pull-right tw-ml-0 sm:tw-ml-1.5" data-v-app=""><button type="button" class="btn btn-danger " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $rs['content_title'];?> </button>&nbsp;<button class="btn btn-default" title="Copy Content" onClick='CopyValTestbox("vkg<?php echo $rs['content_id'];?>")'>&nbsp;<i class="fa-solid fa-copy text-danger" aria-hidden="true"></i>&nbsp;</button></div>
 					<div  style="clear:both;"></div>
 					
 					<div class="p-card" style="max-width:100% !important;" >
+					
 					<?php 
 					echo cleartext($rs['content']);
 					?>
-<textarea style="height:1px;width:1px;float:inline-end;" id="vkg<?php echo $rs['content_id'];?>"><?php echo cleartext($rs['content']);?></textarea>
+<textarea style="height:1px;width:1px;float:inline-end;" id="vkg<?php echo $rs['content_id'];?>">Subject : <?php echo $rs['content_title']."\r\n";?><?php echo cleartext($rs['content']);?></textarea>
 					
 					
 					</div>
@@ -148,7 +149,7 @@ $(function() {
 
 	// js for copy data
 	function CopyValTestbox(divid) {
-	alert(divid)
+	//alert(divid)
    
 	var range = document.createRange();
 	range.selectNode(document.getElementById(divid));
@@ -158,7 +159,9 @@ $(function() {
 	
 	        if (document.execCommand('copy')) {
                 window.getSelection().removeAllRanges();// to deselect
-				alert("Copied : " + theLabel);
+				//alert("Copied : " + theLabel);
+				alert("Content Copied");
+				
             }
 	}
 

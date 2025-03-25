@@ -58,7 +58,13 @@ class Webmail extends AdminController
 		$_SESSION['webmail']['login-departmentid']=$data['departmentid'][0]['departmentid'];
 		}
 		$_SESSION['webmail']['login-staffid']=$data['staffid'];
+		
+		if(isset($_GET['lead'])&&$_GET['lead']==1){
+		redirect(admin_url('webmail/webmail_leads?stype=TEXT&skey='.$_GET['ekey']));
+		}else{
 		redirect(admin_url('webmail/inbox'));
+		}
+		
 		}else{
 		//echo "Old Session";
 		}
@@ -85,6 +91,23 @@ class Webmail extends AdminController
 		$data['inboxemail']=$this->webmail_model->getinboxemail();
 		////////////////////////////////////////////
 		$this->load->view('admin/webmail/inbox', $data);
+		}
+	}
+	
+	 //Display Inbox Listing 
+	public function webmail_leads()
+	{
+	    $data['title'] = _l('Webmail Setup');
+		
+		//print_r($_SESSION['mailersdropdowns']);
+		if(empty($_SESSION['mailersdropdowns'])){
+		$data['errormessage']="Account not Assigned, Please add your webmail setup or contact web admin";
+		$this->load->view('admin/webmail/webmail_leads', $data);
+		}else{
+		
+		$data['inboxemail']=$this->webmail_model->getinboxemail();
+		////////////////////////////////////////////
+		$this->load->view('admin/webmail/webmail_leads', $data);
 		}
 	}	
 	
