@@ -77,7 +77,7 @@
         $(function() {
             $(form_id).appFormValidator({
 
-                onSubmit: function(form) {
+                onSubmit: function(form) {  
 
                     $("input[type=file]").each(function() {
                         if ($(this).val() === "") {
@@ -87,6 +87,7 @@
                     $('#form_submit .fa-spin').removeClass('hide');
 
                     var formURL = $(form).attr("action");
+					alert(formURL);//return;
                     var formData = new FormData($(form)[0]);
 
                     $.ajax({

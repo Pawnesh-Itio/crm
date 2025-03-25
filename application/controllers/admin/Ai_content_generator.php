@@ -63,6 +63,35 @@ class Ai_content_generator extends AdminController
 		}
     }
 	
+	public function generate_email_ai()
+    {
+	
+	    $data = $this->input->post();
+		if (isset($data['submit'])) { unset($data['submit'] );}
+		$data['user_id']      = get_staff_user_id();
+        $data['added_by'] = get_staff_full_name($data['user_id']);
+        $data['ai_content']=$this->ai_content_generator_model->generate($data);
+		
+	
+			
+		if(isset($data['ai_content']['error'])&&!empty($data['ai_content']['error'])){
+		//echo $data['ai_content']['error'];
+		$data['content_description']=$data['ai_content']['error'];
+		echo json_encode([
+                'alert_type' => 'failed',
+                'message'    => $data['content_description'],
+            ]);
+		
+		}else{
+		
+		$data['content_description']=$data['ai_content']['content'];
+		echo json_encode([
+                'alert_type' => 'success',
+                'message'    => $data['content_description'],
+            ]);
+		}
+    }
+	
 
     //Fetch for for update by id
     public function ai_setup()

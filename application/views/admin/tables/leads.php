@@ -240,10 +240,10 @@ return App_table::find('leads')
                     $outputStatus = '<span class="label label-warning">' . _l('lead_junk') . '</span>';
                 }
             } else {
-                $outputStatus = '<span class="lead-status-' . $aRow['status'] . ' label' . (empty($aRow['color']) ? ' label-default' : '') . '" style="color:' . $aRow['color'] . ';border:1px solid ' . adjust_hex_brightness($aRow['color'], 0.4) . ';background: ' . adjust_hex_brightness($aRow['color'], 0.04) . ';">' . e($aRow['status_name']);
+                $outputStatus = '<a '.$aRow['id'].' href="clients/"><span class="lead-status-' . $aRow['status'] . ' label' . (empty($aRow['color']) ? ' label-default' : '') . '" style="color:' . $aRow['color'] . ';border:1px solid ' . adjust_hex_brightness($aRow['color'], 0.4) . ';background: ' . adjust_hex_brightness($aRow['color'], 0.04) . ';">' . e($aRow['status_name']);
 
 
-                $outputStatus .= '</span>';
+                $outputStatus .= '</span></a>';
             }
 
             $row[] = $outputStatus;

@@ -328,6 +328,34 @@
         </div>
     </div>
 </div>
+<!-- Web Email Modal -->
+<div class="modal" id="myWebModal" style="z-index: 99999;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+	 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><!--Heading--></h4>
+        
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body" style="padding:0;">
+	  <div id="loader" class="d-flex justify-content-center align-items-center" style="height: 500px;">
+            <div class="spinner-border text-primary" role="status">
+<span class="visually-hidden"><img src="<?php echo base_url('assets/images/mail-loader.gif')?>"  style="display: block;margin: auto;width: 30%;" /></span>
+            </div>
+          </div>
+		 
+        
+		<iframe id="iframeContent" src="" style="width:100%; height:500px; border:none;" onload="hideLoader()"></iframe>
+      </div>
+      <!-- Modal footer -->
+      <?php /*?><div class="modal-footer">
+        <button type="button" class="btn btn-primary close" data-dismiss="modal">Close</button>
+      </div><?php */?>
+    </div>
+  </div>
+</div>
 <!-- Lead Assign Model -->
  <!-- Modal -->
 <div class="modal fade bd-example-modal-sm" id="leadAssignModel" tabindex="-1" role="dialog" aria-labelledby="leadAssignModel">
@@ -436,7 +464,40 @@ function setupChatSocketListener(chatId){
 	    
 	}
 	});
+	
+
 }
+
+	function getWebEmail(element){
+	//alert(11);
+    //$('#lead-modal').modal('hide');
+    var dataName = element.getAttribute('data-name');
+    var dataEmail = element.getAttribute('data-email');
+	var dataHref = element.getAttribute('data-href');
+	//alert(dataHref);
+  
+	$('#myWebModal .modal-title').html('Webmail : ' + dataEmail );
+	$('#myWebModal').modal('show');
+	$('#loader').show();
+    $('#iframeContent').hide();
+	<?php /*?>$('#myWebModal').modal('show').find('.modal-body').load(dataHref);<?php */?>
+	$('#iframeContent').attr('src', dataHref);
+	$('#myWebModal .modal-dialog').css({"width":"90%","max-width":"950px"});
+	
+	
+	}
+	function hideLoader() {
+      $('#loader').hide();
+      $('#iframeContent').show();
+	  const iframe = document.getElementById('iframeContent');
+      
+      try {
+        const contentHeight = iframe.contentWindow.document.body.scrollHeight;
+        iframe.style.height = contentHeight + 'px';
+      } catch (error) {
+        console.error('Error adjusting iframe height:', error);
+      }
+    }
 </script>
 <!-- End Socket lOgic -->
 <script id="hidden-columns-table-leads" type="text/json">

@@ -219,7 +219,7 @@ function app_init_admin_sidebar_menu_items()
 
     if (is_staff_member()) {
 		$CI->app_menu->add_sidebar_menu_item('ai-content-generator', [
-			'name'     => _l('Generate Content AI'),
+			'name'     => _l('Get Instant AI Support'),
 			'href'     => admin_url('ai_content_generator'),
 			'icon'     => 'fa-regular fa-newspaper',
 			'position' => 45,

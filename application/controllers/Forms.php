@@ -270,8 +270,35 @@ class Forms extends ClientsController
         if (!$key) {
             show_404();
         }
+		
 
         $this->load->model('leads_model');
+		
+		
+//echo "===========>>>>";
+
+// New function created by vikash for Fetch IP with country, reason,city,postal
+$ipdetails=$this->leads_model->getLocationFromIP(); 
+//print_r($ipdetails);
+$ipx=$ipdetails['ip'];
+$ccode=$ipdetails['country'] ?? 'IN';
+$region=$ipdetails['region'] ?? '';
+$city=$ipdetails['city'] ?? '';
+$postal=$ipdetails['postal'] ?? '';
+$ip_address=$city." ".$region." ".$postal;
+
+$this->db->where('iso2', $ccode); // Fetch country_id,calling_code,calling_name from table countries
+$country_details = $this->db->get(db_prefix() . 'countries')->row();
+
+if ($country_details) {
+$ip_country_id = $country_details->country_id;
+//$ip_country_name = $country_details->short_name;
+$ip_calling_code = $country_details->calling_code;
+}
+
+//echo "===========>>>>";
+
+
         $form = $this->leads_model->get_form([
             'form_key' => $key,
         ]);
@@ -473,13 +500,13 @@ class Forms extends ClientsController
                         }
                     }
                 }
-
+                
                 if ($insert_to_db == true) {
                     $regular_fields['status'] = $form->lead_status;
                     if ((isset($regular_fields['name']) && empty($regular_fields['name'])) || !isset($regular_fields['name'])) {
                         $regular_fields['name'] = 'Unknown';
                     }
-                    $regular_fields['name']         = $form->lead_name_prefix . $regular_fields['name'];
+                    $regular_fields['name']         = $form->lead_name_prefix ." - ". $regular_fields['name'];
                     $regular_fields['source']       = $form->lead_source;
                     $regular_fields['addedfrom']    = 0;
                     $regular_fields['lastcontact']  = null;
@@ -487,6 +514,10 @@ class Forms extends ClientsController
                     $regular_fields['dateadded']    = date('Y-m-d H:i:s');
                     $regular_fields['from_form_id'] = $form->id;
                     $regular_fields['is_public']    = $form->mark_public;
+					$regular_fields['address']      = $ip_address;
+					$regular_fields['country']      = $ip_country_id;
+					$regular_fields['country_code'] = $ip_calling_code;
+					$regular_fields['ip']           = $ipx;
                     $this->db->insert(db_prefix() . 'leads', $regular_fields);
                     $lead_id = $this->db->insert_id();
 
@@ -816,4 +847,6 @@ class Forms extends ClientsController
         $data['form'] = $form;
         $this->load->view('forms/ticket', $data);
     }
+	
+	
 }

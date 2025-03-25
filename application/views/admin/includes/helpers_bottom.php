@@ -39,3 +39,25 @@
 <!--Lead reminder modal-->
 <div id="lead_reminder_modal"></div>
 
+<?php 
+if (!is_client_logged_in() && !is_admin() && is_staff_logged_in()) {
+//echo "staff"; echo get_staff_user_id(); echo get_staff_full_name(get_staff_user_id());
+
+?>
+<style>
+#header {background: #142ca9 !important;}
+.sidebar {background: #142ca9 !important;}
+.navbar-nav>li>a {color: #fffff4  !important;}
+.header-notifications .tw-text-neutral-900 { color: #fffff4  !important;}	
+.nav .tw-bg-primary-600 { background-color: rgb(9 93 251)  !important;}
+.sidebar li a {font-weight:600 !important;}
+.tw-group:hover .group-hover\:\!tw-bg-primary-700 { background-color: rgb(36 51 78)  !important;}
+
+
+</style>
+<?php
+}else{
+echo "Not staff";
+}
+
+ ?>
