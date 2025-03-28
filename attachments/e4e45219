@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Mon, 2 Dec 2024 11:49:36 +0530 (IST)
+
+Original-Recipient: rfc822; vikash@eindiabusiness.com
+Final-Recipient: rfc822; vikash@eindiabusiness.com
+Status: 550
+Action: failed
+Last-Attempt-Date: 2 Dec 2024 06:19:41 GMT
+Diagnostic-Code: 5.1.1 <vikash@eindiabusiness.com>: Recipient address rejected: User unknown in virtual mailbox table
+Remote-MTA: dns; mail.eindiabusiness.com

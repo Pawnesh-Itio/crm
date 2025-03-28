@@ -13,7 +13,7 @@
       aria-haspopup="true"
       aria-expanded="false"
     >
-      <i class="fa fa-filter" aria-hidden="true"></i>
+      <i class="fa fa-filter 77" aria-hidden="true"></i>
       {{ activeFilterId ? activeFilter.name : "" }}
     </button>
 
@@ -229,7 +229,7 @@
                 {{ deleteBeingConfirmed ? $t("confirm") : "" }}
               </button>
               <div
-                class="tw-flex-1 tw-flex tw-items-center tw-space-x-2 tw-self-end tw-justify-end"
+                class="tw-flex-1 tw-flex tw-items-center tw-space-x-2 tw-self-end tw-justify-end vikash"
               >
                 <span v-if="!activeFilter" class="relative tw-mt-1">
                   <span class="tw-font-medium tw-mr-3 tw-absolute -tw-left-20">

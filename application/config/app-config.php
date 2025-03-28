@@ -9,7 +9,7 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
     define('APP_DB_HOSTNAME', 'localhost');
     define('APP_DB_USERNAME', 'root');
     define('APP_DB_PASSWORD', '');
-    define('APP_DB_NAME', 'it_crm_db');
+    define('APP_DB_NAME', 'xeyso_it_crm_db');
 } else {
     // Live environment
     define('APP_BASE_URL', 'https://xeyso.com/crm');

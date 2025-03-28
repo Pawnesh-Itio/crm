@@ -1431,4 +1431,20 @@ class Leads extends AdminController
             redirect(admin_url('leads'));
         }
     }
+	
+	  public function updateAssignedAbsorber(){
+	
+        $lead_id = $_REQUEST['lead_idx'];
+        $assigned_id = $_REQUEST['assigned_id'];
+		//exit;
+		// echo "====>>";exit;
+       $update = $this->leads_model->updateAssignedAbsorber($lead_id, $assigned_id);
+        if($update){
+            set_alert('success', 'Absorber assigned successfully');
+            redirect(admin_url('leads'));
+        }else{
+            set_alert('warning','Absorber assigned failed');
+            redirect(admin_url('leads'));
+        }
+    }
 }

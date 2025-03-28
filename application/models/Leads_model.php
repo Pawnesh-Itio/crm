@@ -727,7 +727,17 @@ class Leads_model extends App_Model
             $this->app_object_cache->add('leads-all-statuses-'.$whereKey, $statuses);
         }
 
+        //print_r($statuses);//exit;
         return $statuses;
+    }
+	public function get_tags_list($id = '', $where = [])
+    {
+       
+
+      
+        $tagses = $this->db->get(db_prefix() . 'tags')->result_array();
+
+        return $tagses;
     }
 
     /**
@@ -1225,7 +1235,20 @@ class Leads_model extends App_Model
         }
         return true;
     }
-    public function getAllDepartments(){
+	
+	public function updateAssignedAbsorber($lead_id, $assigned_id){
+        
+            $this->db->where('id', $lead_id);
+            $this->db->update(db_prefix() . 'leads', [
+                'absorber' => $assigned_id,
+            ]);
+        
+        return true;
+    }
+	
+    
+	
+	public function getAllDepartments(){
         $this->db->select('departmentid, name');
         $resultArray = $this->db->get(db_prefix() . 'departments')->result_array();
         if($resultArray){

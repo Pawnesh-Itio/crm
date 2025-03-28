@@ -6,7 +6,8 @@ $this->ci->load->model('gdpr_model');
 $this->ci->load->model('leads_model');
 $this->ci->load->model('staff_model');
 $statuses = $this->ci->leads_model->get_status();
-
+$tagses = $this->ci->leads_model->get_tags_list();
+//print_r($tagses);
 if (is_gdpr() && get_option('gdpr_enable_consent_for_leads') == '1') {
     $consent_purposes = $this->ci->gdpr_model->get_consent_purposes();
 }
@@ -35,6 +36,13 @@ $rules = [
             'value' => $status['id'],
             'label' => $status['name'],
             'subtext' => $status['isdefault'] == 1 ? _l('leads_converted_to_client') : null,
+        ]);
+    }),
+	
+	App_table_filter::new('tags', 'MultiSelectRule')->label(_l('Tags'))->options(function () use ($tagses) {
+        return collect($tagses)->map(fn ($tag) => [
+            'value' => $tag['id'],
+            'label' => $tag['name'],
         ]);
     }),
     App_table_filter::new('source', 'MultiSelectRule')->label(_l('lead_source'))->options(function ($ci) {
@@ -100,10 +108,12 @@ return App_table::find('leads')
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'leads.id and rel_type="lead" ORDER by tag_order ASC LIMIT 1) as tags',
             'firstname as assigned_firstname',
             db_prefix() . 'leads_status.name as status_name',
+			//db_prefix() . 'tags.name as tags',
             db_prefix() . 'leads_sources.name as source_name',
             'lastcontact',
             'dateadded',
         ]);
+		
 
         $sIndexColumn = 'id';
         $sTable       = db_prefix() . 'leads';
@@ -111,6 +121,7 @@ return App_table::find('leads')
         $join = [
             'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'leads.assigned',
             'LEFT JOIN ' . db_prefix() . 'leads_status ON ' . db_prefix() . 'leads_status.id = ' . db_prefix() . 'leads.status',
+			//'LEFT JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'tags.id = ' . db_prefix() . 'leads.tags',
             'JOIN ' . db_prefix() . 'leads_sources ON ' . db_prefix() . 'leads_sources.id = ' . db_prefix() . 'leads.source',
         ];
 
@@ -146,6 +157,7 @@ return App_table::find('leads')
             'color',
             'status',
             'assigned',
+			'absorber',
             'lastname as assigned_lastname',
             db_prefix() . 'leads.addedfrom as addedfrom',
             '(SELECT count(leadid) FROM ' . db_prefix() . 'clients WHERE ' . db_prefix() . 'clients.leadid=' . db_prefix() . 'leads.id) as is_converted',
@@ -158,6 +170,7 @@ return App_table::find('leads')
         $rResult = $result['rResult'];
 
 		$i=1;
+		//print_r($result);//exit;
         foreach ($rResult as $aRow) {
             $row = [];
 
@@ -232,6 +245,8 @@ return App_table::find('leads')
             }
 
             $row[] = $assignedOutput;
+			
+			
 
             if ($aRow['status_name'] == null) {
                 if ($aRow['lost'] == 1) {
@@ -240,13 +255,44 @@ return App_table::find('leads')
                     $outputStatus = '<span class="label label-warning">' . _l('lead_junk') . '</span>';
                 }
             } else {
-                $outputStatus = '<a '.$aRow['id'].' href="clients/"><span class="lead-status-' . $aRow['status'] . ' label' . (empty($aRow['color']) ? ' label-default' : '') . '" style="color:' . $aRow['color'] . ';border:1px solid ' . adjust_hex_brightness($aRow['color'], 0.4) . ';background: ' . adjust_hex_brightness($aRow['color'], 0.04) . ';">' . e($aRow['status_name']);
+			
+			    if(e($aRow['status_name'])=="Contact"){
+                $outputStatus = '<a '.$aRow['id'].' target="_blank" title="Click to view Contact" href="clients/client/'.get_client_id_by_lead_id($aRow['id']).'"><span class="lead-status-' . $aRow['status'] . ' label' . (empty($aRow['color']) ? ' label-default' : '') . '" style="color:' . $aRow['color'] . ';border:1px solid ' . adjust_hex_brightness($aRow['color'], 0.4) . ';background: ' . adjust_hex_brightness($aRow['color'], 0.04) . ';">' . e($aRow['status_name']);
+				}else{
+				$outputStatus = '<a '.$aRow['id'].'><span class="lead-status-' . $aRow['status'] . ' label' . (empty($aRow['color']) ? ' label-default' : '') . '" style="color:' . $aRow['color'] . ';border:1px solid ' . adjust_hex_brightness($aRow['color'], 0.4) . ';background: ' . adjust_hex_brightness($aRow['color'], 0.04) . ';">' . e($aRow['status_name']);
+				}
 
 
                 $outputStatus .= '</span></a>';
             }
 
             $row[] = $outputStatus;
+			
+			//$row[] = e($aRow['absorber']);
+			/////////////////////////
+			$absorberOutput = '';
+            if ($aRow['absorber'] != 0) {
+                $full_name = get_staff_full_name($aRow['absorber']);
+
+                $absorberOutput = '<a '.$aRow['absorber'].' data-toggle="tooltip" data-title="' . $full_name . '" href="' . admin_url('profile/' . $aRow['absorber']) . '">' . staff_profile_image($aRow['absorber'], [
+                    'staff-profile-image-small',
+                ]) . '</a>';
+
+                // For Assigning
+                $currentLoggedInUser = get_staff_user_id();
+                if(is_admin($currentLoggedInUser) || staff_can('view', 'leads')){
+                $absorberOutput .= '<span class="text-success" style="padding-left:15px;"><a onclick="leadAssign('.$aRow['id'].','.$aRow['absorber'].')" data-toggle="modal" data-target="#leadAbsorberModel"><i class="fa fa-plus" aria-hidden="true" style="font-size: 20px;"></i></a></span>';
+                }
+            }else{
+                 // For Assigning
+                 $currentLoggedInUser = get_staff_user_id();
+                 if(is_admin($currentLoggedInUser)|| staff_can('view', 'leads')){
+                    $absorberOutput = '<span class="text-success " style=""><a onclick="leadAssign('.$aRow['id'].')" data-toggle="modal" data-target="#leadAbsorberModel"><i class="fa fa-plus" aria-hidden="true"style="font-size: 20px;position:relative;left:25px;top:10px"></i></a></span>';
+                 }
+            }
+
+            $row[] = $absorberOutput;
+			/////////////////////////////
 
             $row[] = e($aRow['source_name']);
 
