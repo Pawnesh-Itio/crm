@@ -253,7 +253,7 @@
                               ];
 							  
 							  $_table_data[] = [
-                               'name'     => _l('Absorber'),
+                               'name'     => _l('Observer'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
                               ];
 							  
