@@ -245,10 +245,18 @@
                                'name'     => _l('leads_dt_assigned'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
                               ]; 
+							   
+							  
                               $_table_data[] = [
                                'name'     => _l('leads_dt_status'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-status'],
                               ];
+							  
+							  $_table_data[] = [
+                               'name'     => _l('Absorber'),
+                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
+                              ];
+							  
                               $_table_data[] = [
                                'name'     => _l('leads_source'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-source'],
@@ -379,6 +387,34 @@
         </div>
         <div class="modal-footer">
             <button name="assignSubmit" type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+ <!-- Modal -->
+<div class="modal fade bd-example-modal-sm" id="leadAbsorberModel" tabindex="-1" role="dialog" aria-labelledby="leadAbsorberModel">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="leadAbsorberModel">Lead Absorber Assign</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <form id="assignAbsorberForm" action="<?= admin_url('leads/updateAssignedAbsorber') ?>" method="get">
+        <div class="modal-body">
+            <div class="form-group">
+                
+                <label>Assigned to Absorber</label>
+				<input type="hidden" name="lead_idx" id="lead_idx">
+                    <select name="assigned_id" class="custom-select form-control" id="myAbsorberSelect">
+                    <!-- Dynamically Populate Here -->
+                    </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button name="assignSubmit"  type="submit" class="btn btn-primary">Update</button>
         </div>
       </form>
     </div>
@@ -584,8 +620,10 @@ $.ajax({
     success: function(response) {
         // Initialize id field.
         $('#lead_id').val(id);
+		$('#lead_idx').val(id);
         // Clear existing options
         $('#mySelect').empty();
+		$('#myAbsorberSelect').empty();
         // Populate options from the server response
 
         response.forEach(function(item) {
@@ -595,6 +633,7 @@ $.ajax({
                 att="";
             }
             $('#mySelect').append('<option value="' + item.staffid + '" '+att+' >' + item.full_name + '</option>');
+			$('#myAbsorberSelect').append('<option value="' + item.staffid + '" '+att+' >' + item.full_name + '</option>');
         });
     },
     error: function(xhr, status, error) {

@@ -57,10 +57,12 @@
                             'name'     => _l('leads_dt_phonenumber'),
                             'th_attrs' => ['class' => 'toggleable', 'id' => 'th-phone'],
                             ];
+							/**
                             $_table_data[] = [
-                            'name'     => _l('leads_dt_lead_value'),
+                            'name'     => _l('t'),
                             'th_attrs' => ['class' => 'toggleable', 'id' => 'th-lead-value'],
                             ];
+							 */
                             $_table_data[] = [
                             'name'     => _l('tags'),
                             'th_attrs' => ['class' => 'toggleable', 'id' => 'th-tags'],

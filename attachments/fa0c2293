@@ -1,0 +1,14 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Wed, 12 Feb 2025 15:20:15 +0530 (IST)
+
+Original-Recipient: rfc822; yborealeyjade99@gmail.com
+Final-Recipient: rfc822; yborealeyjade99@gmail.com
+Status: 450
+Action: failed
+Last-Attempt-Date: 12 Feb 2025 10:35:28 GMT
+Diagnostic-Code: 4.2.1 The user you are trying to contact is receiving mail at a rate that
+			4.2.1 prevents additional messages from being delivered. Please resend your
+			4.2.1 message at a later time. If the user is able to receive mail at that
+			4.2.1 time, your message will be delivered. For more information, go to
+			4.2.1  https://support.google.com/mail/?p=ReceivingRate 98e67ed59e1d1-2fbf9cf14f1si1747831a91.97 - gsmtp
+Remote-MTA: dns; gmail-smtp-in.l.google.com

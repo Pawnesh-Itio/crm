@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Sun, 16 Mar 2025 10:54:08 +0530 (IST)
+
+Original-Recipient: rfc822; reyes.lori278121@yahoo.com
+Final-Recipient: rfc822; reyes.lori278121@yahoo.com
+Status: 554
+Action: failed
+Last-Attempt-Date: 16 Mar 2025 05:24:15 GMT
+Diagnostic-Code: Message not accepted due to failed RFC compliance. From header is invalid. See https://senders.yahooinc.com/smtp-error-codes#rfc-compliance-failures
+Remote-MTA: dns; mta6.am0.yahoodns.net
