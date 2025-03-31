@@ -943,6 +943,46 @@ function handle_favicon_upload()
     return false;
 }
 
+
+function handle_approver_attachement($fieldname='')
+{
+    $hookData = hooks()->apply_filters('before_handle_favicon_upload', [
+        'index_name' => $fieldname,
+        'handled_externally' => false, // e.g. module upload to s3
+        'handled_externally_successfully' => false,
+        'files' => $_FILES
+    ]);
+
+    if ($hookData['handled_externally']) {
+        return $hookData['handled_externally_successfully'];
+    }
+
+    if (isset($_FILES[$fieldname]['name']) && $_FILES[$fieldname]['name'] != '') {
+       
+        $path = get_upload_path_by_type('invoice');
+        // Get the temp file path
+        $tmpFilePath = $_FILES[$fieldname]['tmp_name'];
+        // Make sure we have a filepath
+        if (!empty($tmpFilePath) && $tmpFilePath != '') {
+            // Getting file extension
+            $path_parts = pathinfo($_FILES[$fieldname]['name']);
+            $extension  = $path_parts['extension'];
+            $extension  = strtolower($extension);
+            // Setup our new file path
+            $filename    = $fieldname .date("YmdHis"). '.' . $extension;
+            $newFilePath = $path . $filename;
+           // _maybe_create_upload_path($path);
+            // Upload the file into the company uploads dir
+            if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+                update_option($fieldname, $filename);
+                return $filename;
+            }
+        }
+    }
+
+    return false;
+}
+
 /**
  * Maybe upload staff profile image
  * @param  string $staff_id staff_id or current logged in staff id will be used if not passed

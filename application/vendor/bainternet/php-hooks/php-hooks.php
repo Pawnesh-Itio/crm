@@ -180,7 +180,7 @@ if (!class_exists('Hooks')){
           array_pop($this->current_filter);
         return $value;
       }
-
+      //echo "======XXXXXXXXXXX"; print_r($value);
       if ( !isset($this->filters['all']) )
         $this->current_filter[] = $tag;
 
@@ -208,6 +208,8 @@ if (!class_exists('Hooks')){
 
       return $value;
     }
+	
+	
     /**
      * apply_filters_ref_array Execute functions hooked on a specific filter hook, specifying arguments in an array.
      * @access public

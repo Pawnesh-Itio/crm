@@ -150,6 +150,29 @@ class Payments_model extends App_Model
 
         return false;
     }
+	
+	
+	public function approve_payment($data, $invoiceid = '')
+    {
+	
+	//print_r($data);exit;
+	$invoiceid=$data['invoiceid'];
+	if (isset($data['invoiceid'])) { unset($data['invoiceid'] );}
+	// Update Records
+	$this->db->where('invoiceid', $invoiceid);
+	
+    $this->db->update('invoicepaymentrecords', $data);
+	//echo $this->db->last_query();exit;
+	// Update Invoice
+	$approver = array("approver_status"=>2);
+	$this->db->where('id', $invoiceid);
+	
+    $this->db->update('invoices', $approver);
+	
+	
+	
+	return $invoiceid;
+	}
 
     /**
      * Check whether payment exist by transaction id for the given invoice

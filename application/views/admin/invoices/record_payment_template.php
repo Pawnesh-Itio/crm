@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php echo form_open(admin_url('invoices/record_payment'), ['id' => 'record_payment_form']); ?>
+<?php echo form_open(admin_url('invoices/record_payment'), ['id' => 'record_payment_form', 'enctype' => 'multipart/form-data']); ?>
 <div class="col-md-12 no-padding animated fadeIn">
     <div class="panel_s">
         <?php echo form_hidden('invoiceid', $invoice->id); ?>
@@ -42,8 +42,11 @@
                     <?php
                     } ?>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 VVV">
                     <?php echo render_input('transactionid', 'payment_transaction_id'); ?>
+					<label for="company_logo" class="control-label"><?php echo _l('Attachement'); ?></label>
+<input type="file" name="staff_attachement" class="form-control" value="" data-toggle="tooltip" title="staff_attachement"><br />
+
                     <div class="form-gruoup">
                         <label for="note" class="control-label"><?php echo _l('record_payment_leave_note'); ?></label>
                         <textarea name="note" class="form-control" rows="8"
@@ -51,6 +54,8 @@
                             id="note"></textarea>
                     </div>
                 </div>
+				
+				
                 <div class="col-md-12 tw-mt-3">
                     <?php
                     $pr_template = is_email_template_active('invoice-payment-recorded');
