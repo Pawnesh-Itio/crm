@@ -20,6 +20,8 @@ class Invoices extends AdminController
     /* List all invoices datatables */
     public function list_invoices($id = '')
     {
+	
+	//echo "========>>>";exit;
         if (staff_cant('view', 'invoices')
             && staff_cant('view_own', 'invoices')
             && get_option('allow_staff_view_invoices_assigned') == '0') {
@@ -525,6 +527,19 @@ class Invoices extends AdminController
         $data['payments'] = $this->payments_model->get_invoice_payments($id);
         $this->load->view('admin/invoices/record_payment_template', $data);
     }
+	
+	   /* Approver new inoice payment view */
+    public function approver_invoice_payment_ajax($id)
+    {
+        $this->load->model('payment_modes_model');
+        $this->load->model('payments_model');
+        $data['payment_modes'] = $this->payment_modes_model->get('', [
+            'expenses_only !=' => 1,
+        ]);
+        $data['invoice']  = $this->invoices_model->get($id);
+        $data['payments'] = $this->payments_model->get_invoice_payments($id);
+        $this->load->view('admin/invoices/approver_payment_template', $data);
+    }
 
     /* This is where invoice payment record $_POST data is send */
     public function record_payment()
@@ -532,9 +547,23 @@ class Invoices extends AdminController
         if (staff_cant('create', 'payments')) {
             access_denied('Record Payment');
         }
+		//print_r($this->input->post()); echo "95555387";exit;
         if ($this->input->post()) {
+		
+		    $attachement  = handle_approver_attachement('staff_attachement');
+			
+			
+		    $postdata=$this->input->post();
+			
+			
+			if(isset($attachement)&&$attachement){
+			//echo "Imagesssssssss";
+			$staffarray = array("staff_attachement"=>$attachement);
+			$postdata=array_merge($postdata, $staffarray);
+			}
+			//print_r($postdata);exit;
             $this->load->model('payments_model');
-            $id = $this->payments_model->process_payment($this->input->post(), '');
+            $id = $this->payments_model->process_payment($postdata, '');
             if ($id) {
                 set_alert('success', _l('invoice_payment_recorded'));
                 redirect(admin_url('payments/payment/' . $id));
@@ -542,6 +571,41 @@ class Invoices extends AdminController
                 set_alert('danger', _l('invoice_payment_record_failed'));
             }
             redirect(admin_url('invoices/list_invoices/' . $this->input->post('invoiceid')));
+        }
+    }
+	
+	/* This is where invoice payment record $_POST data is send */
+    public function approve_payment()
+    {
+        //if (staff_cant('create', 'payments')) {
+            //access_denied('Record Payment');
+        //}
+		
+        if ($this->input->post()) {
+		
+		    $approver_attachement  = handle_approver_attachement('approver_attachement');
+			
+			
+		    $postdata=$this->input->post();
+			
+			
+			if(isset($approver_attachement)&&$approver_attachement){
+			//echo "Imagesssssssss";
+			$approverarray = array("approver_attachement"=>$approver_attachement);
+			$postdata=array_merge($postdata, $approverarray);
+			}
+			//print_r($postdata);
+			
+			//exit;
+            $this->load->model('payments_model');
+            $id = $this->payments_model->approve_payment($postdata, '');
+            if ($id) {
+                set_alert('success', _l('Invoice Payment Approved by Approver'));
+                redirect(admin_url('invoices/#' . $id));
+            } else {
+                set_alert('danger', _l('Invoice Payment Not Approved'));
+            }
+            redirect(admin_url('invoices/#' . $this->input->post('invoiceid')));
         }
     }
 

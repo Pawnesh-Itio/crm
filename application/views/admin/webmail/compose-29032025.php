@@ -10,9 +10,6 @@
 .jqte_tool.jqte_tool_1 .jqte_tool_label {
     height: 20px !important;
 }
-.jqte {
-    margin: 20px 0 !important;
-	}
 </style>
 
 <div id="wrapper">
@@ -82,18 +79,26 @@
 	  <input type="text" class="form-control" id="emailSubjectIT" name="emailSubject" value="" placeholder="Enter email subject"  required>
 	  
 	  </div>
+	  <div class="mb-3">
+	  <div class="tw-text-right">
+	  <button type="button" name="send" class="btn btn-primary mtop20" onclick="toggleCollapse()">Draft with AI <i class="fa fa-plus"></i></button>
 	  
+	  <div class="mtop20 form-group form-group-select-input-lead_source input-group-select hidden" id="collapseDiv">
+	  <div class="input-group input-group-select " app-field-wrapper="lead_source">
+	  <div class="dropdown bootstrap-select input-group-btn _select_input_group bs3 dropup" style="width: 100%;">
+	  <input type="text" class="form-control" id="aicontent" name="aicontent" value="" placeholder="Enter AI Content subject" >
+	  </div>
+	  <div class="input-group-btn"><span class="btn btn-primary ailoader" onclick="get_content();return false;"><i class="fa-solid fa-pen"></i></span></div>
+	  </div>
+	  </div>
+	  </div>
+
+	  </div>
       <div class="mb-3">
         <?php /*?><label for="emailBody" class="form-label mtop10">Email Body</label><?php */?>
 	   <?php //echo render_textarea('emailBody', '', '', [], [], '', 'tinymce'); ?>
 	   <textarea  name="emailBody" id="emailBody" class="form-control editor" required></textarea>
-         <div class="mb-3">
-	  <div class="tw-text-right">
-	  <a name="send" class="ailoader" onclick="get_content();return false;"><img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" /></a>
-	 
-	  </div>
-
-	  </div>                      
+                                
       </div>
 	  <div class="mb-3">
         <label for="recipientEmail" class="form-label">Attach Files:</label>
@@ -167,10 +172,7 @@ $('.submitemail').click(function(){
 
 function get_content() { 
 
-
-
-//let str = $('input[name="aicontent"]').val();
-let str = $('.editor').val();
+let str = $('input[name="aicontent"]').val();
 let aicontent = $.trim(str);
 
 
@@ -190,29 +192,22 @@ $(".ailoader").html("<i class='fa-solid fa-spinner fa-spin-pulse'></i>");
             var formattedStr = formattedStr.replace(/\\/g, "");
             //alert(formattedStr);
 			$('.editor').jqteVal(formattedStr);
-			$(".ailoader").html('<img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" />');
+			$(".ailoader").html("<i class='fa fa-plus'></i>");
 			
 			}else{
 			alert("Not Generated");
-			$(".ailoader").html('<img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" />');
+			$(".ailoader").html("<i class='fa fa-plus'></i>");
 			
 			}
 			
             
         });
 }else{
-alert("Enter Correct Email Body with min length 5");
+alert("Enter Correct Subject with min length 5");
 }
 
    
 }
-
-$(document).ready(function() {
-  setTimeout(function() {
-    $('#lead-modal').removeAttr('id');
-    console.log('ID removed from modal');
-  }, 5000); // 5000 ms = 5 seconds
-});
   </script>
   
 

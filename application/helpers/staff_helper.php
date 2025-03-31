@@ -313,6 +313,28 @@ function get_staff_full_name($userid = '')
     return $staff ? $staff->firstname . ' ' . $staff->lastname : '';
 }
 
+function get_staff_rolex($userid = '')
+{ $tmpStaffUserId = get_staff_user_id();
+    if ($userid == '' || $userid == $tmpStaffUserId) {
+        if (isset($GLOBALS['current_user'])) {
+            return $GLOBALS['current_user']->role;
+        }
+        $userid = $tmpStaffUserId;
+    }
+
+    $CI = & get_instance();
+
+    $staff = $CI->app_object_cache->get('staff-roll-data-' . $userid);
+
+    /**if (!$staff) {
+        $CI->db->where('staffid', $userid);
+        $staff = $CI->db->select('role')->from(db_prefix() . 'staff')->get()->row();
+        $CI->app_object_cache->add('staff-roll-data-' . $userid, $staff);
+    } */
+
+    return $staff ? $staff->role : '';
+}
+
 /**
  * Get staff default language
  * @param  mixed $staffid

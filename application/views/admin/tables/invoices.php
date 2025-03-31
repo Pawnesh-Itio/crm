@@ -20,8 +20,9 @@ return App_table::find('invoices')
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'invoices.id and rel_type="invoice" ORDER by tag_order ASC) as tags',
             'duedate',
             db_prefix() . 'invoices.status',
+			db_prefix() . 'invoices.approver_status',
         ];
-
+         //print_r($aColumns);exit;
         $sIndexColumn = 'id';
         $sTable       = db_prefix() . 'invoices';
 
@@ -123,9 +124,13 @@ return App_table::find('invoices')
 
             $row[] = render_tags($aRow['tags']);
 
-            $row[] = e(_d($aRow['duedate']));
+            $row[] = e(_d($aRow['duedate'])); 
+			
+			
+			$row[] = format_invoice_status($aRow[db_prefix() . 'invoices.status']);
+			$row[] = format_invoice_status($aRow[db_prefix() . 'invoices.approver_status']);
+			//$row[] = e(_d($aRow['approver_status']));
 
-            $row[] = format_invoice_status($aRow[db_prefix() . 'invoices.status']);
 
             // Custom fields add values
             foreach ($customFieldsColumns as $customFieldColumn) {
@@ -173,6 +178,14 @@ return App_table::find('invoices')
                 return collect($ci->invoices_model->get_statuses())->map(fn ($status) => [
                     'value' => (string) $status,
                     'label' => format_invoice_status($status, '', false),
+                ])->all();
+            }),
+		 App_table_filter::new('approver_status', 'MultiSelectRule')
+            ->label(_l('Approver Status'))
+            ->options(function ($ci) {
+                return collect($ci->invoices_model->get_statuses())->map(fn ($approver_status) => [
+                    'value' => (string) $approver_status,
+                    'label' => format_invoice_status($approver_status, '', false),
                 ])->all();
             }),
 

@@ -93,7 +93,7 @@
                                 <input type="checkbox" name="do_not_send_invoice_payment_recorded" value="1"
                                     id="do_not_send_invoice_payment_recorded">
                                 <label
-                                    for="do_not_send_invoice_payment_recorded"><?php echo _l('batch_payments_send_invoice_payment_recorded'); ?></label>
+                                    for="do_not_send_invoice_payment_recorded"> <?php echo _l('batch_payments_send_invoice_payment_recorded77'); ?></label>
                             </div>
                         </div>
                     </div>

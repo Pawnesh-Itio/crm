@@ -7,10 +7,16 @@
                 <th><span class="bold"><?php echo _l('payments_table_mode_heading'); ?></span></th>
                 <th><span class="bold"><?php echo _l('payments_table_date_heading'); ?></span></th>
                 <th><span class="bold"><?php echo _l('payments_table_amount_heading'); ?></span></th>
+				<th><span class="bold"><?php echo _l('Transid'); ?></span></th>
+				<th><span class="bold"><?php echo _l('Note'); ?></span></th>
+				<th><span class="bold"><?php echo _l('ApproverNote'); ?></span></th>
+				<th><span class="bold"><?php echo _l('Attachement'); ?></span></th>
+				<th><span class="bold"><?php echo _l('ApproverAttachement'); ?></span></th>
                 <th><span class="bold"><?php echo _l('options'); ?></span></th>
             </tr>
         </thead>
         <tbody>
+		<?php //print_r($invoice->payments);?>
             <?php foreach ($invoice->payments as $payment) { ?>
             <tr class="payment">
                 <td><?php echo e($payment['paymentid']); ?>
@@ -27,6 +33,19 @@
                 </td>
                 <td><?php echo e(_d($payment['date'])); ?></td>
                 <td><?php echo e(app_format_money($payment['amount'], $invoice->currency_name)); ?></td>
+				<td><?php echo e(_d($payment['transactionid'])); ?></td>
+				<td><?php echo e(_d($payment['note'])); ?></td>
+				<td><?php echo e(_d($payment['approver_note'])); ?></td>
+				<td>
+<?php if ($payment['staff_attachement']) { ?>
+<a href="<?php echo base_url('uploads/invoices/'.e(_d($payment['staff_attachement']))); ?>"  target="_blank" title="View Staff Attachement" ><i class="fa fa-eye"></i></a>
+<?php } ?>
+</td>
+				<td>
+<?php if ($payment['approver_attachement']) { ?>
+<a href="<?php echo base_url('uploads/invoices/'.e(_d($payment['approver_attachement']))); ?>"  target="_blank" title="View Approver Attachement" ><i class="fa fa-eye"></i></a>
+<?php } ?>
+</td>
                 <td>
                     <div class="tw-flex tw-items-center tw-space-x-3">
                         <a href="<?php echo admin_url('payments/payment/' . $payment['paymentid']); ?>"

@@ -147,7 +147,8 @@
             </div>
             <div class="row mtop20">
                 <div class="col-md-3">
-                    <?php echo format_invoice_status($invoice->status, 'mtop5 inline-block'); ?>
+                    <span title="Status - Staff"><?php echo format_invoice_status($invoice->status, 'mtop5 inline-block'); ?></span>
+					<span title="Status - Approver"><?php echo format_invoice_status($invoice->approver_status, 'mtop5 inline-block'); ?></span>
                 </div>
                 <div class="col-md-9 _buttons">
                     <div class="visible-xs">
@@ -282,12 +283,38 @@
                                     <?php hooks()->do_action('after_invoice_preview_more_menu'); ?>
                                 </ul>
                             </div>
-                            <?php if (staff_can('create',  'payments') && abs($invoice->total) > 0) { ?>
-                            <a href="#" onclick="record_payment(<?php echo e($invoice->id); ?>); return false;" class="mleft10 pull-right btn btn-success<?php if ($invoice->status == Invoices_model::STATUS_PAID || $invoice->status == Invoices_model::STATUS_CANCELLED) {
-                               echo ' disabled';
-                           } ?>">
-                                <i class="fa fa-plus-square"></i> <?php echo _l('payment'); ?></a>
+							
+                           
+							
+							<?php //echo "vvvvvv"; staff_can('create',  'payments') && ?>
+							<?php if ( abs($invoice->total) > 0) { ?>
+							<?php if ($invoice->status == Invoices_model::STATUS_PAID && e(get_staff_rolex())==3) { //3 for Approver  ?>
+							<?php if ($invoice->approver_status==2) {  ?>
+							<a href="javascript:void(0)"  class="mleft10 pull-right btn btn-success" title="Approved By Approver">
+                                <i class="fa-solid fa-user-tie"></i> <?php echo _l('Approved'); ?></a>
+							<?php }else{?>
+							<a href="#"  onclick="approver_payment(<?php echo e($invoice->id); ?>); return false;" class="mleft10 pull-right btn btn-danger" title="Pending By Approver">
+                                <i class="fa-solid fa-user-tie"></i> <?php echo _l('Pending'); ?></a>
+							<?php }?>
+							<?php }?>
+							<?php }?>
+							
+							 <?php if (staff_can('create',  'payments') && abs($invoice->total) > 0) { ?>
+							 <?php if ($invoice->status == Invoices_model::STATUS_PAID || $invoice->status == Invoices_model::STATUS_CANCELLED) { ?>
+							 
+                            <a href="javascript:void(0)"  tp="vs" class="mleft10 pull-right btn btn-success" title="Paid by Staff">
+                                <i class="fa-solid fa-user"></i> <?php echo _l('Paid'); ?></a>
+							<?php }else{?>
+							<a href="#" tp="vs" onclick="record_payment(<?php echo e($invoice->id); ?>); return false;" class="mleft10 pull-right btn btn-warning" title="Payment Pending by Staff">
+                                <i class="fa-solid fa-user"></i> <?php echo _l('payment'); ?></a>
+							
+							<?php } ?>
                             <?php } ?>
+							
+                            
+                            
+							
+							
                     </div>
                 </div>
                 <?php
@@ -299,9 +326,16 @@
                 </div>
                 <?php } ?>
             </div>
+			<?php
+			$paystatus=$invoice->status.$invoice->approver_status;
+			$bgx="";
+			if($paystatus==22){ $bgx="tw-bg-success-100";}elseif($paystatus==21){ $bgx=" tw-bg-warning-100 ";}else{$bgx="tw-bg-danger-100";}
+			
+			
+			?>
             <div class="clearfix"></div>
             <hr class="hr-panel-separator" />
-            <div class="tab-content">
+            <div class="tab-content padding <?php echo $bgx;?>">
                 <div role="tabpanel" class="tab-pane active" id="tab_invoice">
                     <?php if ($invoice->status == Invoices_model::STATUS_CANCELLED && $invoice->recurring > 0) { ?>
                     <div class="alert alert-info">
@@ -506,3 +540,13 @@ schedule_invoice_send(<?php echo e($invoice->id); ?>);
 <?php } ?>
 </script>
 <?php hooks()->do_action('after_invoice_preview_template_rendered', $invoice); ?>
+
+<script>
+// A payment function
+function approver_payment(id) { 
+  if (typeof id == "undefined" || id === "") {
+    return;
+  }
+  $("#invoice").load(admin_url + "invoices/approver_invoice_payment_ajax/" + id);
+}
+</script>

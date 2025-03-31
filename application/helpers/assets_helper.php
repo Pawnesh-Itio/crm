@@ -56,6 +56,8 @@ function _init_admin_assets()
     if (get_option('pusher_realtime_notifications') == 1) {
         $CI->app_scripts->add('pusher-js', 'https://js.pusher.com/5.0/pusher.min.js');
     }
+	
+	
 
     add_dropbox_js_assets();
     add_google_api_js_assets();

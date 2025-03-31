@@ -57,7 +57,7 @@ if (!is_client_logged_in() && !is_admin() && is_staff_logged_in()) {
 </style>
 <?php
 }else{
-echo "Not staff";
+//echo "Not staff";
 }
 
  ?>
