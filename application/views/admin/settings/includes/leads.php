@@ -15,6 +15,7 @@ echo render_select('settings[leads_default_status]',$leads_statuses,array('id','
 <hr />
 <?php
 $savedValidation = json_decode(get_option('lead_unique_validation'));
+$savedStaffList =json_decode(get_option('lead_auto_assign_to_staff'));
 $validationFields = [
   [
     'value'=>'email',
@@ -34,6 +35,9 @@ $validationFields = [
   ],
 ];
 $validationFields = hooks()->apply_filters('lead_available_dupicate_validation_fields_option', $validationFields);
+
+/////////For Staff//////////////
+
 ?>
 <div class="form-group" id="unique_validation_wrapper">
   <label for="lead_unique_validation"><?php echo _l('lead_unique_validation_on'); ?></label>
@@ -79,6 +83,27 @@ $validationFields = hooks()->apply_filters('lead_available_dupicate_validation_f
 <hr />
 <?php echo render_yes_no_option('lead_lock_after_convert_to_customer','lead_lock_after_convert_to_customer'); ?>
 <hr />
+<?php echo render_yes_no_option('automatically_converts_into_contact','Automatically converts into contact'); ?>
+<hr />
+<div class="row">
+<div class="col-md-5"><?php echo render_yes_no_option('automatically_assign_to_staff','automatically_assign_to_staff'); ?></div>
+  <div class="col-md-7">
+<div class="form-group" id="staffDiv" style="display: none;">
+  <label for="lead_auto_assign_to_staff"><?php echo _l('lead_unique_validation_on'); ?></label>
+  <select class="selectpicker" name="settings[lead_auto_assign_to_staff][]" id="lead_auto_assign_to_staff" data-width="100%" multiple="true" data-none-selected-text="<?php echo _l('no_validation'); ?>">
+    <?php foreach($staffList as $staffField) {
+      ?>
+      <option value="<?php echo e($staffField['staffid']); ?>" <?php if(in_array($staffField['staffid'], $savedStaffList)){echo ' selected';} ?>>
+        <?php echo e($staffField['firstname']); ?> <?php echo e($staffField['lastname']); ?>
+      </option>
+      <?php
+    }
+    ?>
+  </select>
+</div>
+  </div>
+  </div>
+<hr />
 <div class="form-group">
   <label for="settings[lead_modal_class]" class="control-label">
     <?php echo _l('modal_width_class'); ?> (modal-lg, modal-xl, modal-xxl)
@@ -86,3 +111,19 @@ $validationFields = hooks()->apply_filters('lead_available_dupicate_validation_f
   <input type="text" id="settings[lead_modal_class]" name="settings[lead_modal_class]" class="form-control" value="<?php echo get_option('lead_modal_class'); ?>">
 </div>
 <?php hooks()->do_action('after_leads_settings'); ?>
+<script>
+  
+  const yesRadio = document.getElementById('y_opt_1_automatically_assign_to_staff');
+  if (yesRadio.checked) {
+  document.getElementById('staffDiv').style.display = 'block';
+  }
+  
+
+  document.getElementById('y_opt_1_automatically_assign_to_staff').addEventListener('click', function () {
+   document.getElementById('staffDiv').style.display = 'block';
+  });
+
+  document.getElementById('y_opt_2_automatically_assign_to_staff').addEventListener('click', function () {
+  document.getElementById('staffDiv').style.display = 'none';
+  });
+</script>

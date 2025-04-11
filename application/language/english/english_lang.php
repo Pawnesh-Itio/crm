@@ -2813,6 +2813,7 @@ $lang['task_checklist_item_completed_by']                   = 'Completed by %s';
 $lang['staff_email_signature_help']                         = 'If empty default email signature from settings will be used';
 $lang['default_task_priority']                              = 'Default Priority';
 $lang['project_send_created_email']                         = 'Send project created email';
+$lang['automatically_assign_to_staff']                      = 'Automatically assign to staff';
 
 
 # Version 1.2.8

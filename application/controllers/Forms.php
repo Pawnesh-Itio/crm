@@ -296,6 +296,8 @@ $ip_country_id = $country_details->country_id;
 $ip_calling_code = $country_details->calling_code;
 }
 
+
+
 //echo "===========>>>>";
 
 
@@ -306,6 +308,26 @@ $ip_calling_code = $country_details->calling_code;
         if (!$form) {
             show_404();
         }
+		
+	
+// Auto assign to staff when activate from admin
+if(get_option('automatically_assign_to_staff')==1){
+$values=json_decode(get_option('lead_auto_assign_to_staff'));
+
+	if(count($values) > 0){
+	$randomKey = array_rand($values);
+	$assignValue = $values[$randomKey];
+	$form->responsible = $assignValue;
+	}
+}
+
+
+
+
+// Auto assign to staff when activate from admin
+if(get_option('automatically_converts_into_contact')==1){
+ //echo "Add in contact";
+}
 
         // Change the locale so the validation loader function can load
         // the proper localization file
@@ -520,6 +542,9 @@ $ip_calling_code = $country_details->calling_code;
 					$regular_fields['ip']           = $ipx;
                     $this->db->insert(db_prefix() . 'leads', $regular_fields);
                     $lead_id = $this->db->insert_id();
+					
+					//echo $lead_id;
+					
 
                     hooks()->do_action('lead_created', [
                         'lead_id'          => $lead_id,

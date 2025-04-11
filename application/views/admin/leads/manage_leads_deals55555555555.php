@@ -1,30 +1,15 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php init_head(); ?>
+<?php init_head();  ?>
 
-<div id="wrapper"> <?php //echo $_SESSION['leads_page_type'];?>
+<div id="wrapper">
     <div class="content">
         <div class="row">
             <div class="col-md-12">
                 <div class="_buttons tw-mb-2 sm:tw-mb-4">
-				
-				<?php if(isset($_SESSION['leads_page_type'])&&$_SESSION['leads_page_type']=='leads'){ ?>
-                    <a href="#" onclick="init_lead(); return false;"
-                        class="btn btn-primary mright5 pull-left display-block">
-                        <i class="fa-regular fa-plus tw-mr-1"></i>
-                        <?php echo _l('new_lead'); ?>
-                    </a>
-                    <?php if (is_admin() || get_option('allow_non_admin_members_to_import_leads') == '1') { ?>
-                    <a href="<?php echo admin_url('leads/import'); ?>"
-                        class="btn btn-primary pull-left display-block hidden-xs">
-                        <i class="fa-solid fa-upload tw-mr-1"></i>
-                        <?php echo _l('import_leads'); ?>
-                    </a>
-                    <?php } ?>
-					<?php } ?>
+                    
                     <div class="row">
-                        <div class="col-sm-5 ">
-						<?php if(isset($_SESSION['leads_page_type'])&&$_SESSION['leads_page_type']=='leads'){ ?>
-                            <a href="#" class="btn btn-default btn-with-tooltip" data-toggle="tooltip"
+                        <div class="col-sm-5 "> <?php echo $ltype;?>
+                            <?php /*?><a href="#" class="btn btn-default btn-with-tooltip" data-toggle="tooltip"
                                 data-title="<?php echo _l(''); ?>" data-placement="top"
                                 onclick="slideToggle('.leads-overview'); return false;"><i
                                     class="fa fa-bar-chart"></i></a>
@@ -36,11 +21,7 @@
                                 <?php } else { ?>
                                 <i class="fa-solid fa-table-list"></i>
                                 <?php }; ?>
-                            </a>
-							
-<?php }else{ ?>
-<a href="#" class="btn btn-warning pull-left display-block"><i class="fa-solid fa-handshake"></i> Deal</a>
-<?php } ?>
+                            </a><?php */?>
                         </div>
                         <div class="col-sm-4 col-xs-12 pull-right leads-search">
                             <?php if ($this->session->userdata('leads_kanban_view') == 'true') { ?>
@@ -260,13 +241,6 @@
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-status'],
                               ];
 							  
-							  if($_SESSION['leads_page_type']=='deals'){
-							  $_table_data[] = [
-                               'name'     => _l('Deal Status'),
-                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-status'],
-                              ];
-							  }
-							  
 							  $_table_data[] = [
                                'name'     => _l('Observer'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
@@ -300,6 +274,7 @@
                                ?>
                                     <div class="panel-table-full">
                                         <?php
+										
                                  render_datatable(
                                    $table_data,
                                    'leads',

@@ -3,16 +3,6 @@
 #lead-modal .modal-lg{
 width: 90% !important;
 }
-.box-shadow{
-box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-padding:20px;
-background:#ecf3f5;
-}
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-border-color: rgb(37 99 235 / var(--tw-border-opacity)) !important;
-color: rgb(37 99 235 / var(--tw-text-opacity)) !important;
-font-weight: bolder !important;
-}
 </style>
 <div class="modal-header">
  <?php if(isset($lead->id)&&$lead->id){ ?>
@@ -52,9 +42,7 @@ font-weight: bolder !important;
 		}
 		echo '</div>';
 	}
-	?> <?php if(isset($lead->deal_status)&&$lead->deal_status){ ?> <?php echo $this->leads_model->get_deal_status_title($lead->deal_status);?> 
-	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-edit"></i> Deal Status <?php //echo $lead->is_deal?></a>
-	<?php } ?>
+	?>
 	</h4>
 </div>
 <div class="modal-body">
@@ -146,33 +134,6 @@ $(document).ready(function() {
 function scrollToBottom(){
 	//alert(chatBox.scrollHeight);
 	chatBox.scrollTop=chatBox.scrollHeight;
-}
-
-// for hide deal modal
-
-   $('#dealModalClose').on('click', function() {
-	  $('#dealModal').modal('hide');
-    });
-	
-	
-	function convert_to_deal() {
-	
-	if($('#deal_status').val()==""){ alert("Please select Deal status"); return false; }
-	if($('#deal_id').val()==""){ alert("something wront try again after some time"); return false; }
-	
-
-   $.post(admin_url + 'leads/convert_to_deal', {
-            deal_status: $('#deal_status').val(),
-            is_deal : 1,
-			id : $('#deal_id').val(),
-        })
-        .done(function(response) { 
-            response = JSON.parse(response);
-            alert_float(response.alert_type, response.message);
-			setTimeout(function() {
-      location.reload();
-    }, 2000); // 5000 milliseconds = 5 seconds
-        });
 }
 </script>
 

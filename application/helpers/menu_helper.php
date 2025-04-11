@@ -185,6 +185,26 @@ function app_init_admin_sidebar_menu_items()
 			'badge'    => [],
 		]);
     }
+	
+	    if (is_staff_member()) {
+		$CI->app_menu->add_sidebar_menu_item('deals', [
+			'name'     => _l('Deals'),
+			'href'     => admin_url('leads/deals'),
+			'icon'     => 'fa-solid fa-handshake',
+			'position' => 20,
+			'badge'    => [],
+		]);
+    }
+	
+	  /*  if (is_staff_member()) {
+		$CI->app_menu->add_sidebar_menu_item('task', [
+			'name'     => _l('Deal Task'),
+			'href'     => admin_url('deal_task'),
+			'icon'     => 'fa-solid fa-file-signature',
+			'position' => 20,
+			'badge'    => [],
+		]);
+    }*/
     // Direct Email
     if (is_staff_member()) {
 		$CI->app_menu->add_sidebar_menu_item('Direct-Email', [
@@ -538,6 +558,22 @@ function app_init_admin_sidebar_menu_items()
             'slug'     => 'web-to-lead',
             'name'     => _l('web_to_lead'),
             'href'     => admin_url('leads/forms'),
+            'position' => 20,
+            'badge'    => [],
+        ]);
+		
+		$CI->app_menu->add_setup_children_item('leads', [
+            'slug'     => 'deal-status',
+            'name'     => _l('Deal Status'),
+            'href'     => admin_url('leads/deal_status'),
+            'position' => 20,
+            'badge'    => [],
+        ]);
+		
+		$CI->app_menu->add_setup_children_item('leads', [
+            'slug'     => 'task-status',
+            'name'     => _l('Task Status'),
+            'href'     => admin_url('leads/task_status'),
             'position' => 20,
             'badge'    => [],
         ]);
