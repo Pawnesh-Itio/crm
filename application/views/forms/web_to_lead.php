@@ -87,7 +87,7 @@
                     $('#form_submit .fa-spin').removeClass('hide');
 
                     var formURL = $(form).attr("action");
-					alert(formURL);//return;
+					//alert(formURL);//return;
                     var formData = new FormData($(form)[0]);
 
                     $.ajax({

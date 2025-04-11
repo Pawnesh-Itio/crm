@@ -7,10 +7,10 @@ $this->ci->load->model('leads_model');
 $this->ci->load->model('staff_model');
 $statuses = $this->ci->leads_model->get_status();
 $tagses = $this->ci->leads_model->get_tags_list();
-//print_r($tagses);
-if (is_gdpr() && get_option('gdpr_enable_consent_for_leads') == '1') {
-    $consent_purposes = $this->ci->gdpr_model->get_consent_purposes();
-}
+$dealstatuses = $this->ci->leads_model->get_deal_status();
+
+
+
 
 $rules = [
     App_table_filter::new('name', 'TextRule')->label(_l('leads_dt_name')),
@@ -36,6 +36,13 @@ $rules = [
             'value' => $status['id'],
             'label' => $status['name'],
             'subtext' => $status['isdefault'] == 1 ? _l('leads_converted_to_client') : null,
+        ]);
+    }),
+	
+	App_table_filter::new('deal_status', 'MultiSelectRule')->label(_l('Deal Status'))->options(function () use ($dealstatuses) {
+        return collect($dealstatuses)->map(fn ($deal_status) => [
+            'value' => $deal_status['id'],
+            'label' => $deal_status['name'],
         ]);
     }),
 	
@@ -82,10 +89,13 @@ if (isset($consent_purposes)) {
         });
 }
 
-return App_table::find('leads')
-    ->outputUsing(function ($params) use ($statuses) {
-        extract($params);
 
+
+
+$pagexxx=@$_SESSION['leads_page_type'];
+return App_table::find('leads') 
+    ->outputUsing(function ($params) use ($statuses,$pagexxx) {
+        extract($params);
         $lockAfterConvert      = get_option('lead_lock_after_convert_to_customer');
         $has_permission_delete = staff_can('delete',  'leads');
         $custom_fields         = get_table_custom_fields('leads');
@@ -158,12 +168,21 @@ return App_table::find('leads')
             'status',
             'assigned',
 			'absorber',
+			'deal_status',
             'lastname as assigned_lastname',
             db_prefix() . 'leads.addedfrom as addedfrom',
             '(SELECT count(leadid) FROM ' . db_prefix() . 'clients WHERE ' . db_prefix() . 'clients.leadid=' . db_prefix() . 'leads.id) as is_converted',
             'zip',
         ]);
+		
+		
+		
 
+        if($pagexxx=='deals'){
+		array_push($where, ' AND is_deal=1 ');
+		}
+		
+		
         $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, $additionalColumns);
 
         $output  = $result['output'];
@@ -267,6 +286,9 @@ return App_table::find('leads')
             }
 
             $row[] = $outputStatus;
+			if($pagexxx=='deals'){
+			 $row[] = $this->ci->leads_model->get_deal_status_title(e($aRow['deal_status']));
+			 }
 			
 			//$row[] = e($aRow['absorber']);
 			/////////////////////////

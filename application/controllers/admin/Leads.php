@@ -48,7 +48,46 @@ class Leads extends AdminController
         $data['statuses'] = $this->leads_model->get_status();
         $data['sources']  = $this->leads_model->get_source();
         $data['title']    = _l('leads');
+		@$_SESSION['leads_page_type'] ="leads";
         $data['table'] = App_table::find('leads');
+        // in case accesed the url leads/index/ directly with id - used in search
+        $data['leadid']   = $id;
+        $data['isKanBan'] = $this->session->has_userdata('leads_kanban_view') &&
+            $this->session->userdata('leads_kanban_view') == 'true';
+
+        $this->load->view('admin/leads/manage_leads', $data);
+    }
+	
+	/* List all leads */
+    public function deals($id = '')
+    {
+        close_setup_menu();
+
+        if (!is_staff_member()) {
+            access_denied('Leads');
+        }
+
+        $data['switch_kanban'] = true;
+
+        if ($this->session->userdata('leads_kanban_view') == 'true') {
+            $data['switch_kanban'] = false;
+            $data['bodyclass']     = 'kan-ban-body';
+        }
+
+        $data['staff'] = $this->staff_model->get('', ['active' => 1]);
+        if (is_gdpr() && get_option('gdpr_enable_consent_for_leads') == '1') {
+            $this->load->model('gdpr_model');
+            $data['consent_purposes'] = $this->gdpr_model->get_consent_purposes();
+        }
+		
+		$data['ltype']    = _l('leads');
+        $data['summary']  = get_leads_summary();
+        $data['statuses'] = $this->leads_model->get_status();
+        $data['sources']  = $this->leads_model->get_source();
+        $data['title']    = _l('leads');
+		@$_SESSION['leads_page_type'] ="deals";
+        $data['table']    = App_table::find('leads');
+		//print_r($data['table']);
         // in case accesed the url leads/index/ directly with id - used in search
         $data['leadid']   = $id;
         $data['isKanBan'] = $this->session->has_userdata('leads_kanban_view') &&
@@ -162,6 +201,7 @@ class Leads extends AdminController
             $data['lead']          = $lead;
             $data['mail_activity'] = $this->leads_model->get_mail_activity($id);
             $data['notes']         = $this->misc_model->get_notes($id, 'lead');
+			$data['deal_task']     = $this->leads_model->get_deal_task($id);
             $data['activity_log']  = $this->leads_model->get_lead_activity_log($id);
 
             if (is_gdpr() && get_option('gdpr_enable_consent_for_leads') == '1') {
@@ -647,7 +687,7 @@ class Leads extends AdminController
 
     public function add_lead_attachment()
     {
-        $id       = $this->input->post('id');
+        echo $id       = $this->input->post('id');
         $lastFile = $this->input->post('last_file');
 
         if (!is_staff_member() || !$this->leads_model->staff_can_access_lead($id)) {
@@ -1012,6 +1052,137 @@ class Leads extends AdminController
         $data['title']    = 'Leads statuses';
         $this->load->view('admin/leads/manage_statuses', $data);
     }
+	
+	
+	/* View Deal status */
+	 public function deal_status()
+    {
+        if (!is_admin()) {
+            access_denied('Leads Status');
+        }
+        $data['statuses'] = $this->leads_model->get_deal_status();
+        $data['title']    = 'Deal Status';
+        $this->load->view('admin/leads/deal_status', $data);
+    }
+	
+	 /* Add or update deal status */
+    public function dealstatus()
+    {
+        if (!is_admin()) {
+            access_denied('Deal Statuses');
+        }
+        if ($this->input->post()) {
+            $data = $this->input->post();
+            if (!$this->input->post('id')) {
+                $inline = isset($data['inline']);
+                if (isset($data['inline'])) {
+                    unset($data['inline']);
+                }
+                $id = $this->leads_model->add_deal_status($data);
+                if (!$inline) {
+                    if ($id) {
+                        set_alert('success', _l('added_successfully', _l('Deal Status')));
+						redirect(admin_url('leads/deal_status'));
+                    }
+                } else {
+                    echo json_encode(['success' => $id ? true : false, 'id' => $id]);
+                }
+            } else {
+                $id = $data['id'];
+                unset($data['id']);
+                $success = $this->leads_model->update_deal_status($data, $id); 
+                if ($success) { 
+                    set_alert('success', _l('updated_successfully', _l('Deal Status')));
+					redirect(admin_url('leads/deal_status'));
+                }
+            }
+        }
+    }
+	
+	  /* Delete leads status from databae */
+    public function delete_deal_status($id)
+    {
+        if (!is_admin()) {
+            access_denied('Deal Statuses');
+        }
+        if (!$id) {
+            redirect(admin_url('leads/deal_status'));
+        }
+        $response = $this->leads_model->delete_deal_status($id);
+        if (is_array($response) && isset($response['referenced'])) {
+            set_alert('warning', _l('is_referenced', _l('Deal Status')));
+        } elseif ($response == true) {
+            set_alert('success', _l('deleted', _l('Deal Status')));
+        } else {
+            set_alert('warning', _l('problem_deleting', _l('Deal Status')));
+        }
+        redirect(admin_url('leads/deal_status'));
+    }
+	
+	/* View Deal status */
+	 public function task_status()
+    {
+        if (!is_admin()) {
+            access_denied('Task Status');
+        }
+        $data['statuses'] = $this->leads_model->get_task_status();
+        $data['title']    = 'Task Status';
+        $this->load->view('admin/leads/task_status', $data);
+    }
+	
+	 /* Add or update deal status */
+    public function taskstatus()
+    {
+        if (!is_admin()) {
+            access_denied('Task Statuses');
+        }
+        if ($this->input->post()) {
+            $data = $this->input->post();
+            if (!$this->input->post('id')) {
+                $inline = isset($data['inline']);
+                if (isset($data['inline'])) {
+                    unset($data['inline']);
+                }
+                $id = $this->leads_model->add_task_status($data);
+                if (!$inline) {
+                    if ($id) {
+                        set_alert('success', _l('added_successfully', _l('Task Status')));
+						redirect(admin_url('leads/task_status'));
+                    }
+                } else {
+                    echo json_encode(['success' => $id ? true : false, 'id' => $id]);
+                }
+            } else {
+                $id = $data['id'];
+                unset($data['id']);
+                $success = $this->leads_model->update_task_status($data, $id); 
+                if ($success) { 
+                    set_alert('success', _l('updated_successfully', _l('Task Status')));
+					redirect(admin_url('leads/task_status'));
+                }
+            }
+        }
+    }
+	
+	  /* Delete leads status from databae */
+    public function delete_task_status($id)
+    {
+        if (!is_admin()) {
+            access_denied('Task Statuses');
+        }
+        if (!$id) {
+            redirect(admin_url('leads/task_status'));
+        }
+        $response = $this->leads_model->delete_task_status($id);
+        if (is_array($response) && isset($response['referenced'])) {
+            set_alert('warning', _l('is_referenced', _l('Task Status')));
+        } elseif ($response == true) {
+            set_alert('success', _l('deleted', _l('Task Status')));
+        } else {
+            set_alert('warning', _l('problem_deleting', _l('Task Status')));
+        }
+        redirect(admin_url('leads/task_status'));
+    }
 
     /* Add or update leads status */
     public function status()
@@ -1091,6 +1262,37 @@ class Leads extends AdminController
             }
 
             $note_id = $this->misc_model->add_note($data, 'lead', $rel_id);
+
+            if ($note_id) {
+                if (isset($contacted_date)) {
+                    $this->db->where('id', $rel_id);
+                    $this->db->update(db_prefix() . 'leads', [
+                        'lastcontact' => $contacted_date,
+                    ]);
+                    if ($this->db->affected_rows() > 0) {
+                        $this->leads_model->log_lead_activity($rel_id, 'not_lead_activity_contacted', false, serialize([
+                            get_staff_full_name(get_staff_user_id()),
+                            _dt($contacted_date),
+                        ]));
+                    }
+                }
+            }
+        }
+        echo json_encode(['leadView' => $this->_get_lead_data($rel_id), 'id' => $rel_id]);
+    }
+	
+	/* Add new lead note */
+    public function add_deal_task($rel_id)
+    {
+        if (!is_staff_member() || !$this->leads_model->staff_can_access_lead($rel_id)) {
+            ajax_access_denied();
+        }
+
+        if ($this->input->post()) {
+            $data = $this->input->post();
+            
+
+            $note_id = $this->leads_model->add_deal_task($data, 'lead', $rel_id);
 
             if ($note_id) {
                 if (isset($contacted_date)) {
@@ -1423,12 +1625,18 @@ class Leads extends AdminController
         $lead_id = $_POST['lead_id'];
         $assigned_id = $_POST['assigned_id'];
         $update = $this->leads_model->updateAssignedUser($lead_id, $assigned_id);
+		
+		$update = $this->leads_model->updateAssignedAbsorber($lead_id, $assigned_id);
+	   $redirecturlx='leads';
+	   if(isset($_SESSION['leads_page_type'])&&$_SESSION['leads_page_type']=='deals'){
+	   $redirecturlx='leads/deals';
+	   }
         if($update){
             set_alert('success', 'Member assigned successfully');
-            redirect(admin_url('leads'));
+            redirect(admin_url($redirecturlx));
         }else{
             set_alert('warning','Member assigned failed');
-            redirect(admin_url('leads'));
+            redirect(admin_url($redirecturlx));
         }
     }
 	
@@ -1439,12 +1647,38 @@ class Leads extends AdminController
 		//exit;
 		// echo "====>>";exit;
        $update = $this->leads_model->updateAssignedAbsorber($lead_id, $assigned_id);
+	   
+	   $redirecturlx='leads';
+	   if(isset($_SESSION['leads_page_type'])&&$_SESSION['leads_page_type']=='deals'){
+	   $redirecturlx='leads/deals';
+	   }
+	   
         if($update){
             set_alert('success', 'Absorber assigned successfully');
-            redirect(admin_url('leads'));
+            redirect(admin_url($redirecturlx));
         }else{
             set_alert('warning','Absorber assigned failed');
-            redirect(admin_url('leads'));
+            redirect(admin_url($redirecturlx));
         }
     }
+	public function convert_to_deal()
+    {
+	
+	    $data = $this->input->post();
+		$id=$data['id'];
+		unset($data['id']);
+		
+		$vv=$this->leads_model->convert_to_deal($data,$id);
+		
+		   echo json_encode([
+                'alert_type' => 'success',
+                'message'    => $vv,
+            ]);
+		
+    }
+
+
+
+	
+
 }

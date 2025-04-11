@@ -19,6 +19,8 @@ class Settings extends AdminController
         }
 
         $tab = $this->input->get('group');
+		$data['staffList']=$this->settings_model->get_staff_list();
+			
 
         if ($this->input->post()) {
             if (staff_cant('edit', 'settings')) {
@@ -27,6 +29,7 @@ class Settings extends AdminController
             $logo_uploaded     = (handle_company_logo_upload() ? true : false);
             $favicon_uploaded  = (handle_favicon_upload() ? true : false);
             $signatureUploaded = (handle_company_signature_upload() ? true : false);
+			
 
             $post_data = $this->input->post();
             $tmpData   = $this->input->post(null, false);
@@ -46,7 +49,7 @@ class Settings extends AdminController
             if (isset($post_data['settings']['smtp_password'])) {
                 $post_data['settings']['smtp_password'] = $tmpData['settings']['smtp_password'];
             }
-
+            //print_r($post_data);
             $success = $this->settings_model->update($post_data);
 
             if ($success > 0) {

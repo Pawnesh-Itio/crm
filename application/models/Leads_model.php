@@ -730,6 +730,165 @@ class Leads_model extends App_Model
         //print_r($statuses);//exit;
         return $statuses;
     }
+	
+	 public function get_deal_status($id = '', $where = [])
+    {
+        if (is_numeric($id)) {
+            $this->db->where($where);
+            $this->db->where('id', $id);
+
+            return $this->db->get(db_prefix() . 'deals_status')->row();
+        }
+
+
+       
+            $this->db->where($where);
+            $this->db->order_by('statusorder', 'asc');
+
+            $result = $this->db->get(db_prefix() . 'deals_status')->result_array();
+           
+       
+
+        //print_r($statuses);//exit;
+        return $result;
+    }
+	
+	 public function add_deal_status($data)
+    {
+        if (isset($data['color']) && $data['color'] == '') {
+            $data['color'] = hooks()->apply_filters('default_lead_status_color', '#757575');
+        }
+
+        if (!isset($data['statusorder'])) {
+            $data['statusorder'] = total_rows(db_prefix() . 'deals_status') + 1;
+        }
+
+        $this->db->insert(db_prefix() . 'deals_status', $data);
+        $insert_id = $this->db->insert_id();
+        if ($insert_id) {
+            log_activity('New Deal Status Added [StatusID: ' . $insert_id . ', Name: ' . $data['name'] . ']');
+
+            return $insert_id;
+        }
+
+        return false;
+    }
+
+    public function update_deal_status($data, $id)
+    {
+	//print_r($data);echo $id;exit;
+        $this->db->where('id', $id);
+        $this->db->update(db_prefix() . 'deals_status', $data);
+		 //echo $this->db->last_query(); echo $this->db->affected_rows(); exit;
+        if ($this->db->affected_rows() > 0) {
+            //log_activity('Deal Status Updated [StatusID: ' . $id . ', Name: ' . $data['name'] . ']');
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete lead status from database
+     * @param  mixed $id status id
+     * @return boolean
+     */
+    public function delete_deal_status($id)
+    {
+       
+        $this->db->where('id', $id);
+        $this->db->delete(db_prefix() . 'deals_status');
+        if ($this->db->affected_rows() > 0) {
+            
+            log_activity('Deal Status Deleted [StatusID: ' . $id . ']');
+
+            return true;
+        }
+
+        return false;
+    }
+	
+	//=========================Task=====================
+	 public function get_task_status($id = '', $where = [])
+    {
+        if (is_numeric($id)) {
+            $this->db->where($where);
+            $this->db->where('id', $id);
+
+            return $this->db->get(db_prefix() . 'task_status')->row();
+        }
+
+
+       
+            $this->db->where($where);
+            $this->db->order_by('statusorder', 'asc');
+
+            $result = $this->db->get(db_prefix() . 'task_status')->result_array();
+           
+       
+
+        //print_r($statuses);//exit;
+        return $result;
+    }
+	
+	 public function add_task_status($data)
+    {
+        if (isset($data['color']) && $data['color'] == '') {
+            $data['color'] = hooks()->apply_filters('default_lead_status_color', '#757575');
+        }
+
+        if (!isset($data['statusorder'])) {
+            $data['statusorder'] = total_rows(db_prefix() . 'task_status') + 1;
+        }
+
+        $this->db->insert(db_prefix() . 'task_status', $data);
+        $insert_id = $this->db->insert_id();
+        if ($insert_id) {
+            log_activity('New Task Status Added [StatusID: ' . $insert_id . ', Name: ' . $data['name'] . ']');
+
+            return $insert_id;
+        }
+
+        return false;
+    }
+
+    public function update_task_status($data, $id)
+    {
+	//print_r($data);echo $id;exit;
+        $this->db->where('id', $id);
+        $this->db->update(db_prefix() . 'task_status', $data);
+		 //echo $this->db->last_query(); echo $this->db->affected_rows(); exit;
+        if ($this->db->affected_rows() > 0) {
+            //log_activity('Deal Status Updated [StatusID: ' . $id . ', Name: ' . $data['name'] . ']');
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete lead status from database
+     * @param  mixed $id status id
+     * @return boolean
+     */
+    public function delete_task_status($id)
+    {
+       
+        $this->db->where('id', $id);
+        $this->db->delete(db_prefix() . 'task_status');
+        if ($this->db->affected_rows() > 0) {
+            
+            log_activity('Task Status Deleted [StatusID: ' . $id . ']');
+
+            return true;
+        }
+
+        return false;
+    }
+	//======================END TASK========================
+	
 	public function get_tags_list($id = '', $where = [])
     {
        
@@ -1215,6 +1374,7 @@ class Leads_model extends App_Model
     }
     public function updateAssignedUser($lead_id, $assigned_id){
         $current_lead_data = $this->get($lead_id);
+		
         // Check if the current lead status is 2
         if ($current_lead_data->status == 2) {
             $this->db->where('id', $lead_id);
@@ -1290,5 +1450,65 @@ class Leads_model extends App_Model
     
    }
    
-   
+   public function get_deal_task($id)
+    {
+        $this->db->where('rel_id', $id);
+        $this->db->order_by('date', 'asc');
+        return $this->db->get(db_prefix() . 'deal_task')->result_array();
+    }
+    public function get_task_type($id)
+    {
+	
+	
+        $this->db->where('id', $id);
+        return $this->db->get(db_prefix() . 'task_status')->result_array();
+		
+    }
+	
+	
+	public function add_deal_task($data, $rel_type, $rel_id)
+    {
+        
+        $data['staff']   = get_staff_user_id();
+        $data['rel_id']      = $rel_id;
+        $data['description'] = nl2br($data['description']);
+
+
+
+        
+        $this->db->insert(db_prefix() . 'deal_task', $data);
+		//return $this->db->last_query();exit;
+        $insert_id = $this->db->insert_id();
+
+        if ($insert_id) {
+            hooks()->do_action('note_created', $insert_id, $data);
+
+            return $insert_id;
+        }
+
+        return false;
+    }
+	
+	public function convert_to_deal($data,$id)
+    {
+	    $this->db->where('id', $id);
+        $this->db->update(db_prefix().'leads', $data);
+        if ($this->db->affected_rows() > 0) {
+		$this->log_lead_activity($id,'Lead converted to deal');
+		return "Lead converted to deal";
+		}else{
+		return "Lead not converted";
+		}
+    }
+	
+   	public function get_deal_status_title($id)
+    {
+	    $this->db->select('name,color');
+        //$this->db->from(db_prefix() . 'deals_status');
+        $this->db->where('id', $id);
+        //$deal_status = $this->db->get()->row();
+		$deal_status = $this->db->get(db_prefix() . 'deals_status')->result_array();
+		return $deal_status = "<a href='#' class='btn btn-default' style='background:".$deal_status[0]['color']."'>".$deal_status[0]['name']."</a>";
+       
+    }
 }

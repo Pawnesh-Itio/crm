@@ -80,6 +80,8 @@ class Settings_model extends App_Model
                 $val = serialize($val);
             } elseif ($name == 'lead_unique_validation') {
                 $val = json_encode($val);
+			} elseif ($name == 'lead_auto_assign_to_staff') {
+                $val = json_encode($val);
             } elseif ($name == 'required_register_fields') {
                 $val = json_encode($val);
             } elseif ($name == 'visible_customer_profile_tabs') {
@@ -181,6 +183,17 @@ class Settings_model extends App_Model
                 $affectedRows++;
             }
         }
+		
+		 if (!in_array('lead_auto_assign_to_staff', $all_settings_looped)
+                && in_array('_leads_settings', $all_settings_looped)) {
+            $this->db->where('name', 'lead_auto_assign_to_staff');
+            $this->db->update(db_prefix() . 'options', [
+                'value' => json_encode([]),
+            ]);
+            if ($this->db->affected_rows() > 0) {
+                $affectedRows++;
+            }
+        }
 
         if (isset($data['custom_fields'])) {
             if (handle_custom_fields_post(0, $data['custom_fields'])) {
@@ -200,5 +213,11 @@ class Settings_model extends App_Model
         }
 
         return false;
+    }
+	public function get_staff_list()
+    {
+	    $this->db->select('staffid,firstname,lastname,');
+		$this->db->order_by('firstname', 'asc');
+        return $this->db->get(db_prefix() . 'staff')->result_array();
     }
 }
