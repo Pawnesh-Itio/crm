@@ -1173,9 +1173,9 @@ if ($currentDateTime > $assignDateTime) {
     
 <div class="modal fade" id="dealModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg " role="document">
-      <?php echo form_open((isset($lead) ? admin_url('leads/leadtodeal/' . $lead->id) : admin_url('leads/leadtodeal')), ['id' => 'leadtodeal_form']); ?> 
+<?php echo form_open((isset($lead) ? admin_url('leads/leadtodeal/' . $lead->id) : admin_url('leads/leadtodeal')), ['id' => 'leadtodeal_form']); ?> 
 	  
-	  <?php 
+<?php 
 $this->db->select('id,name,');
 $selected_deals=1;
 $dstatus="Convert to Deal";
@@ -1193,7 +1193,7 @@ $dstatus="Convert to Document";
 $selected_deals=3;
 }elseif(isset($lead->deal_status)&&$lead->deal_status==3){
 $this->db->where('id', 4);
-$dstatus="Convert to Invoice";
+$dstatus="Send Quotation";
 $selected_deals=4;
 }
 
