@@ -308,10 +308,11 @@ $ip_calling_code = $country_details->calling_code;
         if (!$form) {
             show_404();
         }
-		
+$status=1;		
 	
 // Auto assign to staff when activate from admin
 if(get_option('automatically_assign_to_staff')==1){
+$status=3;
 $values=json_decode(get_option('lead_auto_assign_to_staff'));
 
 	if(count($values) > 0){
@@ -320,8 +321,8 @@ $values=json_decode(get_option('lead_auto_assign_to_staff'));
 	$form->responsible = $assignValue;
 	}
 }
-
-
+	
+								
 
 
 // Auto assign to staff when activate from admin
@@ -486,6 +487,8 @@ if(get_option('automatically_converts_into_contact')==1){
                                         $description .= $fields_labels[$name] . ': ' . $val . '<br />';
                                     }
                                 }
+								
+									
 
                                 $task_data = [
                                     'name'        => $task_name,
@@ -493,7 +496,7 @@ if(get_option('automatically_converts_into_contact')==1){
                                     'dateadded'   => date('Y-m-d H:i:s'),
                                     'startdate'   => date('Y-m-d'),
                                     'addedfrom'   => $form->responsible,
-                                    'status'      => 1,
+                                    'status'      => $status,
                                     'description' => $description,
                                 ];
 
@@ -540,6 +543,7 @@ if(get_option('automatically_converts_into_contact')==1){
 					$regular_fields['country']      = $ip_country_id;
 					$regular_fields['country_code'] = $ip_calling_code;
 					$regular_fields['ip']           = $ipx;
+					$regular_fields['status']       = $status;
                     $this->db->insert(db_prefix() . 'leads', $regular_fields);
                     $lead_id = $this->db->insert_id();
 					

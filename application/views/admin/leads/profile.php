@@ -120,7 +120,7 @@
     </div>
 	 <?php if(isset($lead->is_deal)&&$lead->is_deal==0){ ?>
 	<div class="mleft5 pull-right">
-        <a href="#" class="btn btn-success pull-right lead-top-btn" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-handshake"></i> Deal <?php //echo $lead->is_deal?></a>
+        <a href="#" class="btn btn-success pull-right lead-top-btn" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-handshake"></i> Convert to Deal <?php //echo $lead->is_deal?></a>
     </div>
 	<?php }else{ ?>
 	<div class="mleft5 pull-right">
@@ -213,23 +213,26 @@
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->email != '' ? '<a href="mailto:' . e($lead->email) . '">' . e($lead->email) . '</a>' : '-') ?>
                     </dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_website'); ?>
+					
+					<dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
+                        <?php echo _l('lead_add_edit_phonenumber'); ?></dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->phonenumber != '' ? '<a href="tel:' . e($lead->country_code).e($lead->phonenumber). '">' . e($lead->country_code).' - '.e($lead->phonenumber) . '</a>' : '-') ?>
+                    </dd>
+					
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business URL'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->website != '' ? '<a href="' . e(maybe_add_http($lead->website)) . '" target="_blank">' . e($lead->website) . '</a>' : '-') ?>
                     </dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
-                        <?php echo _l('lead_add_edit_phonenumber'); ?></dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1">
-                        <?php echo(isset($lead) && $lead->phonenumber != '' ? '<a href="tel:' . e($lead->phonenumber) . '">' . e($lead->phonenumber) . '</a>' : '-') ?>
-                    </dd>
+                    
 <?php /*?>                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_value'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->lead_value != 0 ? e(app_format_money($lead->lead_value, $base_currency->id)) : '-') ?>
                     </dd>
 <?php */?>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_company'); ?>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business Name'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->company != '' ? e($lead->company) : '-') ?></dd>
@@ -257,8 +260,10 @@
                 </dl><?php */?>
 				</dl>
 				
-				
             </div>
+			
+			
+			
             <div class="col-md-6 col-xs-12 lead-information-col">
                 <div class="lead-info-heading">
                     <h4>
@@ -340,7 +345,25 @@
                     <?php } ?>
                 </dl>
             </div>
-            
+            <div class="clearfix"></div>
+			<div class="col-md-12 col-xs-12 lead-information-col">
+                
+                <div class="lead-info-heading">
+                    <h4>
+                        <?php echo _l('Custom Fields - Staff'); ?>
+                    </h4>
+                </div>
+                <dl>
+      <?php
+	  if ((isset($lead) && !empty($lead->custom_field))) {
+      // Convert to associative array
+      $custom_field_array = json_decode($lead->custom_field, true);
+	  foreach ($custom_field_array as $key => $value) {
+	  ?>
+      <div><?php echo $key; ?> : <?php echo $value; ?></div>
+      <?php } ?> <?php } ?>
+                </dl>
+            </div>
 			<div class="clearfix"></div>
 			<div class="col-md-12 col-xs-12 lead-information-col">
                 <?php if (total_rows(db_prefix() . 'customfields', ['fieldto' => 'leads', 'active' => 1]) > 0 && isset($lead)) { ?>
@@ -373,6 +396,9 @@
                 </dl>
             </div>
         </div>
+		
+		
+		
         <div class="clearfix"></div>
         <div class="lead-edit<?php if (isset($lead)) {
                 echo ' hide';
@@ -459,15 +485,15 @@
 				*/
 				?>
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
-                <?php echo render_input('company', 'lead_company', $value); ?>
+                <?php echo render_input('company', 'Business Name', $value); //lead_company to Business Name ?>  
             </div>
             <div class="col-md-6">
 			   <?php if ((isset($lead) && empty($lead->website)) || !isset($lead)) {
                    $value = (isset($lead) ? $lead->website : '');
-                   echo render_input('website', 'lead_website', $value);
+                   echo render_input('website', 'Business URL', $value);//lead_website to Business URL 
                } else { ?>
                 <div class="form-group">
-                    <label for="website"><?php echo _l('lead_website'); ?></label>
+                    <label for="website"><?php echo _l('Business URL'); ?></label> 
                     <div class="input-group">
                         <input type="text" name="website" id="website" value="<?php echo e($lead->website); ?>"
                             class="form-control">
@@ -518,6 +544,7 @@
                 </div>
                 <?php } ?>
             </div>
+			
             <div class="col-md-12">
                 <?php $value = (isset($lead) ? $lead->description : ''); ?>
                 <?php echo render_textarea('description', 'lead_description', $value); ?>
@@ -553,6 +580,54 @@
                     </div>
                 </div>
             </div>
+			<div class="clearfix"></div>
+			<div class="col-md-12">
+			<div class=""><h4>Custom Fields</h4></div>
+            
+        
+			<div id="custom-fields">
+      
+	  <?php
+	  if ((isset($lead) && !empty($lead->custom_field))) {
+      // Convert to associative array
+      $custom_field_array = json_decode($lead->custom_field, true);
+	  
+	  foreach ($custom_field_array as $key => $value) {
+	  ?>
+	  <div class="field-group form-group row">
+<div class="col-sm-3">
+<input type="text" class="form-control" name="custom_field_name[]" placeholder="<?php echo $key;?>" value="<?php echo $key;?>" required>
+</div>
+<div class="col-sm-7">
+<input type="text" class="form-control" name="custom_field_value[]" placeholder="<?php echo $key;?>" value="<?php echo $value;?>" required>
+</div>
+<div class="col-sm-2">
+<a href="#" class="remove text-danger" title="Remove"><i class="fa fa fa-times"></i></a>
+</div>
+</div>
+	  <?php
+	  }
+	  }
+	  ?>
+	  <div class="field-group form-group row">
+	  <div class="col-sm-3">
+        <input type="text" class="form-control" name="custom_field_name[]" placeholder="Field Name" required>
+		</div>
+	  <div class="col-sm-7">
+        <input type="text" class="form-control" name="custom_field_value[]" placeholder="Field Value" required>
+		</div>
+	  <div class="col-sm-2">
+		<a href="#" class="remove text-danger" title="Remove"><i class="fa fa fa-times"></i></a>
+		</div>
+		</div>
+     
+    </div>
+    <button type="button" id="add-field">Add Field</button>
+	
+    <br><br>
+			
+			
+			</div>
             <div class="col-md-12 mtop15">
                 <?php $rel_id = (isset($lead) ? $lead->id : false); ?>
                 <?php echo render_custom_fields('leads', $rel_id); ?>
@@ -567,6 +642,10 @@
         <div id="lead-latest-activity" class="pleft5"></div>
     </div>
     <?php } ?>
+	
+	
+	
+	
     <?php if ($lead_locked == false) { ?>
     <div class="lead-edit<?php echo isset($lead) ? ' hide' : ''; ?>">
         <hr class="-tw-mx-4 tw-border-neutral-200" />
@@ -730,6 +809,8 @@ $data['taskstatus']   = $this->db->get(db_prefix() . 'task_status')->result_arra
 
 </div>
 
+<div class="form-group" id="other_task_title" style="display: none;"><label for="task_title" class="control-label"> <small class="req text-danger">* </small>Other Task Title</label><div><input type="text" id="task_title" name="task_title" class="form-control"  autocomplete="off"></div></div>
+
 <div class="form-group" app-field-wrapper="date"><label for="date" class="control-label"> <small class="req text-danger">* </small>Date to be notified</label><div class="input-group date"><input type="text" id="date" name="date" class="form-control datetimepicker" data-date-min-date="<?php echo date('Y-m-d');?>" data-step="30" value="" autocomplete="off" required><div class="input-group-addon">
     <i class="fa-regular fa-calendar calendar-icon"></i>
 </div></div></div>
@@ -752,25 +833,43 @@ $data['taskstatus']   = $this->db->get(db_prefix() . 'task_status')->result_arra
 					$i		= 0;
 					foreach ($deal_task as $task) { ?>
 					<?php $tasktype=$this->leads_model->get_task_type($task['task_type']); ?>
-					<div class="media8 lead-note feed-item">
+<?php 
+$task_bg="";					
+$assignDateTime = new DateTime($task['date']);
+$currentDateTime = new DateTime();
+if ($currentDateTime > $assignDateTime) {
+    $task_bg="#ef4444";
+} 
+?>
+					<div class="media8 lead-note feed-item " >
 						<a href="<?php echo admin_url('profile/' . $task['staff']); ?>" target="_blank">
 							<?php echo staff_profile_image($task['staff'], ['staff-profile-image-small', 'pull-left mright10']); ?>
 						</a>
 						<div class="media-body " >
 							
 	
-							<a href="<?php echo admin_url('profile/' . $task['staff']); ?>" target="_blank">
-								<h5 class="media-heading tw-font-semibold tw-mb-0">
+							
+<h5 class="media-heading tw-font-semibold tw-mb-0">
+
+<?php if ($task['task_status']==0) { ?>								
+<div class="btn-group pull-right mleft5">
+<i class="fa-solid fa-circle-check text-warning fa-2x mright10 change_task_status" data-tid="<?php echo $task['id'];?>"></i>				
+</div>
+<?php }else{ ?>
+<div class="btn-group pull-right mleft5">
+<i class="fa-solid fa-circle-check text-success fa-2x mright10" ></i>				
+</div>
+<?php } ?>
 								<?php if (!empty($task['date_contacted'])) { ?>
 									<span data-toggle="tooltip"
 										data-title="<?php echo e(_dt($task['date'])); ?>">
 										<i class="fa fa-phone-square text-success" aria-hidden="true"></i>
 									</span>
 									<?php } ?>
-									<?php echo e(get_staff_full_name($task['staff'])); ?> - <span style="color:<?php echo $tasktype[0]['color'];?>; font-weight:bolder;">Type : <?php //echo $tasktype[0]['name'];?></span>
-									</h5></a>
+									<?php echo e(get_staff_full_name($task['staff'])); ?> <?php if (isset($tasktype[0]['name']) && $tasktype[0]['color']) { ?> - <span style="color:<?php echo $tasktype[0]['color'];?>; font-weight:bolder;">Type : <?php echo $tasktype[0]['name'];?> <?php } ?> <?php if (isset($task['task_title']) && $task['task_title']) { echo " - (".$task['task_title'].")"; } ?></span>
+									</h5>
 <p><?php echo $task['description']; ?></p>
-<span class="tw-text-sm tw-text-neutral-500"> Task Time : <?php echo $task['date']; ?> Task Added on : <?php echo $task['dateadded']; ?> </span>
+<span class="tw-text-sm tw-text-neutral-500" style="color:<?php echo $task_bg;?>"> Task Time : <?php echo $task['date']; ?> Task Added on : <?php echo $task['dateadded']; ?> </span>
 									
 									
 							
@@ -1073,42 +1172,384 @@ $data['taskstatus']   = $this->db->get(db_prefix() . 'task_status')->result_arra
 	
     
 <div class="modal fade" id="dealModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        
-        <div class="modal-content">
-            <div class="modal-header">
+    <div class="modal-dialog modal-lg " role="document">
+      <?php echo form_open((isset($lead) ? admin_url('leads/leadtodeal/' . $lead->id) : admin_url('leads/leadtodeal')), ['id' => 'leadtodeal_form']); ?> 
+	  
+	  <?php 
+$this->db->select('id,name,');
+$selected_deals=1;
+$dstatus="Convert to Deal";
+
+if(isset($lead->deal_status)&&$lead->deal_status==0){
+$this->db->where('id', 1);
+$selected_deals=1;
+}elseif(isset($lead->deal_status)&&$lead->deal_status==1){
+$this->db->where('id', 2);
+$dstatus="Convert to Hot Deal";
+$selected_deals=2;
+}elseif(isset($lead->deal_status)&&$lead->deal_status==2){
+$this->db->where('id', 3);
+$dstatus="Convert to Document";
+$selected_deals=3;
+}elseif(isset($lead->deal_status)&&$lead->deal_status==3){
+$this->db->where('id', 4);
+$dstatus="Convert to Invoice";
+$selected_deals=4;
+}
+
+
+$this->db->order_by('statusorder', 'asc');
+$data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_array(); 
+//echo $this->db->last_query();
+?> 
+        <div class="modal-content tw-bg-info-100">
+            <div class="modal-header" style="background-color: rgb(186 230 253 / 1) !important;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">#<?php echo $lead->id;?> - <?php echo 'Convert to Deal'; ?></h4>
+                <h4 class="modal-title">#<?php echo $lead->id;?> - <?php echo $dstatus; ?> [<?php echo $lead->deal_status;?>]</h4>
             </div>
             <div class="modal-body">
                 <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
                 
                 <input type="hidden" name="deal_id" id="deal_id" value="<?php echo $lead->id;?>"  />
-<div class="table-responsive">
-<?php 
-$this->db->select('id,name,');
-$this->db->order_by('statusorder', 'asc');
-$data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_array(); 
-?>
-<div class="form-group">
-<label for="date" class="control-label"> 
-<small class="req text-danger">* </small>Deal Status</label>
+<div>
 
-<select name="deal_status" id="deal_status" class="form-control" required>
-<option value="">Select Deal Status</option>
+
+<div class="row">
+
+<div class="col-md-12">
+<?php /*?><label for="dealsstatus"><?php echo _l('Deal Status'); ?></label> <?php */?>
+<select name="deal_status" id="deal_status" class="form-control pull-right mleft5" required style="width:200px;">
+<?php /*?><option value="">Select Deal Status</option><?php */?>
 <?php  foreach ($data['dealsstatus'] as $rs) { ?>
-<option value="<?=$rs['id'];?>"><?=$rs['name'];?></option>
+<option value="<?=$rs['id'];?>" <?php if($rs['id']==$selected_deals){ ?> selected="selected" <?php } ?>><?=$rs['name'];?></option>
 <?php  } ?>
 </select>
+
 </div>
+<?php if(isset($lead->deal_status)&&$lead->deal_status==0){ ?>
+<input type="hidden" name="vtype" value="deal" />
+<div class="col-md-4">
+ <?php $value = (isset($lead) ? $lead->name  : ''); ?>
+ <?php echo render_input('name', 'Full Name', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ </div>    
+<div class="col-md-4">
+ <?php $value = (isset($lead) ? $lead->email : ''); ?>
+ <?php echo render_input('email', 'Email ID', $value,'email',['required' => 'true']); //lead_company to Business Name ?>  
+ </div>
+<div class="col-md-4">
+<div class="col-md-4 tw-px-0">
+ <?php $value = (isset($lead) ? $lead->country_code : ''); ?>
+ <?php echo render_input('country_code', 'Country Code', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ </div><div class="col-md-8 tw-px-0">
+ <?php $value = (isset($lead) ? $lead->phonenumber : ''); ?>
+ <?php echo render_input('phonenumber', 'Phone Number', $value,'number',['required' => 'true']); //lead_company to Business Name ?> 
+  </div>
+ </div>
+ 
+<div class="col-md-4">
+ <?php $value = (isset($lead) ? $lead->company : ''); ?>
+ <?php echo render_input('company', 'Business Name', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ </div>    
+<div class="col-md-4">
+ <?php $value = (isset($lead) ? $lead->website : ''); ?>
+ <?php echo render_input('website', 'Business URL', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ </div>
+
+ <div class="col-md-4">
+ <?php $value = (isset($lead) ? $lead->BusinessNature : ''); ?>
+ <?php echo render_input('BusinessNature', 'Business Nature', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ </div>
+<div class="col-md-4">
+ <?php $value = (isset($lead) ? $lead->IncorporationCountry : ''); ?>
+ <?php echo render_input('IncorporationCountry', 'Incorporation Country', $value); //lead_company to Business Name ?>  
+ </div>    
+<div class="col-md-4">
+ <?php $value = (isset($lead) ? $lead->MonthlyVolume : ''); ?>
+ <?php echo render_input('MonthlyVolume', 'Monthly Volume', $value); //lead_company to Business Name ?>  
+ </div>
+<div class="col-md-4">
+ <?php $value = (isset($lead) ? $lead->AverageProductPrice : ''); ?>
+ <?php echo render_input('AverageProductPrice', 'Average Product Price', $value); //lead_company to Business Name ?>  
+ </div>
+<div class="col-md-12">
+ <?php $value = (isset($lead) ? $lead->description : ''); ?>
+ <?php echo render_textarea('description', 'Business Description', $value); ?>
+ </div>
+
+<?php 
+}elseif(isset($lead->deal_status)&&$lead->deal_status==1){ ?>
+<input type="hidden" name="vtype" value="hot" />
+ 
+<div class="col-md-4">
+ <?php echo render_input('products_services', 'Products / Services', '','',['required' => 'true']); //lead_company to Business Name ?>  
+ </div>    
+<div class="col-md-4">
+ <?php echo render_input('descriptor', 'Descriptor', ''); //lead_company to Business Name ?>  
+ </div>
+<div class="col-md-4">
+ <?php echo render_input('processing_history', 'Processing History', ''); //lead_company to Business Name ?>  
+ </div>
+ 
+
+<div class="col-md-12">
+  <label for="dealsstatus">&nbsp;<?php echo _l('SPOC Info'); ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+  
+<div class="col-md-3">
+ <?php echo render_input('spocname', 'Name', ''); ?>  
+ </div>
+<div class="col-md-3">
+ <?php echo render_input('spocphone', 'Phone', ''); ?>  
+ </div>    
+<div class="col-md-3">
+ <?php echo render_input('spocemail', 'Email', ''); ?>  
+ </div>
+<div class="col-md-3">
+ <?php echo render_input('spocim', 'IM', ''); ?>  
+ </div>
+</div>
+</div>
+
+<div class="col-md-12">
+  <label for="dealsstatus">&nbsp;<?php echo _l('Customer Service'); ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+  
+<div class="col-md-4">
+<?php echo render_input('customername', 'Name', ''); //lead_company to Business Name ?>  
+ </div>
+<div class="col-md-4">
+ <?php echo render_input('customertollfree', 'Toll-Free', ''); //lead_company to Business Name ?>  
+ </div>    
+<div class="col-md-4">
+ <?php echo render_input('customeremail', 'Email', ''); //lead_company to Business Name ?>  
+ </div>
+
+</div>
+</div>
+<?php 
+}elseif(isset($lead->deal_status)&&$lead->deal_status==2){ ?>
+<input type="hidden" name="vtype" value="doc" />
+
+<div class="col-md-12">
+  <label for="dealsstatus">&nbsp;<?php echo 'Ownership Information (Owner 1) '; ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+  
+<div class="col-md-4">
+ 
+ <?php echo render_input('ownership_name', 'Full Name', '','text',['required' => 'true']); ?>  
+ </div>
+<div class="col-md-4">
+ 
+ <?php echo render_input('ownership_share', 'Ownership Share (%)', '','number',['required' => 'true']); ?>  
+ </div>    
+<div class="col-md-4">
+
+ <?php echo render_input('ownership_address', 'Address', '','text',['required' => 'true']); ?>  
+ </div>
+ 
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_city', 'City', '','text',['required' => 'true']); ?>  
+ </div>
+  <div class="col-md-4">
+
+ <?php echo render_input('ownership_town', 'Town', '','text'); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_state', 'State', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_zip', 'Zip Code', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_email', 'Email', '','email',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_phone', 'Cell Phone', '','text',['required' => 'true']); ?>  
+ </div>
+
+</div>
+</div>
+
+<div class="col-md-12">
+  <label for="dealsstatus">&nbsp;<?php echo 'Ownership Information (Owner 2) '; ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+  
+<div class="col-md-4">
+ 
+ <?php echo render_input('ownership_name2', 'Full Name', '','text'); ?>  
+ </div>
+<div class="col-md-4">
+ 
+ <?php echo render_input('ownership_share2', 'Ownership Share (%)', '','number'); ?>  
+ </div>    
+<div class="col-md-4">
+
+ <?php echo render_input('ownership_address2', 'Address', '','text',); ?>  
+ </div>
+ 
+ <div class="col-md-4">
+ <?php echo render_input('ownership_city2', 'City', '','text'); ?>  
+ </div>
+  <div class="col-md-4">
+
+ <?php echo render_input('ownership_town2', 'Town', '','text'); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_state2', 'State', '','text'); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_zip2', 'Zip Code', '','text'); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_email2', 'Email', '','text'); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('ownership_phone2', 'Cell Phone', '','text'); ?>  
+ </div>
+
+</div>
+</div>
+
+<div class="col-md-12">
+  <label for="dealsstatus">&nbsp;<?php echo 'Bank Information'; ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+  
+ <div class="col-md-4">
+ <?php echo render_input('account_holder_name', 'Account Holder Name', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+ <?php echo render_input('account_holder_address', 'Account Holder Address', '','text',['required' => 'true']); ?>  
+ </div>    
+ <div class="col-md-4">
+ <?php echo render_input('account_holder_country', 'Account Holder Country', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+ <?php echo render_input('bank_name', 'Bank Name', '','text',['required' => 'true']); ?>  
+ </div>
+  <div class="col-md-4">
+ <?php echo render_input('bank_address', 'Bank Address', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+ <?php echo render_input('bank_country', 'Bank Country', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+ <?php echo render_input('Bank_swift_routing_iban', 'Bank SWIFT/Routing/IBAN', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+ <?php echo render_input('bank_account_number', 'Bank Account Number', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+ &nbsp;&nbsp;&nbsp;
+ </div>
+
+</div>
+</div>
+
+<div class="col-md-12">
+ <?php echo render_textarea('business_and_operations_description', 'Business & Operations Description', '',['required' => 'true']); ?>
+ </div>
+ 
+ <div class="col-md-12">
+ <?php echo render_textarea('fulfillment_and_delivery_explanation', 'Fulfillment & delivery explanation', '',['required' => 'true']); ?>
+ </div>
+ 
+ <div class="col-md-12">
+ <?php echo render_textarea('marketing_activities_overview', 'Marketing activities overview', '',['required' => 'true']); ?>
+ </div>
+
+<?php 
+}elseif(isset($lead->deal_status)&&$lead->deal_status==3){ ?>
+<input type="hidden" name="vtype" value="uw" />
+
+<div class="form-group">
+    <div class="radio radio-primary radio-inline">
+        <input type="radio" id="quotation_status" name="quotation_status" value="1" checked>
+        <label for="status">Approve </label>
+    </div>
+    <div class="radio radio-primary radio-inline">
+        <input type="radio" id="quotation_status" name="quotation_status" value="0" >
+        <label for="status">Reject</label>
+    </div>
+</div>
+<div id="approveDiv">
+
+
+<div class="col-md-4">
+ 
+ <?php echo render_input('MDR', 'MDR', '','text',['required' => 'true']); ?>  
+ </div>
+<div class="col-md-4">
+ 
+ <?php echo render_input('SetupFee', 'Setup Fee', '','number',['required' => 'true']); ?>  
+ </div>    
+<div class="col-md-4">
+
+ <?php echo render_input('HoldBack', 'Hold Back', '','text',['required' => 'true']); ?>  
+ </div>
+ 
+ <div class="col-md-4">
+ <?php echo render_input('CardType', 'Card Type', '','text',['required' => 'true']); ?>  
+ </div>
+  <div class="col-md-4">
+
+ <?php echo render_input('Settlement', 'Settlement', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('SettlementFee', 'Settlement Fee', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('MinSettlement', 'Min Settlement', '','text',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+
+ <?php echo render_input('MonthlyFee', 'Monthly Fee', '','text',['required' => 'true']); ?>  
+ </div>
+
+
+
+  <div class="col-md-12">
+ <?php echo render_textarea('Descriptor', 'Descriptor', '',['required' => 'true']); ?>
+ </div>
+</div>
+
+<div id="rejectDiv" style="display:none;">
+ <div class="col-md-12">
+ <?php echo render_textarea('Reason', 'Reason', ''); ?>
+ </div>
+</div>
+<?php }elseif(isset($lead->deal_status)&&$lead->deal_status==4){  echo "&nbsp;&nbsp;Invoice form" ?>
+
+<?php } ?>
+</div>
+
+
+
+
+
+</div>  
+
+
+
 </div>   
                
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="background-color: rgb(186 230 253 / 1) !important;">
                 
-                <button onclick="convert_to_deal(); return false;" class="btn btn-primary"><?php echo _l('submit'); ?></button>
+                <button onclick="convert_to_dealxxx(); return false;" class="btn btn-primary"><?php echo $dstatus; ?></button>
             </div>
+		<?php echo form_close(); ?>
         </div>
         <!-- /.modal-content -->
         
@@ -1129,4 +1570,5 @@ $(function() {
  
 
 </script>
+
 <?php } ?>

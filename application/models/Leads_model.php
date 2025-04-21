@@ -271,6 +271,34 @@ class Leads_model extends App_Model
         $data['address'] = nl2br($data['address']);
 
         $data['email'] = trim($data['email']);
+		
+		
+		
+		//return print_r($data);
+		
+		//exit;
+		
+	if (!empty($data['custom_field_name']) && !empty($data['custom_field_value'])) {
+  $namesx = $data['custom_field_name'];
+  $valuesx = $data['custom_field_value'];
+
+  for ($i = 0; $i < count($namesx); $i++) {
+    $key = trim($namesx[$i]);
+    $value = trim($valuesx[$i]);
+
+    if ($key !== '' && $value !== '') {
+      $fields[$key] = $value;
+    }
+  }
+
+  // Convert to JSON
+  $data['custom_field'] = json_encode($fields);
+  }else{
+  $data['custom_field']="";
+  }
+  unset($data['custom_field_name']);
+  unset($data['custom_field_value']);
+  
 
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'leads', $data);
@@ -1472,12 +1500,13 @@ class Leads_model extends App_Model
         $data['staff']   = get_staff_user_id();
         $data['rel_id']      = $rel_id;
         $data['description'] = nl2br($data['description']);
+		//$data['task_title'] = "hiiiiiii";
 
 
 
         
         $this->db->insert(db_prefix() . 'deal_task', $data);
-		//return $this->db->last_query();exit;
+		//echo $this->db->last_query();exit;
         $insert_id = $this->db->insert_id();
 
         if ($insert_id) {
@@ -1501,6 +1530,18 @@ class Leads_model extends App_Model
 		}
     }
 	
+	public function change_task_status($data,$id)
+    {
+	    $this->db->where('id', $id);
+        $this->db->update(db_prefix().'deal_task', $data);
+        if ($this->db->affected_rows() > 0) {
+		$this->log_lead_activity($id,'Task Completed');
+		return "Task Completed";
+		}else{
+		return "Task not Completed";
+		}
+    }
+	
    	public function get_deal_status_title($id)
     {
 	    $this->db->select('name,color');
@@ -1511,4 +1552,210 @@ class Leads_model extends App_Model
 		return $deal_status = "<a href='#' class='btn btn-default' style='background:".$deal_status[0]['color']."'>".$deal_status[0]['name']."</a>";
        
     }
+	
+	public function updateleads($data,$id)
+    {
+	    
+		
+		//echo $id;
+		
+		if (isset($data['vtype'])&&$data['vtype']=="doc") {
+		
+		
+		unset($data['deal_id']);
+		unset($data['vtype']);
+		
+		// For Ownearship info
+		// Create associative array and encode to JSON
+		$data['ownership_info1'] = json_encode([
+		'ownership_name'  => $data['ownership_name'],
+		'ownership_share' => $data['ownership_share'],
+		'ownership_address' => $data['ownership_address'],
+		'ownership_city'    => $data['ownership_city'],
+		'ownership_town' => $data['ownership_town'],
+		'ownership_state' => $data['ownership_state'],
+		'ownership_zip' => $data['ownership_zip'],
+		'ownership_email' => $data['ownership_email'],
+		'ownership_phone' => $data['ownership_phone']
+		]);
+		
+		unset($data['ownership_name']);
+		unset($data['ownership_share']);
+		unset($data['ownership_address']);
+		unset($data['ownership_city']);
+		unset($data['ownership_town']);
+		unset($data['ownership_state']);
+		unset($data['ownership_zip']);
+		unset($data['ownership_email']);
+		unset($data['ownership_phone']);
+		
+		// For Ownearship info
+		// Create associative array and encode to JSON
+		$data['ownership_info2'] = json_encode([
+		'ownership_name'  => $data['ownership_name2'],
+		'ownership_share' => $data['ownership_share2'],
+		'ownership_address' => $data['ownership_address2'],
+		'ownership_city'    => $data['ownership_city2'],
+		'ownership_town' => $data['ownership_town2'],
+		'ownership_state' => $data['ownership_state2'],
+		'ownership_zip' => $data['ownership_zip2'],
+		'ownership_email' => $data['ownership_email2'],
+		'ownership_phone' => $data['ownership_phone2']
+		]);
+		
+		unset($data['ownership_name2']);
+		unset($data['ownership_share2']);
+		unset($data['ownership_address2']);
+		unset($data['ownership_city2']);
+		unset($data['ownership_town2']);
+		unset($data['ownership_state2']);
+		unset($data['ownership_zip2']);
+		unset($data['ownership_email2']);
+		unset($data['ownership_phone2']);
+		
+		
+		// For Bank Details
+		// Create associative array and encode to JSON
+		$data['bank_info'] = json_encode([
+		'account_holder_name'  => $data['account_holder_name'],
+		'account_holder_address' => $data['account_holder_address'],
+		'account_holder_country' => $data['account_holder_country'],
+		'bank_name'    => $data['bank_name'],
+		'bank_address' => $data['bank_address'],
+		'bank_country' => $data['bank_country'],
+		'Bank_swift_routing_iban' => $data['Bank_swift_routing_iban'],
+		'bank_account_number' => $data['bank_account_number']
+		]);
+		
+		unset($data['account_holder_name']);
+		unset($data['account_holder_address']);
+		unset($data['account_holder_country']);
+		unset($data['bank_name']);
+		unset($data['bank_address']);
+		unset($data['bank_country']);
+		unset($data['Bank_swift_routing_iban']);
+		unset($data['bank_account_number']);
+	
+		
+		
+		 $this->db->insert(db_prefix().'deal_document', $data);
+		
+		
+		if ($this->db->affected_rows() > 0) {
+		$datax['deal_status']=3;
+		$this->db->where('id', $id);
+        $this->db->update(db_prefix().'leads', $datax);
+		}
+		
+		}elseif (isset($data['vtype'])&&$data['vtype']=="uw") {
+		unset($data['deal_id']);
+		unset($data['vtype']);
+		
+		if($data["quotation_status"]==0){
+		unset($data['MDR']);
+		unset($data['SetupFee']);
+		unset($data['HoldBack']);
+		unset($data['CardType']);
+		unset($data['Settlement']);
+		unset($data['SettlementFee']);
+		unset($data['MinSettlement']);
+		unset($data['MonthlyFee']);
+		unset($data['Descriptor']);
+		
+		 $this->db->insert(db_prefix().'deal_quotation', $data);
+		//echo $this->db->last_query();
+		
+		if ($this->db->affected_rows() > 0) {
+		$datax['deal_status']=2;
+		$this->db->where('id', $id);
+        $this->db->update(db_prefix().'leads', $datax);
+		}
+		
+		
+		}else{
+		
+		unset($data['vtype']);
+		unset($data['Reason']);
+		
+		 $this->db->insert(db_prefix().'deal_quotation', $data);
+		//echo $this->db->last_query();
+		
+		if ($this->db->affected_rows() > 0) {
+		$datax['deal_status']=4;
+		$this->db->where('id', $id);
+        $this->db->update(db_prefix().'leads', $datax);
+		}
+		
+		}
+		
+		
+		}elseif (isset($data['vtype'])&&$data['vtype']=="hot") {
+		//echo "For hot";
+		//print_r($data);exit;
+		
+		
+		unset($data['deal_id']);
+		unset($data['vtype']);
+		
+		// For spoc
+		// Create associative array and encode to JSON
+		$data['spoc_info'] = json_encode([
+		'name'  => $data['spocname'],
+		'email' => $data['spocemail'],
+		'phone' => $data['spocphone'],
+		'im'    => $data['spocim']
+		]);
+		
+		unset($data['spocname']);
+		unset($data['spocphone']);
+		unset($data['spocemail']);
+		unset($data['spocim']);
+		
+		// For customer
+		// Create associative array and encode to JSON
+		$data['customer_info'] = json_encode([
+		'name'  => $data['customername'],
+		'email' => $data['customertollfree'],
+		'phone' => $data['customeremail']
+		]);
+		
+		unset($data['customername']);
+		unset($data['customertollfree']);
+		unset($data['customeremail']);
+		
+		$this->db->where('id', $id);
+        $this->db->update(db_prefix().'leads', $data);
+		//echo $this->db->last_query();exit;
+		
+		
+		
+       
+		
+		
+		}else{
+		
+		//print_r($data);exit;
+		unset($data['deal_id']);
+		unset($data['vtype']);
+		
+		$data['is_deal']=1; // for convert to deal
+		
+		$this->db->where('id', $id);
+        $this->db->update(db_prefix().'leads', $data);
+		//echo $this->db->last_query();exit;
+		
+		}
+		//exit;
+		
+		
+		
+        if ($this->db->affected_rows() > 0) {
+		$this->log_lead_activity($id,'Leads to Deal Converted');
+		return "success";
+		}else{
+		return "failed";
+		}
+    }
+	
+
 }

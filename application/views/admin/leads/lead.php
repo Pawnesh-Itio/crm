@@ -1,4 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php //echo "========>>>>";exit; ?>
 <style>
 #lead-modal .modal-lg{
 width: 90% !important;
@@ -14,6 +15,7 @@ color: rgb(37 99 235 / var(--tw-text-opacity)) !important;
 font-weight: bolder !important;
 }
 </style>
+ 
 <div class="modal-header">
  <?php if(isset($lead->id)&&$lead->id){ ?>
 
@@ -53,7 +55,15 @@ font-weight: bolder !important;
 		echo '</div>';
 	}
 	?> <?php if(isset($lead->deal_status)&&$lead->deal_status){ ?> <?php echo $this->leads_model->get_deal_status_title($lead->deal_status);?> 
-	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-edit"></i> Deal Status <?php //echo $lead->is_deal?></a>
+	
+	
+	<?php if(isset($lead->deal_status)&&$lead->deal_status==3&&$lead->uw_status==0&&get_staff_rolex()!=4){ ?>
+	<a href="#" class="btn btn-info" ><i class="fa-solid fa-edit"></i> Pending by UW Approver</a>
+	<?php }elseif(isset($lead->uw_status)&&$lead->uw_status==0&&get_staff_rolex()==4){ ?>
+	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-edit"></i> Deal Status </a>
+	<?php }else{ ?>
+	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-edit"></i> Deal Status </a>
+	<?php } ?>
 	<?php } ?>
 	</h4>
 </div>
@@ -174,6 +184,96 @@ function scrollToBottom(){
     }, 2000); // 5000 milliseconds = 5 seconds
         });
 }
+
+
+
+	  
+	  $('#task_type').on('change', function () {
+        var selected = $(this).val();
+		//alert(selected);
+        $('#other_task_title').hide(); // Hide all boxes
+		$('#other_task_title').removeAttr('readonly');
+        if (selected==14) {
+        $('#other_task_title').show(); // Show selected box
+		$('#other_task_title').attr('readonly', true);
+        }
+      });
+	  
+	  
+	   $('#add-field').click(function () {
+        $('#custom-fields').append(`
+          <div class="field-group form-group row">
+	  <div class="col-sm-3">
+        <input type="text" class="form-control" name="custom_field_name[]" placeholder="Field Name" required>
+		</div><div class="col-sm-7">
+        <input type="text" class="form-control" name="custom_field_value[]" placeholder="Field Value" required>
+		</div><div class="col-sm-2">
+		<a href="#" class="remove text-danger" title="Remove"><i class="fa fa fa-times"></i></a>
+		</div>
+      </div>`);
+      });
+
+      $(document).on('click', '.remove', function () {
+        $(this).closest('.field-group').remove();
+      });
+	  
+	  
+	  	$('.change_task_status').on('click', function() {
+		
+		var taskid=$(this).attr('data-tid');
+		
+		if(taskid==""){ return false; }
+		
+		
+		if (!confirm("Are you sure you want to completed this task?")) {
+        return false;
+        }
+	$(this).removeClass('text-warning').addClass('text-success');
+	
+
+   $.post(admin_url + 'leads/change_task_status', {
+			id : taskid,
+        })
+        .done(function(response) { 
+            response = JSON.parse(response);
+            alert_float(response.alert_type, response.message);
+			//alert("Done");
+        });
+       });
+//change quotation status
+	   
+$('input[name="quotation_status"]').on('change', function() { 
+      if ($(this).val() == 1) {
+	    
+        $('#approveDiv').slideDown(); // You can also use .show()
+		$('#rejectDiv').slideUp(); // Or use .hide()
+		$('#Reason').removeAttr('required');
+		$('#MDR').attr('required', true);
+		$('#SetupFee').attr('required', true);
+		$('#HoldBack').attr('required', true);
+		$('#CardType').attr('required', true);
+		$('#Settlement').attr('required', true);
+		$('#SettlementFee').attr('required', true);
+		$('#MinSettlement').attr('required', true);
+		$('#MonthlyFee').attr('required', true);
+		$('#Descriptor').attr('required', true);
+      } else {
+	  
+        $('#rejectDiv').slideDown(); // Or use .hide()
+		$('#approveDiv').slideUp(); // You can also use .show()
+		$('#Reason').attr('required', true);
+		$('#MDR').removeAttr('required');
+		$('#SetupFee').removeAttr('required');
+		$('#HoldBack').removeAttr('required');
+		$('#CardType').removeAttr('required');
+		$('#Settlement').removeAttr('required');
+		$('#SettlementFee').removeAttr('required');
+		$('#MinSettlement').removeAttr('required');
+		$('#MonthlyFee').removeAttr('required');
+		$('#Descriptor').removeAttr('required');
+      }
+    });
+	  
 </script>
 
 <style>
