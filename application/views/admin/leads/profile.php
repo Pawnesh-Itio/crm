@@ -110,7 +110,7 @@
             <i class="fa fa-print"></i>
         </a>
     </div>
-
+    <?php if(isset($lead->deal_status)&&$lead->deal_status <= 3){ ?>
     <div class="mleft5 pull-right<?php echo $lead_locked == true ? ' hide': ''; ?>">
         <a href="#" lead-edit data-toggle="tooltip" data-title="<?php echo _l('edit'); ?>"
             class="btn btn-info lead-top-btn">
@@ -118,13 +118,14 @@
             <i class="fa-regular fa-pen-to-square"></i>
         </a>
     </div>
+	<?php } ?>
 	 <?php if(isset($lead->is_deal)&&$lead->is_deal==0){ ?>
 	<div class="mleft5 pull-right">
         <a href="#" class="btn btn-success pull-right lead-top-btn" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-handshake"></i> Convert to Deal <?php //echo $lead->is_deal?></a>
     </div>
 	<?php }else{ ?>
-	<div class="mleft5 pull-right">
-<a href="#" class="btn btn-warning pull-right lead-top-btn" onclick="alert('Already converted to deal')" ><i class="fa-solid fa-handshake"></i> Deal</a><?php } ?></div>
+	<?php /*?><div class="mleft5 pull-right">
+<a href="#" class="btn btn-warning pull-right lead-top-btn" onclick="alert('Already converted to deal')" ><i class="fa-solid fa-handshake"></i> Deal</a><?php */?><?php } ?></div>
     <?php
            $client                                 = false;
            $convert_to_client_tooltip_email_exists = '';

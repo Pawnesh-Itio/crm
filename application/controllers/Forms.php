@@ -531,7 +531,8 @@ if(get_option('automatically_converts_into_contact')==1){
                     if ((isset($regular_fields['name']) && empty($regular_fields['name'])) || !isset($regular_fields['name'])) {
                         $regular_fields['name'] = 'Unknown';
                     }
-                    $regular_fields['name']         = $form->lead_name_prefix ." - ". $regular_fields['name'];
+                    //$regular_fields['name']         = $form->lead_name_prefix ." - ". $regular_fields['name'];
+					$regular_fields['name']         = $regular_fields['name'];
                     $regular_fields['source']       = $form->lead_source;
                     $regular_fields['addedfrom']    = 0;
                     $regular_fields['lastcontact']  = null;
