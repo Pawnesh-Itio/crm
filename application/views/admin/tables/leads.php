@@ -93,6 +93,8 @@ if (isset($consent_purposes)) {
 
 
 $pagexxx=@$_SESSION['leads_page_type'];
+
+
 return App_table::find('leads') 
     ->outputUsing(function ($params) use ($statuses,$pagexxx) {
         extract($params);
@@ -151,8 +153,18 @@ return App_table::find('leads')
 		array_push($where);
  
         if (staff_cant('view', 'leads')) {
+		
+		if(get_staff_rolex()==4){  // 4 for assign role UW approver
+		array_push($where, ' AND (deal_status = 3)'); // display only list for UW Deals
+		
+		}else{
+		
             array_push($where, 'AND (assigned =' . get_staff_user_id() . ' OR addedfrom = ' . get_staff_user_id() . ' OR is_public = 1)');
-        }
+			}
+        }elseif(get_staff_rolex()==4){ // 4 for assign role UW approver
+		array_push($where, ' AND (deal_status = 3)'); // display only list for UW Deals
+		
+		}
 
         $aColumns = hooks()->apply_filters('leads_table_sql_columns', $aColumns);
 
@@ -180,6 +192,8 @@ return App_table::find('leads')
 
         if($pagexxx=='deals'){
 		array_push($where, ' AND is_deal=1 ');
+		}else{
+		array_push($where, ' AND is_deal=0 ');
 		}
 		
 		

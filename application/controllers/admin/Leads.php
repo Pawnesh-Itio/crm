@@ -1290,6 +1290,8 @@ class Leads extends AdminController
 
         if ($this->input->post()) {
             $data = $this->input->post();
+			
+			//print_r($data);exit;
             
 
             $note_id = $this->leads_model->add_deal_task($data, 'lead', $rel_id);
@@ -1675,6 +1677,42 @@ class Leads extends AdminController
                 'message'    => $vv,
             ]);
 		
+    }	
+	
+	public function change_task_status()
+    {
+	
+	    $data = $this->input->post();
+		$id=$data['id'];
+		unset($data['id']);
+		$data['task_status']=1;
+		$vv=$this->leads_model->change_task_status($data,$id);
+		
+		   echo json_encode([
+                'alert_type' => 'success',
+                'message'    => $vv,
+            ]);
+		
+    }
+	
+	 /* Add or update lead */
+    public function leadtodeal($id = '')
+    {
+        if (!is_staff_member() || ($id != '' && !$this->leads_model->staff_can_access_lead($id))) {
+            ajax_access_denied();
+        }
+
+        if ($this->input->post()) {
+                $success = $this->leads_model->updateleads($this->input->post(), $id);
+                if ($success=="success") {
+					set_alert('success', _l('Deal updated Sucessfully'));
+					redirect(admin_url('leads/deals'));
+                }else{
+				    set_alert('danger', _l('Deal Not updated'));
+					redirect(admin_url('leads/leads'));
+				}
+        }
+
     }
 
 
