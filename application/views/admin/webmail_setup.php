@@ -13,7 +13,7 @@
                 <div class="panel_s">
                     <div class="panel-body panel-table-full">
 
-                        <?php if (count($webmaillist) == 0) { ?>
+                        <?php  if (count($webmaillist) == 0) { ?>
 <div class="alert alert-info text-center">
     <?php echo _l('No Webmail Setup Entries'); ?>
 </div>
