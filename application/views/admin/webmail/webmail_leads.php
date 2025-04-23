@@ -114,7 +114,14 @@ background: #dc2626 !important;
 <?php if (count($inboxemail) == 0) { ?>
 <div class="alert alert-info text-center">
 
-    <?php echo _l('Records Not Found'); ?>
+    <?php echo _l('Records Not Found'); 
+	$skey="";
+	if(isset($_GET['skey'])&&$_GET['skey']){$skey=$_GET['skey'];} ?><br /><br />
+
+	<a href='<?php echo site_url("admin/webmail/compose?id=$skey"); ?>' target="_blank" class="btn btn-primary btn-sm mleft10">
+<i class="fa-regular fa-paper-plane tw-mr-1"></i>
+<?php echo _l('Compose New Mail'); ?></a> 
+
 </div>
 <?php } ?>
 <div class="table-responsive">
