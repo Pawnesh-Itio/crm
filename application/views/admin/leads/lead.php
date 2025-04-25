@@ -54,15 +54,23 @@ font-weight: bolder !important;
 		}
 		echo '</div>';
 	}
-	?> <?php if(isset($lead->deal_status)&&$lead->deal_status){ ?> <?php echo $this->leads_model->get_deal_status_title($lead->deal_status);?> 
+	?> <?php if(isset($lead->deal_status)&&$lead->deal_status){ ?>  
 	
 	
 	<?php if(isset($lead->deal_status)&&$lead->deal_status==3&&$lead->uw_status==0&&get_staff_rolex()!=4){ ?>
 	<a href="#" class="btn btn-info" ><i class="fa-solid fa-edit"></i> Pending by UW Approver</a>
 	<?php }elseif(isset($lead->uw_status)&&$lead->uw_status==0&&get_staff_rolex()==4){ ?>
-	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-edit"></i> Deal Status </a>
+	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-edit"></i> <?php echo $this->leads_model->get_deal_status_title($lead->deal_status);?> 11 </a>
+	<?php }else{  
+	$inv_url="javascript:void(0)";
+	if($lead->deal_status==4){ 
+	$inv_url=admin_url('invoices/invoice?iid=' . $lead->id);
+	?>
+	<a href="<?php echo $inv_url;?>" class="btn tw-text-white tw-rounded-full" style="background:<?php echo $this->leads_model->get_deal_status_color($lead->deal_status);?>"  target="_blank" title="Create Invoice" ><i class="fa-solid fa-handshake"></i> <?php echo $this->leads_model->get_deal_status_data($lead->deal_status);?> Deal</a>
 	<?php }else{ ?>
-	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-edit"></i> Deal Status </a>
+	<a href="<?php echo $inv_url;?>" class="btn tw-text-white tw-rounded-full" data-toggle="modal" data-target="#dealModal" style="background:<?php echo $this->leads_model->get_deal_status_color($lead->deal_status);?>" ><i class="fa-solid fa-handshake"></i> <?php echo $this->leads_model->get_deal_status_data($lead->deal_status);?> Deal</a>
+	<?php } ?>
+	
 	<?php } ?>
 	<?php } ?>
 	</h4>

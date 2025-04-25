@@ -119,9 +119,9 @@
 
 
 <?php init_tail(); ?>
-<link rel="stylesheet" type="text/css" href="https://jqueryte.com/css/jquery-te.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/editor/css/jquery-te.css'); ?>"/>
 
-<script src="https://jqueryte.com/js/jquery-te-1.4.0.min.js"></script>
+<script src="<?php echo base_url('assets/editor/js/jquery-te-1.4.0.min.js'); ?>"></script>
 
 <script>
 
