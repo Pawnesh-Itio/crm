@@ -1553,6 +1553,24 @@ class Leads_model extends App_Model
        
     }
 	
+	public function get_deal_status_data($id)
+    {
+	    $this->db->select('name');
+        $this->db->where('id', $id);
+		$deal_status = $this->db->get(db_prefix() . 'deals_status')->result_array();
+		return $deal_status[0]['name'];
+       
+    }
+	
+	public function get_deal_status_color($id)
+    {
+	    $this->db->select('color');
+        $this->db->where('id', $id);
+		$deal_status = $this->db->get(db_prefix() . 'deals_status')->result_array();
+		return $deal_status[0]['color'];
+       
+    }
+	
 	public function updateleads($data,$id)
     {
 	    
