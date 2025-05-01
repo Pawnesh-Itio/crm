@@ -157,12 +157,12 @@
     </a>
     <?php } ?>
     <?php if (total_rows(db_prefix() . 'clients', ['leadid' => $lead->id]) == 0) { ?>
-    <a href="#" data-toggle="tooltip" data-title="<?php echo e($convert_to_client_tooltip_email_exists); ?>"
+    <?php /*?><a href="#" data-toggle="tooltip" data-title="<?php echo e($convert_to_client_tooltip_email_exists); ?>"
         class="btn btn-success pull-right lead-convert-to-customer lead-top-btn lead-view"
         onclick="convert_lead_to_customer(<?php echo e($lead->id); ?>); return false;">
         <i class="fa-regular fa-user"></i>
         <?php echo e($text); ?>
-    </a>
+    </a><?php */?>
     <?php } ?>
     <?php } ?>
 
@@ -549,6 +549,11 @@
             <div class="col-md-12">
                 <?php $value = (isset($lead) ? $lead->description : ''); ?>
                 <?php echo render_textarea('description', 'lead_description', $value); ?>
+				
+				<?php $value = (isset($lead) ? $lead->subject : ''); ?>
+                <?php echo render_input('subject', 'Lead Subject', $value);  ?>
+				
+				
                 <div class="row">
                     <div class="col-md-12">
                         <?php if (!isset($lead)) { ?>
@@ -1230,36 +1235,37 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
 </div>
 <?php if(isset($lead->deal_status)&&$lead->deal_status==0){ ?>
 <input type="hidden" name="vtype" value="deal" />
+<input type="hidden" name="country" value="<?php echo isset($lead) ? $lead->country  : '';?> " />
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->name  : ''); ?>
- <?php echo render_input('name', 'Full Name', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ <?php echo render_input('name', 'Full Name', $value,'text',['required' => 'true']); ?>  
  </div>    
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->email : ''); ?>
- <?php echo render_input('email', 'Email ID', $value,'email',['required' => 'true']); //lead_company to Business Name ?>  
+ <?php echo render_input('email', 'Email ID', $value,'email',['required' => 'true']);  ?>  
  </div>
 <div class="col-md-4">
 <div class="col-md-4 tw-px-0">
  <?php $value = (isset($lead) ? $lead->country_code : ''); ?>
- <?php echo render_input('country_code', 'Country Code', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ <?php echo render_input('country_code', 'Country Code', $value,'text',['required' => 'true']); ?>  
  </div><div class="col-md-8 tw-px-0">
  <?php $value = (isset($lead) ? $lead->phonenumber : ''); ?>
- <?php echo render_input('phonenumber', 'Phone Number', $value,'number',['required' => 'true']); //lead_company to Business Name ?> 
+ <?php echo render_input('phonenumber', 'Phone Number', $value,'number',['required' => 'true']); ?> 
   </div>
  </div>
  
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->company : ''); ?>
- <?php echo render_input('company', 'Business Name', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ <?php echo render_input('company', 'Business Name', $value,'text'); //,['required' => 'true'] ?>  
  </div>    
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->website : ''); ?>
- <?php echo render_input('website', 'Business URL', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ <?php echo render_input('website', 'Business URL', $value,'text'); //,['required' => 'true'] ?>  
  </div>
 
  <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->BusinessNature : ''); ?>
- <?php echo render_input('BusinessNature', 'Business Nature', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
+ <?php echo render_input('BusinessNature', 'Business Nature', $value,'text'); //,['required' => 'true'] ?>  
  </div>
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->IncorporationCountry : ''); ?>
@@ -1273,10 +1279,20 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
  <?php $value = (isset($lead) ? $lead->AverageProductPrice : ''); ?>
  <?php echo render_input('AverageProductPrice', 'Average Product Price', $value); //lead_company to Business Name ?>  
  </div>
+ <div class="col-md-12">
+ <?php $value = (isset($lead) ? $lead->address : ''); ?>
+ <?php echo render_textarea('address', 'Address', $value); ?>
+ </div>
 <div class="col-md-12">
  <?php $value = (isset($lead) ? $lead->description : ''); ?>
  <?php echo render_textarea('description', 'Business Description', $value); ?>
  </div>
+
+ <div class="col-md-12 checkbox last:tw-mb-0">
+ <input type="checkbox" checked="" class="capability" id="inserttocustomer" name="inserttocustomer" value="yes">
+<label for="bulk_pdf_exporter_view">Add to Contact</label>
+</div>
+
 
 <?php 
 }elseif(isset($lead->deal_status)&&$lead->deal_status==1){ ?>

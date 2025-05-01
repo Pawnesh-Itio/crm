@@ -33,6 +33,20 @@
             <div class="col-md-6">
                 <div class="f_client_id">
                     <div class="form-group select-placeholder">
+                        <label for="clientid" class="control-label"><?php echo _l('Name / Company Name'); ?></label>
+                        <select name="leadid" class="selectpicker" data-width="100%"
+                                    data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+       
+						<?php $iid = (isset($_GET['iid']) ? $_GET['iid'] : '');
+						 $leadsrs=$this->leads_model->get_deal_name_companyname($_GET['iid']);
+                     echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$leadsrs[0]['company']. '</option>';
+                  ?>
+                                </select>
+                    </div>
+                </div>
+				
+				<div class="f_client_id">
+                    <div class="form-group select-placeholder">
                         <label for="clientid" class="control-label"><?php echo _l('invoice_select_customer'); ?></label>
                         <select id="clientid" name="clientid" data-live-search="true" data-width="100%" class="ajax-search<?php if (isset($invoice) && empty($invoice->clientid)) {
                 echo ' customer-removed';
@@ -181,7 +195,11 @@
                }
 
                $_is_draft            = (isset($invoice) && $invoice->status == Invoices_model::STATUS_DRAFT) ? true : false;
+			   if(isset($_GET['iid'])&&$_GET['iid']){
+			   $_invoice_number      = str_pad($__number, get_option('number_padding_prefixes'), '0', STR_PAD_LEFT)."-".$_GET['iid'];
+			   }else{
                $_invoice_number      = str_pad($__number, get_option('number_padding_prefixes'), '0', STR_PAD_LEFT);
+			   }
                $isedit               = isset($invoice) ? 'true' : 'false';
                $data_original_number = isset($invoice) ? $invoice->number : 'false';
 

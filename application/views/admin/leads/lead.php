@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php //echo "========>>>>";exit; ?>
+
 <style>
 #lead-modal .modal-lg{
 width: 90% !important;
@@ -35,7 +35,8 @@ font-weight: bolder !important;
 		} else {
 			$name = _l('lead');
 		}
-		echo '#' . $lead->id . ' - ' . $name;
+		
+		echo '#' . $lead->id . ' - ' . $name. ' - ' . (isset($lead->subject) ? $lead->subject  : '');
 	} else {
 		echo _l('add_new', _l('lead_lowercase'));
 	}
@@ -47,10 +48,10 @@ font-weight: bolder !important;
 		} elseif ($lead->junk == 1) {
 			echo '<span class="label label-warning">' . _l('lead_junk') . '</span>';
 		} else {
-			if (total_rows(db_prefix() . 'clients', [
+			/*if (total_rows(db_prefix() . 'clients', [
 				'leadid' => $lead->id, ])) {
 				echo '<span class="label label-success">' . _l('lead_is_client') . '</span>';
-			}
+			}*/
 		}
 		echo '</div>';
 	}

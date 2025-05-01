@@ -218,7 +218,7 @@
                                                     <?php echo _l('form_submit_success_redirect_to_website'); ?>
                                                 </label>
                                             </div>
-                                            <?php $value = (isset($form) ? $form->success_submit_msg : ''); ?>
+                                            <?php $value = (isset($form) ? $form->success_submit_msg : 'Thank you'); ?>
                                             <?php echo render_textarea('success_submit_msg', 'form_success_submit_msg', $value); ?>
                                             <?php $value = (isset($form) ? $form->submit_redirect_url : ''); ?>
                                             <?php echo render_input('submit_redirect_url', 'form_submit_website_url', $value, 'url'); ?>
