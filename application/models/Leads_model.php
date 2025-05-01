@@ -1271,6 +1271,7 @@ class Leads_model extends App_Model
         $data['dateadded'] = date('Y-m-d H:i:s');
 
         $this->db->insert(db_prefix() . 'web_to_lead', $data);
+		//echo $this->db->last_query();exit;
         $insert_id = $this->db->insert_id();
         if ($insert_id) {
             log_activity('New Web to Lead Form Added [' . $data['name'] . ']');
@@ -1571,6 +1572,13 @@ class Leads_model extends App_Model
        
     }
 	
+	public function get_deal_name_companyname($id)
+    {
+	    $this->db->select('name,company');
+        $this->db->where('id', $id);
+		return $deal_status = $this->db->get(db_prefix() . 'leads')->result_array();
+    }
+	
 	public function updateleads($data,$id)
     {
 	    
@@ -1752,18 +1760,249 @@ class Leads_model extends App_Model
 		
 		}else{
 		
-		//print_r($data);exit;
+		
+		
+		
+		if (isset($data['inserttocustomer'])) {
+		
+		$data_clients['leadid']=$data['deal_id'];
+		$data_clients['default_language']="";
+		$data_clients['company']=$data['company'];
+		$data_clients['phonenumber']=$data['country_code'].' '.$data['phonenumber'];
+		$data_clients['website']=$data['website'];
+		$data_clients['address']=$data['address'];
+		$data_clients['country']=$data['country'];
+		$data_clients['billing_street']=$data['address'];
+		$data_clients['billing_country']=$data['country'];
+		$data_clients['show_primary_contact']=0;
+		$data_clients['default_currency']=0;
+		$data_clients['shipping_country']=0;
+        $parts = explode(" ", $data['name']);
+        $firstname = ucfirst($parts[0]);
+        $lastname = isset($parts[1]) ? ucfirst($parts[1]) : "";
+		$data_clients['firstname']=$firstname;
+		$data_clients['lastname']=$lastname;
+		$data_clients['email']=$data['email'];
+		$data_clients['password']=rand(100000,999999);
+		$data_clients['is_primary']=1;
+		} 
+		$iscustomer=$data['inserttocustomer'];
+		$deal_id=$data['deal_id'];
 		unset($data['deal_id']);
 		unset($data['vtype']);
+		unset($data['inserttocustomer']);
 		
 		$data['is_deal']=1; // for convert to deal
-		
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $data);
 		//echo $this->db->last_query();exit;
+		empty($data);
+		
+		$data=$data_clients;
+		
+		
+		
+		
+		if (isset($iscustomer)) { 
+		 
+		// Collect dynamic fields (stored in a single column as JSON)
+           
+            $default_country  = get_option('customer_default_country');
+
+            $original_lead_email = $data['email'] ? $data['email'] : "";
+
+            if ($data['country'] == '' && $default_country != '') {
+                $data['country'] = $default_country;
+            }
+            $data['is_primary'] = 1;
+            $id                 = $this->clients_model->add($data, true); //////////////
+            if ($id) {
+                $primary_contact_id = get_primary_contact_user_id($id);
+
+                if (isset($notes)) {
+                    foreach ($notes as $note) {
+                        $this->db->insert(db_prefix() . 'notes', [
+                            'rel_id'         => $id,
+                            'rel_type'       => 'customer',
+                            'dateadded'      => $note['dateadded'],
+                            'addedfrom'      => $note['addedfrom'],
+                            'description'    => $note['description'],
+                            'date_contacted' => $note['date_contacted'],
+                            ]);
+                    }
+                }
+                if (isset($consents)) {
+                    foreach ($consents as $consent) {
+                        unset($consent['id']);
+                        unset($consent['purpose_name']);
+                        $consent['lead_id']    = 0;
+                        $consent['contact_id'] = $primary_contact_id;
+                        $this->gdpr_model->add_consent($consent);
+                    }
+                }
+                if (staff_cant('view', 'customers') && get_option('auto_assign_customer_admin_after_lead_convert') == 1) {
+                    $this->db->insert(db_prefix() . 'customer_admins', [
+                        'date_assigned' => date('Y-m-d H:i:s'),
+                        'customer_id'   => $id,
+                        'staff_id'      => get_staff_user_id(),
+                    ]);
+                }
+                $this->leads_model->log_lead_activity($data['leadid'], 'not_lead_activity_converted', false, serialize([
+                    get_staff_full_name(),
+                ]));
+                $default_status = $this->leads_model->get_status('', [
+                    'isdefault' => 1,
+                ]);
+                $this->db->where('id', $data['leadid']);
+                $this->db->update(db_prefix() . 'leads', [
+                    'date_converted' => date('Y-m-d H:i:s'),
+                    'status'         => $default_status[0]['id'],
+                    'junk'           => 0,
+                    'lost'           => 0,
+                ]);
+                // Check if lead email is different then client email
+                $contact = $this->clients_model->get_contact(get_primary_contact_user_id($id));
+                if ($contact->email != $original_lead_email) {
+                    if ($original_lead_email != '') {
+                        $this->leads_model->log_lead_activity($data['leadid'], 'not_lead_activity_converted_email', false, serialize([
+                            $original_lead_email,
+                            $contact->email,
+                        ]));
+                    }
+                }
+                if (isset($include_leads_custom_fields)) {
+                    foreach ($include_leads_custom_fields as $fieldid => $value) {
+                        // checked don't merge
+                        if ($value == 5) {
+                            continue;
+                        }
+                        // get the value of this leads custom fiel
+                        $this->db->where('relid', $data['leadid']);
+                        $this->db->where('fieldto', 'leads');
+                        $this->db->where('fieldid', $fieldid);
+                        $lead_custom_field_value = $this->db->get(db_prefix() . 'customfieldsvalues')->row()->value;
+                        // Is custom field for contact ot customer
+                        if ($value == 1 || $value == 4) {
+                            if ($value == 4) {
+                                $field_to = 'contacts';
+                            } else {
+                                $field_to = 'customers';
+                            }
+                            $this->db->where('id', $fieldid);
+                            $field = $this->db->get(db_prefix() . 'customfields')->row();
+                            // check if this field exists for custom fields
+                            $this->db->where('fieldto', $field_to);
+                            $this->db->where('name', $field->name);
+                            $exists               = $this->db->get(db_prefix() . 'customfields')->row();
+                            $copy_custom_field_id = null;
+                            if ($exists) {
+                                $copy_custom_field_id = $exists->id;
+                            } else {
+                                // there is no name with the same custom field for leads at the custom side create the custom field now
+                                $this->db->insert(db_prefix() . 'customfields', [
+                                    'fieldto'        => $field_to,
+                                    'name'           => $field->name,
+                                    'required'       => $field->required,
+                                    'type'           => $field->type,
+                                    'options'        => $field->options,
+                                    'display_inline' => $field->display_inline,
+                                    'field_order'    => $field->field_order,
+                                    'slug'           => slug_it($field_to . '_' . $field->name, [
+                                        'separator' => '_',
+                                    ]),
+                                    'active'        => $field->active,
+                                    'only_admin'    => $field->only_admin,
+                                    'show_on_table' => $field->show_on_table,
+                                    'bs_column'     => $field->bs_column,
+                                ]);
+                                $new_customer_field_id = $this->db->insert_id();
+                                if ($new_customer_field_id) {
+                                    $copy_custom_field_id = $new_customer_field_id;
+                                }
+                            }
+                            if ($copy_custom_field_id != null) {
+                                $insert_to_custom_field_id = $id;
+                                if ($value == 4) {
+                                    $insert_to_custom_field_id = get_primary_contact_user_id($id);
+                                }
+                                $this->db->insert(db_prefix() . 'customfieldsvalues', [
+                                    'relid'   => $insert_to_custom_field_id,
+                                    'fieldid' => $copy_custom_field_id,
+                                    'fieldto' => $field_to,
+                                    'value'   => $lead_custom_field_value,
+                                ]);
+                            }
+                        } elseif ($value == 2) {
+                            if (isset($merge_db_fields)) {
+                                $db_field = $merge_db_fields[$fieldid];
+                                // in case user don't select anything from the db fields
+                                if ($db_field == '') {
+                                    continue;
+                                }
+                                if ($db_field == 'country' || $db_field == 'shipping_country' || $db_field == 'billing_country') {
+                                    $this->db->where('iso2', $lead_custom_field_value);
+                                    $this->db->or_where('short_name', $lead_custom_field_value);
+                                    $this->db->or_like('long_name', $lead_custom_field_value);
+                                    $country = $this->db->get(db_prefix() . 'countries')->row();
+                                    if ($country) {
+                                        $lead_custom_field_value = $country->country_id;
+                                    } else {
+                                        $lead_custom_field_value = 0;
+                                    }
+                                }
+                                $this->db->where('userid', $id);
+                                $this->db->update(db_prefix() . 'clients', [
+                                    $db_field => $lead_custom_field_value,
+                                ]);
+                            }
+                        } elseif ($value == 3) {
+                            if (isset($merge_db_contact_fields)) {
+                                $db_field = $merge_db_contact_fields[$fieldid];
+                                if ($db_field == '') {
+                                    continue;
+                                }
+                                $this->db->where('id', $primary_contact_id);
+                                $this->db->update(db_prefix() . 'contacts', [
+                                    $db_field => $lead_custom_field_value,
+                                ]);
+                            }
+                        }
+                    }
+                }
+                // set the lead to status client in case is not status client
+                $this->db->where('isdefault', 1);
+                $status_client_id = $this->db->get(db_prefix() . 'leads_status')->row()->id;
+                $this->db->where('id', $data['leadid']);
+                $this->db->update(db_prefix() . 'leads', [
+                    'status' => $status_client_id,
+                ]);
+
+                set_alert('success', _l('lead_to_client_base_converted_success'));
+
+                if (is_gdpr() && get_option('gdpr_after_lead_converted_delete') == '1') {
+                    // When lead is deleted
+                    // move all proposals to the actual customer record
+                    $this->db->where('rel_id', $data['leadid']);
+                    $this->db->where('rel_type', 'lead');
+                    $this->db->update('proposals', [
+                        'rel_id'   => $id,
+                        'rel_type' => 'customer',
+                    ]);
+
+                    $this->leads_model->delete($data['leadid']);
+
+                    $this->db->where('userid', $id);
+                    $this->db->update(db_prefix() . 'clients', ['leadid' => null]);
+                }
+
+                log_activity('Created Lead Client Profile [LeadID: ' . $data['leadid'] . ', ClientID: ' . $id . ']');
+                hooks()->do_action('lead_converted_to_customer', ['lead_id' => $data['leadid'], 'customer_id' => $id]);
+		}
+		
 		
 		}
-		//exit;
+		
+		}
 		
 		
 		

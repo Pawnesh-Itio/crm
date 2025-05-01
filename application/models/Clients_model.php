@@ -151,7 +151,8 @@ class Clients_model extends App_Model
             $contact_data['phonenumber'] = $data['contact_phonenumber'];
             unset($data['contact_phonenumber']);
         }
-
+		
+        
         $this->db->insert(db_prefix() . 'clients', array_merge($data, [
             'datecreated' => date('Y-m-d H:i:s'),
             'addedfrom'   => is_staff_logged_in() ? get_staff_user_id() : 0,

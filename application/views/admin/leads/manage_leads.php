@@ -28,15 +28,15 @@
                                 data-title="<?php echo _l(''); ?>" data-placement="top"
                                 onclick="slideToggle('.leads-overview'); return false;"><i
                                     class="fa fa-bar-chart"></i></a>
-                            <a href="<?php echo admin_url('leads/switch_kanban/' . $switch_kanban); ?>"
+                            <?php /*?><a href="<?php echo admin_url('leads/switch_kanban/' . $switch_kanban); ?>"
                                 class="btn btn-default mleft5 hidden-xs" data-toggle="tooltip" data-placement="top"
                                 data-title="<?php echo $switch_kanban == 1 ? _l('leads_switch_to_kanban') : _l('switch_to_list_view'); ?>">
                                 <?php if ($switch_kanban == 1) { ?>
-                                <i class="fa-solid fa-grip-vertical"></i>
+                                <i class="fa-solid fa-grip-vertical"></i>!!
                                 <?php } else { ?>
                                 <i class="fa-solid fa-table-list"></i>
                                 <?php }; ?>
-                            </a>
+                            </a><?php */?>
 							
 <?php }else{ ?>
 <a href="#" class="btn btn-warning pull-left display-block"><i class="fa-solid fa-handshake"></i> Deal</a>
