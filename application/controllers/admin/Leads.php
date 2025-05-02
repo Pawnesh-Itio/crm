@@ -870,6 +870,12 @@ class Leads extends AdminController
             'zip',
             'description',
             'website',
+			'SkypeInfo',
+			'WhatsAppGroupId',
+			'TelegramGroupId',
+			'MonthlyVolume',
+			'BusinessNature',
+			'BusinessNature',
         ];
 
         $fields = hooks()->apply_filters('lead_form_available_database_fields', $fields);
