@@ -61,7 +61,7 @@ font-weight: bolder !important;
 	<?php if(isset($lead->deal_status)&&$lead->deal_status==3&&$lead->uw_status==0&&get_staff_rolex()!=4){ ?>
 	<a href="#" class="btn btn-info" ><i class="fa-solid fa-edit"></i> Pending by UW Approver</a>
 	<?php }elseif(isset($lead->uw_status)&&$lead->uw_status==0&&get_staff_rolex()==4){ ?>
-	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-edit"></i> <?php echo $this->leads_model->get_deal_status_title($lead->deal_status);?> 11 </a>
+	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" title="Send Quotation / Reject" ><i class="fa-solid fa-handshake"></i> <?php echo $this->leads_model->get_deal_status_data($lead->deal_status);?></a>
 	<?php }else{  
 	$inv_url="javascript:void(0)";
 	if($lead->deal_status==4){ 
@@ -69,7 +69,7 @@ font-weight: bolder !important;
 	?>
 	<a href="<?php echo $inv_url;?>" class="btn tw-text-white tw-rounded-full" style="background:<?php echo $this->leads_model->get_deal_status_color($lead->deal_status);?>"  target="_blank" title="Create Invoice" ><i class="fa-solid fa-handshake"></i> <?php echo $this->leads_model->get_deal_status_data($lead->deal_status);?> Deal</a>
 	<?php }else{ ?>
-	<a href="<?php echo $inv_url;?>" class="btn tw-text-white tw-rounded-full" data-toggle="modal" data-target="#dealModal" style="background:<?php echo $this->leads_model->get_deal_status_color($lead->deal_status);?>" ><i class="fa-solid fa-handshake"></i> <?php echo $this->leads_model->get_deal_status_data($lead->deal_status);?> Deal</a>
+	<a href="<?php echo $inv_url;?>" class="btn tw-text-white tw-rounded-full" data-toggle="modal" data-target="#dealModal" style="background:<?php echo $this->leads_model->get_deal_status_color($lead->deal_status);?>" title="click for change deal status" ><i class="fa-solid fa-handshake"></i> <?php echo $this->leads_model->get_deal_status_data($lead->deal_status);?> Deal</a>
 	<?php } ?>
 	
 	<?php } ?>
@@ -95,6 +95,7 @@ font-weight: bolder !important;
 		</div>
 	</div>
 </div>
+
 <script>
     // open reminder modal from close button
     $('.reminder-open').click(function() {

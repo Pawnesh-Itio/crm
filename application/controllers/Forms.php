@@ -308,7 +308,7 @@ $ip_calling_code = $country_details->calling_code;
         if (!$form) {
             show_404();
         }
-$status=1;		
+$status=2;		
 	
 // Auto assign to staff when activate from admin
 if(get_option('automatically_assign_to_staff')==1){

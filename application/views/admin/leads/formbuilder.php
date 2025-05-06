@@ -44,7 +44,7 @@
                         <div class="tab-content">
                             <?php if (isset($form)) { ?>
                             <div role="tabpanel" class="tab-pane active" id="tab_form_build">
-                                <div id="build-wrap"></div>
+                                <div id="build-wrap" data="2"></div>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="tab_form_integration">
                                 <p><?php echo _l('form_integration_code_help'); ?></p>

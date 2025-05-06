@@ -846,7 +846,6 @@ class Leads extends AdminController
         $data['roles']    = $this->roles_model->get();
         $data['sources']  = $this->leads_model->get_source();
         $data['statuses'] = $this->leads_model->get_status();
-
         $data['members'] = $this->staff_model->get('', [
             'active'       => 1,
             'is_not_staff' => 0,
@@ -1640,10 +1639,10 @@ class Leads extends AdminController
 	   $redirecturlx='leads/deals';
 	   }
         if($update){
-            set_alert('success', 'Member assigned successfully');
+            set_alert('success', 'Lead Assigned Successfully ');
             redirect(admin_url($redirecturlx));
         }else{
-            set_alert('warning','Member assigned failed');
+            set_alert('warning','Lead assigned failed');
             redirect(admin_url($redirecturlx));
         }
     }

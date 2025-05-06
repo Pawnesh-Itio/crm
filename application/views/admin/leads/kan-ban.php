@@ -9,6 +9,8 @@ foreach ($statuses as $status) {
         $kanBan->refresh($this->input->get('refresh')[$status['id']] ?? null);
     }
     $leads       = $kanBan->get();
+	
+	
     $total_leads = count($leads);
     $total_pages = $kanBan->totalPages();
 
@@ -43,13 +45,14 @@ foreach ($statuses as $status) {
                 <?php echo app_format_money(
         $summary[$statusSummaryIndex = array_search($status['id'], array_column($summary, 'id'))]['value'],
         $base_currency
-    ); ?> - <small><?php echo $summary[$statusSummaryIndex]['total'] . ' ' . _l('leads') ?></small>
+    ); ?> - <small><?php //echo $summary[$statusSummaryIndex]['total'] . ' ' . _l('leads') ?>
+	<?php echo $total_leads . ' ' . _l('leads')// ?></small>
                 <a href="#" onclick="return false;" class="pull-right color-white kanban-color-picker kanban-stage-color-picker<?php if ($status['isdefault'] == 1) {
         echo ' kanban-stage-color-picker-last';
     } ?>" data-placement="bottom" data-toggle="popover" data-content="
             <div class='text-center'>
-              <button type='button' return false;' class='btn btn-primary btn-block mtop10 new-lead-from-status'>
-                <?php echo _l('new_lead'); ?>
+              <button type='button' return false;' class='btn btn-primary btn-block mtop10 new-lead-from-status-close'>
+                <?php echo _l('Change Color'); ?>
               </button>
             </div>
             <?php if (is_admin()) {?>

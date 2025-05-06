@@ -1877,4 +1877,14 @@ class Invoices_model extends App_Model
             'active' => 1, 'invoice_emails' => 1,
         ]);
     }
+	
+	public function get_contact_id_from_leadid($id)
+    {
+       $this->db->select('userid');
+       $this->db->where('leadid', $id);
+       $invoices           = $this->db->get(db_prefix() . 'clients')->result_array();
+	   $uid = isset($invoices[0]['userid']) ? $invoices[0]['userid'] : '';
+		//echo $this->db->last_query();exit;
+        return $uid;
+    }
 }
