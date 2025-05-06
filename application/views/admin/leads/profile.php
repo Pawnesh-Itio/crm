@@ -119,7 +119,7 @@
         </a>
     </div>
 	<?php } ?>
-	 <?php if(isset($lead->is_deal)&&$lead->is_deal==0){ ?>
+	 <?php if(isset($lead->is_deal)&&$lead->is_deal==0&&$lead->status==1){ ?>
 	<div class="mleft5 pull-right">
         <a href="#" class="btn btn-success pull-right lead-top-btn" data-toggle="modal" data-target="#dealModal" ><i class="fa-solid fa-handshake"></i> Convert to Deal <?php //echo $lead->is_deal?></a>
     </div>
@@ -1299,7 +1299,7 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
 <input type="hidden" name="vtype" value="hot" />
  
 <div class="col-md-4">
- <?php echo render_input('products_services', 'Products / Services', '','',['required' => 'true']); //lead_company to Business Name ?>  
+ <?php echo render_input('products_services', 'Products / Services / Industries', '','',['required' => 'true']); //lead_company to Business Name ?>  
  </div>    
 <div class="col-md-4">
  <?php echo render_input('descriptor', 'Descriptor', ''); //lead_company to Business Name ?>  

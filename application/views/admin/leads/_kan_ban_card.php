@@ -23,9 +23,7 @@ if ($lead['status'] == $status['id']) { ?>
             <a href="<?php echo admin_url('leads/index/' . e($lead['id'])); ?>"
                 title="#<?php echo e($lead['id']) . ' - ' . e($lead['lead_name']); ?>"
                 onclick="init_lead(<?php echo e($lead['id']); ?>);return false;" class="tw-block tw-min-w-0">
-                <span
-                    class="mtop10 mbot10 tw-truncate tw-block">
-                    #<?php echo e($lead['id']) . ' - ' . e($lead['lead_name']); ?>
+                <span class="mtop10 mbot10 tw-truncate tw-block"> #<?php echo e($lead['id']) . ' - ' . e($lead['lead_name']); ?>
                 </span>
             </a>
         </div>

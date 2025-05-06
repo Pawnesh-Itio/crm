@@ -1,7 +1,13 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
 
-<div id="wrapper"> <?php //echo $_SESSION['leads_page_type'];?>
+<?php if(isset($_SESSION['leads_page_type'])&&$_SESSION['leads_page_type']=='deals'&&empty($switch_kanban)){ ?>
+<script>
+window.location.href = "<?php echo admin_url('leads/switch_kanban/' . $switch_kanban); ?>";
+</script>
+<?php } ?>
+
+<div id="wrapper"> 
     <div class="content">
         <div class="row">
             <div class="col-md-12">
@@ -28,19 +34,19 @@
                                 data-title="<?php echo _l(''); ?>" data-placement="top"
                                 onclick="slideToggle('.leads-overview'); return false;"><i
                                     class="fa fa-bar-chart"></i></a>
-                            <?php /*?><a href="<?php echo admin_url('leads/switch_kanban/' . $switch_kanban); ?>"
+                            <a href="<?php echo admin_url('leads/switch_kanban/' . $switch_kanban); ?>"
                                 class="btn btn-default mleft5 hidden-xs" data-toggle="tooltip" data-placement="top"
                                 data-title="<?php echo $switch_kanban == 1 ? _l('leads_switch_to_kanban') : _l('switch_to_list_view'); ?>">
                                 <?php if ($switch_kanban == 1) { ?>
-                                <i class="fa-solid fa-grip-vertical"></i>!!
+                                <i class="fa-solid fa-grip-vertical"></i>
                                 <?php } else { ?>
                                 <i class="fa-solid fa-table-list"></i>
-                                <?php }; ?>
-                            </a><?php */?>
+                                <?php } ?>
+                            </a>
 							
-<?php }else{ ?>
-<a href="#" class="btn btn-warning pull-left display-block"><i class="fa-solid fa-handshake"></i> Deal</a>
-<?php } ?>
+<?php }else{  ?>
+<a href="#" class="btn btn-warning pull-left display-block mright10"><i class="fa-solid fa-handshake"></i> Deal</a>
+<?php  } ?>
                         </div>
                         <div class="col-sm-4 col-xs-12 pull-right leads-search">
                             <?php if ($this->session->userdata('leads_kanban_view') == 'true') { ?>
@@ -236,9 +242,19 @@
                                'name'     => _l('leads_dt_email'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-email'],
                               ];
-                              $_table_data[] = [
+                              /*$_table_data[] = [
                                'name'     => _l('leads_dt_phonenumber'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-phone'],
+                              ];*/
+							  
+							  $_table_data[] = [
+                               'name'     => _l('Website'),
+                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-website'],
+                              ];
+							  
+							  $_table_data[] = [
+                               'name'     => _l('Industries'),
+                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-products_services'],
                               ];
                               /*$_table_data[] = [
                                  'name'     => _l('leads_dt_lead_value'),
@@ -659,6 +675,21 @@ $.ajax({
         console.error('An error occurred: ' + error);
     }
 });
+}
+
+function leads_kanban_update(e, t) { //alert(11);
+    if (t === e.item.parent()[0]) {
+        var a = { status: $(e.item.parent()[0]).attr("data-lead-status-id"), leadid: $(e.item).attr("data-lead-id"), order: [] };
+        $.each($(e.item).parents(".leads-status").find("li"), function (e, t) {
+            var i = $(t).attr("data-lead-id");
+            i && a.order.push([i, e + 1]);
+        }),
+            setTimeout(function () { //alert(JSON.stringify(a)); // Alerts the full JSON string
+                $.post(admin_url + "leads/update_lead_status", a).done(function (t) {
+                    update_kan_ban_total_when_moving(e, a.status), leads_kanban();
+                });
+            }, 200);
+    }
 }
 </script>
 </body>

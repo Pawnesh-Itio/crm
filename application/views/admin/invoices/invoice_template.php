@@ -1,4 +1,12 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
+<?php if(!isset($_GET['iid'])&&empty($_GET['iid'])){ 
+echo "<h5 class='text-danger'>wrong url - not authorized to create invoice<h5>";
+echo "<h5 class='text-danger'>Generate invoice only from deal section<h5>";
+exit;
+}
+
+?>
 <div class="<?php if (!isset($invoice) || (isset($invoice) && count($invoices_to_merge) == 0 && (isset($invoice) && !isset($invoice_from_project) && count($expenses_to_bill) == 0 || $invoice->status == Invoices_model::STATUS_CANCELLED))) {
     echo ' hide';
 } ?>" id="invoice_top_info">
@@ -34,24 +42,31 @@
                 <div class="f_client_id">
                     <div class="form-group select-placeholder">
                         <label for="clientid" class="control-label"><?php echo _l('Name / Company Name'); ?></label>
-                        <select name="leadid" class="selectpicker" data-width="100%"
-                                    data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
+<select name="leadid" class="selectpicker" data-width="100%"
+                                    data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>" required>
        
-						<?php $iid = (isset($_GET['iid']) ? $_GET['iid'] : '');
-						 $leadsrs=$this->leads_model->get_deal_name_companyname($_GET['iid']);
-                     echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$leadsrs[0]['company']. '</option>';
+<?php 
+if(isset($_GET['iid'])&&$_GET['iid']){
+$iid = $_GET['iid'];
+$leadsrs=$this->leads_model->get_deal_name_companyname($iid);
+if(isset($leadsrs[0]['name'])&&$leadsrs[0]['name']){
+echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$leadsrs[0]['company']. '</option>';
+}
+}
                   ?>
                                 </select>
                     </div>
                 </div>
 				
+				<?php $contactid=$this->invoices_model->get_contact_id_from_leadid($_GET['iid']);?>
 				<div class="f_client_id">
                     <div class="form-group select-placeholder">
                         <label for="clientid" class="control-label"><?php echo _l('invoice_select_customer'); ?></label>
                         <select id="clientid" name="clientid" data-live-search="true" data-width="100%" class="ajax-search<?php if (isset($invoice) && empty($invoice->clientid)) {
                 echo ' customer-removed';
             } ?>" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
-                            <?php $selected = (isset($invoice) ? $invoice->clientid : '');
+                            <?php echo $selected = (isset($invoice) ? $invoice->clientid : $contactid);
+							
                  if ($selected == '') {
                      $selected = (isset($customer_id) ? $customer_id: '');
                  }
