@@ -27,14 +27,15 @@ foreach ($dealdata as $key => $value) {
     $table.="<tr><td><strong>".ucwords(str_replace('_',' ',$key)).": </strong></td><td>$value</td></tr>";
 }
 
-$table.="</table><br><br>";
+$table.="</table>";
+//exit;
 
 $cc="vikashg@itio.in,shivamg@itio.in";
 
         parent::__construct();
         $this->staff_email       = $staff_email;
         $this->staffid           = $staffid;
-        $this->lead_details      = $table;
+        @$this->lead_details     = $table;
 		$this->cc                = $cc;
     }
 
