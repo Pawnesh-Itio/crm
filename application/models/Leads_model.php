@@ -1671,6 +1671,28 @@ class Leads_model extends App_Model
 		$datax['deal_status']=3;
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
+		
+		// For Email Data
+		$this->db->select('name,title,company,description,country,address,email,website,country_code,phonenumber,BusinessNature,MonthlyVolume,IncorporationCountry,AverageProductPrice,products_services,descriptor,processing_history,subject');
+		$this->db->where('id', $id);
+        $dealdata=$this->db->get('leads')->row();
+        $dealdata->country=get_country($dealdata->country)->short_name ?? null; // Get Country name from country code
+		
+		//Get UW Department email
+		$this->db->select('email,staffid');
+		$this->db->where('role', 4);
+		$this->db->limit(1);
+        $uwstaff=$this->db->get('staff')->row();
+		
+		
+		$staffemail = isset($uwstaff->email) ? strtolower($uwstaff->email) : "udayj@itio.in";
+		$staffidx = isset($uwstaff->staffid) ? strtolower($uwstaff->staffid) : "12";
+		///////////////////////////////////////
+		
+		send_mail_template('lead_assigned_to_uw', $staffemail, $staffidx, $data, $dealdata);
+		
+		///////////////////End Email///////////////////////////////////////////////////
+		
 		}
 		
 		}elseif (isset($data['vtype'])&&$data['vtype']=="uw") {

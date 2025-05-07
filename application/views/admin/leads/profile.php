@@ -1191,11 +1191,11 @@ $this->db->where('id', 1);
 $selected_deals=1;
 }elseif(isset($lead->deal_status)&&$lead->deal_status==1){
 $this->db->where('id', 2);
-$dstatus="Convert to Hot Deal";
+$dstatus="Convert to Document";
 $selected_deals=2;
 }elseif(isset($lead->deal_status)&&$lead->deal_status==2){
 $this->db->where('id', 3);
-$dstatus="Convert to Document";
+$dstatus="Convert to UW";
 $selected_deals=3;
 }elseif(isset($lead->deal_status)&&$lead->deal_status==3){
 $this->db->where('id', 4);
