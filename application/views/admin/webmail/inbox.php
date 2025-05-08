@@ -74,7 +74,8 @@ background: #dc2626 !important;
 			  <div class="col-md-7 mbot10"><div class="dt-buttons btn-group">
 			 <?php if(!empty($_SESSION['webmail']['folder'])){ ?>
 			  <button class="btn btn-default buttons-collection btn-sm btn-default-dt-options"  type="button" aria-haspopup="true"><span><?php echo $_SESSION['webmail']['folder'];?></span></button> <?php if(isset($_SESSION['inbox-total-email'])&&!empty($_SESSION['inbox-total-email'])){?><button class="btn btn-default btn-sm btn-default-dt-options bg-danger" type="button" ><span><?=$_SESSION['inbox-total-email'];?></span></button> <?php } ?>
-			  <?php } ?><span id="mail-loader"></span>
+			  <?php } ?><span>
+			  <?php if($_SESSION['messageorder']==1){ ?> <a class="btn btn-warning buttons-collection btn-sm btn-default-dt-options" href="?messageorder=2" title="View All Email">View All</a> <?php }else{ ?> <a class="btn btn-warning buttons-collection btn-sm btn-default-dt-options" href="?messageorder=1" title="View Last 2 Days">View Last 2 Days</a> <?php }?><span id="mail-loader"></span>
 			  
 			  </div></div>
 			  <div class="col-md-5 mbot10">
@@ -165,7 +166,7 @@ $attachment->save($attachmentDir);
 // Paging
 // Configuration
 $totalRecords = $_SESSION['inbox-total-email']; // Total number of records (replace with your DB query result)
-$recordsPerPage = 30; // Records per page
+$recordsPerPage = 20; // Records per page
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page from URL
 $current_page = max(1, $current_page); // Ensure current page is at least 1
 
@@ -432,7 +433,7 @@ $(function() {
 <script>
 function adjustIframeHeight(iframe) {
     setTimeout(() => {
-        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+        iframe.style.height = (iframe.contentWindow.document.body.scrollHeight + 20) + "px";
     }, 100);
 }
 $(document).ready(function() {
