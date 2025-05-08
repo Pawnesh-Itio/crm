@@ -43,6 +43,13 @@ class Webmail extends AdminController
 		$wheredata.=' AND id='.$_GET['mt'];
 		}
 		
+		/// for display All / Last 2 Days
+		if(isset($_GET['messageorder'])&&$_GET['messageorder']){
+		$_SESSION['messageorder']=$_GET['messageorder'];
+		}else{
+		$_SESSION['messageorder']=1;
+		}
+		
 		if((isset($_GET['mt'])&&$_GET['mt'] <> $_SESSION['webmail']['id']) || empty($_SESSION['webmail']) ){  
 		//echo "New Session";
 		//echo $wheredata;exit;

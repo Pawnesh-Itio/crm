@@ -109,10 +109,9 @@ class Webmail_model extends App_Model
 	  if ($inbox === null) {
       die("The 'Sent' folder could not be found.");
       }
-      // Query to fetch emails
-      //$messages = $inbox->query()->all()->get();  // Fetch all messages
+     
 	   
-	  $limit=30;
+	  $limit=20;
 	  if(isset($_GET["page"])){ $pn = $_GET["page"]; }else{ $pn=1;};
 		
 		if(isset($_GET['stype'])&&!empty($_GET['stype'])&&isset($_GET['skey'])&&!empty($_GET['skey'])){
@@ -121,7 +120,15 @@ class Webmail_model extends App_Model
 		
 		  $messages = $inbox->query()->where($stype , $skey)->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch with search data
 		}else{
-		 $messages = $inbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch all messages
+		
+		if($_SESSION['messageorder']==1){
+		$since = (new DateTime())->modify('-2 days')->format('d.m.Y');
+		$messages = $inbox->query()->since($since)->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch Last 2 days
+		}else{
+		$messages = $inbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch all messages
+		}
+		//echo $searchmain;exit;
+		 
 		}
 		
 		
