@@ -1587,7 +1587,7 @@ class Leads_model extends App_Model
 		
 		if (isset($data['vtype'])&&$data['vtype']=="doc") {
 		
-		
+		$lead_id=$data['deal_id'];
 		unset($data['deal_id']);
 		unset($data['vtype']);
 		
@@ -1688,16 +1688,20 @@ class Leads_model extends App_Model
 		$staffemail = isset($uwstaff->email) ? strtolower($uwstaff->email) : "udayj@itio.in";
 		$staffidx = isset($uwstaff->staffid) ? strtolower($uwstaff->staffid) : "12";
 		///////////////////////////////////////
-		
-		send_mail_template('lead_assigned_to_uw', $staffemail, $staffidx, $data, $dealdata);
+		$cname=$this->leads_model->get_deal_name_companyname($lead_id);
+		$companyname = isset($cname[0]['company']) ? $cname[0]['company'] : $cname[0]['name'];
+		send_mail_template('lead_assigned_to_uw', $staffemail, $staffidx, $lead_id, $dealdata, $companyname);
 		
 		///////////////////End Email///////////////////////////////////////////////////
 		
 		}
 		
 		}elseif (isset($data['vtype'])&&$data['vtype']=="uw") {
+		$lead_id=$data['deal_id'];
 		unset($data['deal_id']);
 		unset($data['vtype']);
+		$assigned_id=$data['assigned_id'];
+		unset($data['assigned_id']);
 		
 		if($data["quotation_status"]==0){
 		unset($data['MDR']);
@@ -1709,6 +1713,7 @@ class Leads_model extends App_Model
 		unset($data['MinSettlement']);
 		unset($data['MonthlyFee']);
 		unset($data['Descriptor']);
+		$data["quotation_status"]="Rejected";
 		
 		 $this->db->insert(db_prefix().'deal_quotation', $data);
 		//echo $this->db->last_query();
@@ -1724,7 +1729,7 @@ class Leads_model extends App_Model
 		
 		unset($data['vtype']);
 		unset($data['Reason']);
-		
+		$data["quotation_status"]="Approved";
 		 $this->db->insert(db_prefix().'deal_quotation', $data);
 		//echo $this->db->last_query();
 		
@@ -1736,6 +1741,25 @@ class Leads_model extends App_Model
 		
 		}
 		
+		
+		if(isset($datax['deal_status'])&&$datax['deal_status']==4){$datax['deal_status']="Final Invoice";}else{$datax['deal_status']="Documentation";}
+		//////////////////////////////////////////////
+		//Get UW Department email
+		$this->db->select('email,staffid');
+		$this->db->where('staffid', $assigned_id);
+		$this->db->limit(1);
+        $uwstaff=$this->db->get('staff')->row();
+		
+		
+		$staffemail = isset($uwstaff->email) ? strtolower($uwstaff->email) : "udayj@itio.in";
+		$staffidx = isset($uwstaff->staffid) ? strtolower($uwstaff->staffid) : "12";
+		///////////////////////////////////////
+		$datax=array_merge($data,$datax);
+		$cname=$this->leads_model->get_deal_name_companyname($lead_id);
+		$companyname = isset($cname[0]['company']) ? $cname[0]['company'] : $cname[0]['name'];
+		send_mail_template('lead_assigned_to_uw', $staffemail, $staffidx, $lead_id, $datax, $companyname);
+		
+		//////////////////////////////////////////////
 		
 		}elseif (isset($data['vtype'])&&$data['vtype']=="hot") {
 		//echo "For hot";

@@ -7,6 +7,10 @@ class lead_assigned_to_uw extends App_mail_template
     protected $for = 'leads';
 
     protected $staff_email;
+	
+	public $lead_id;
+	
+	public $lead_details;
 
     protected $original_password;
 
@@ -14,13 +18,13 @@ class lead_assigned_to_uw extends App_mail_template
 
     public $slug = 'lead_assigned_to_uw';
 
-    public $rel_type = 'leads';
+    public $rel_type = 'lead';
 
-    public function __construct($staff_email, $staffid, $data, $dealdata)
+    public function __construct($staff_email, $staffid, $lead_id, $dealdata, $companyname)
     {
 
 
-
+//echo $lead_id."====>>>>>";exit;
 	
 $table="<table border='1' cellpadding='5' cellspacing='0'>";
 foreach ($dealdata as $key => $value) {
@@ -28,13 +32,18 @@ foreach ($dealdata as $key => $value) {
 }
 
 $table.="</table>";
-//exit;
+$_SESSION['templatesub']=" # ".$lead_id;
+if(isset($companyname)&&$companyname){
+$_SESSION['templatesub']=" ".$companyname." # ".$lead_id;
+}
 
-$cc="vikashg@itio.in,shivamg@itio.in";
+
+$cc="vikashg@itio.in";
 
         parent::__construct();
         $this->staff_email       = $staff_email;
         $this->staffid           = $staffid;
+		@$this->lead_id          = $lead_id;
         @$this->lead_details     = $table;
 		$this->cc                = $cc;
     }
@@ -42,7 +51,7 @@ $cc="vikashg@itio.in,shivamg@itio.in";
     public function build()
     {
         $this->to($this->staff_email)
-        ->set_rel_id($this->staffid)
-        ->set_merge_fields('staff_merge_fields', $this->staffid, $this->lead_details);
+		->set_rel_id($this->lead_id)
+        ->set_merge_fields('staff_merge_fields', $this->staffid, $this->lead_details, $this->lead_id );
     }
 }
