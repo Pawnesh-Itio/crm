@@ -165,7 +165,7 @@ class App_mail_template
         : $hook_data['template']->message;
 
         $hook_data = hooks()->apply_filters('before_email_template_send', $hook_data);
-
+        
         $this->template    = $hook_data['template'];
         $this->send_to     = $hook_data['email'];
         $this->attachments = $hook_data['attachments'];
@@ -184,11 +184,15 @@ class App_mail_template
         $from = $this->_from();
 
         $this->ci->email->from($from['fromemail'], $from['fromname']);
-
+$this->_subject()."vikash Gupta";
         $this->ci->email->subject($this->_subject());
+		
+		
 
         $this->ci->email->message($this->template->message);
         $this->ci->email->to($this->send_to);
+		
+		
 
         if (is_array($this->cc) || !empty($this->cc)) {
             $this->ci->email->cc($this->cc);
@@ -270,7 +274,14 @@ class App_mail_template
      */
     protected function _subject()
     {
+	     
+		
+		if(isset($_SESSION['templatesub'])&&$_SESSION['templatesub']&&strstr($this->template->subject,"{uw_company}")){
+		return str_replace("{uw_company}",$_SESSION['templatesub'],$this->template->subject);exit;
+		}else{
         return $this->template->subject;
+		}
+		
     }
 
     /**
@@ -490,7 +501,7 @@ class App_mail_template
                     $language = $lang;
                 }
             }
-        } elseif ($rel_type == 'lead') {
+        } elseif ($rel_type == 'lead') { 
             $this->ci->db->select('default_language');
             $this->ci->db->where('id', $this->get_rel_id());
             $lead = $this->ci->db->get(db_prefix() . 'leads')->row();

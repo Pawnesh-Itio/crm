@@ -1218,6 +1218,7 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
                 <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
                 
                 <input type="hidden" name="deal_id" id="deal_id" value="<?php echo $lead->id;?>"  />
+				
 <div>
 
 
@@ -1256,7 +1257,7 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
  
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->company : ''); ?>
- <?php echo render_input('company', 'Business Name', $value,'text'); //,['required' => 'true'] ?>  
+ <?php echo render_input('company', 'Business Name', $value,'text',['required' => 'true']); //,['required' => 'true'] ?>  
  </div>    
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->website : ''); ?>
@@ -1265,7 +1266,7 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
 
  <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->BusinessNature : ''); ?>
- <?php echo render_input('BusinessNature', 'Business Nature', $value,'text'); //,['required' => 'true'] ?>  
+ <?php echo render_input('BusinessNature', 'Business Nature', $value,'text',['required' => 'true']); //,['required' => 'true'] ?>  
  </div>
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->IncorporationCountry : ''); ?>
@@ -1487,6 +1488,7 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
 <?php 
 }elseif(isset($lead->deal_status)&&$lead->deal_status==3){ ?>
 <input type="hidden" name="vtype" value="uw" />
+<input type="hidden" name="assigned_id" id="assigned_id" value="<?php echo $lead->assigned;?>"  />
 
 <div class="form-group">
     <div class="radio radio-primary radio-inline">
