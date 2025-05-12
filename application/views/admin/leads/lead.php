@@ -299,6 +299,10 @@ $('input[type="radio"][name="accept_cards"]').on('click', function() {
 		document.getElementById('cardsDiv').style.display = 'none';
     }
 });
+
+ $('#toggleBtn').click(function(){
+    $('#myDiv').slideToggle(); // Animated toggle
+});
 </script>
 
 <style>
