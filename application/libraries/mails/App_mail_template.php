@@ -184,7 +184,7 @@ class App_mail_template
         $from = $this->_from();
 
         $this->ci->email->from($from['fromemail'], $from['fromname']);
-$this->_subject()."vikash Gupta";
+
         $this->ci->email->subject($this->_subject());
 		
 		

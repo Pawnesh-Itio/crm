@@ -285,6 +285,21 @@ $('input[name="quotation_status"]').on('change', function() {
     });
 	  
 </script>
+ <script>
+  
+$('input[type="radio"][name="accept_cards"]').on('click', function() { 
+    var selectedValue = $(this).val();
+
+    // You can do something based on the selected value
+    if (selectedValue == 1) {
+        // Do something for Option A
+		document.getElementById('cardsDiv').style.display = 'block';
+    } else {
+        // Do something for Option B
+		document.getElementById('cardsDiv').style.display = 'none';
+    }
+});
+</script>
 
 <style>
 /* Set a standard font size for all messages */
