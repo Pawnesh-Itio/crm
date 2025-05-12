@@ -2077,5 +2077,47 @@ class Leads_model extends App_Model
 		}
     }
 	
+	function jsonToTable($json) {
+    $data = json_decode($json, true);
+
+    if (!is_array($data)) {
+        return "Invalid JSON data.";
+    }
+
+    $html = "<table border='1' cellpadding='5' cellspacing='5' width='100%'>";
+
+    // Handle associative array
+    if (array_keys($data) !== range(0, count($data) - 1)) {
+        foreach ($data as $key => $value) {
+            $html .= "<tr><td class='tw-font-bold' width='50%'>" . ucwords(str_replace("_"," ",htmlspecialchars($key))) . "</td><td width='50%'> :: " . htmlspecialchars($value) . "</td></tr>";
+        }
+    } else {
+        // Handle array of associative arrays (e.g. multiple rows)
+        $headersPrinted = false;
+        foreach ($data as $row) {
+            if (is_array($row)) {
+                if (!$headersPrinted) {
+                    $html .= "<tr>";
+                    foreach ($row as $key => $val) {
+                        $html .= "<th>" . ucwords(str_replace("_"," ",htmlspecialchars($key))) . "</th>";
+                    }
+                    $html .= "</tr>";
+                    $headersPrinted = true;
+                }
+
+                $html .= "<tr>";
+                foreach ($row as $val) {
+                    $html .= "<td> :: " . htmlspecialchars($val) . "</td>";
+                }
+                $html .= "</tr>";
+            }
+        }
+    }
+
+    $html .= "</table>";
+    return $html;
+}
+
+	
 
 }

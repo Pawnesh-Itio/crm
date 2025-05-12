@@ -254,7 +254,7 @@ window.location.href = "<?php echo admin_url('leads/switch_kanban/' . $switch_ka
 							  
 							  $_table_data[] = [
                                'name'     => _l('Industries'),
-                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-products_services'],
+                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-BusinessNature'],
                               ];
                               /*$_table_data[] = [
                                  'name'     => _l('leads_dt_lead_value'),

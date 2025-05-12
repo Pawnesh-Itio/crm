@@ -221,7 +221,7 @@
                         <?php echo(isset($lead) && $lead->phonenumber != '' ? '<a href="tel:' . e($lead->country_code).e($lead->phonenumber). '">' . e($lead->country_code).' - '.e($lead->phonenumber) . '</a>' : '-') ?>
                     </dd>
 					
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business URL'); ?>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business URL77'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->website != '' ? '<a href="' . e(maybe_add_http($lead->website)) . '" target="_blank">' . e($lead->website) . '</a>' : '-') ?>
@@ -241,19 +241,21 @@
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                     <?php echo(isset($lead) && $lead->address != '' ? process_text_content_for_display($lead->address) : '-') ?></dd>
-                    <?php /*?><dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_city'); ?>
-                    </dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1">
-                        <?php echo(isset($lead) && $lead->city != '' ? e($lead->city) : '-') ?></dd>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_state'); ?>
-                    </dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1">
-                        <?php echo(isset($lead) && $lead->state != '' ? e($lead->state) : '-') ?>
-                    </dd><?php */?>
+                   
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_country'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->country != 0 ? e(get_country($lead->country)->short_name) : '-') ?>
+                    </dd>
+					
+					<dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business Nature'); ?>
+                    </dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->BusinessNature != '' ? e($lead->BusinessNature) : '-') ?></dd>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Incorporation Country'); ?>
+                    </dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1">
+                        <?php echo(isset($lead) && $lead->IncorporationCountry != '' ? e(get_country($lead->IncorporationCountry)->short_name) : '-') ?>
                     </dd>
                     <?php /*?><dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_zip'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
@@ -346,6 +348,44 @@
                     <?php } ?>
                 </dl>
             </div>
+			
+			<div class="clearfix"></div>
+			<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" id="toggleBtn"><?php echo _l('Deal Details'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+<div>
+<table border="1" cellpadding="5" cellspacing="5" width="100%"><tbody>
+<tr><td class="tw-font-bold" width="50%">Target Country</td><td width="50%"> :: <?php echo(isset($lead) && $lead->target_countries != 0 ? e(get_country($lead->target_countries)->short_name) : '-') ?></td></tr>
+<tr><td class="tw-font-bold" width="50%">Products / Services</td><td width="50%"> :: <?php echo(isset($lead) && $lead->products_services != '' ? e($lead->products_services) : '-') ?></td></tr>
+<tr><td class="tw-font-bold" width="50%">Descriptor</td><td width="50%"> :: <?php echo(isset($lead) && $lead->descriptor != '' ? e($lead->descriptor) : '-') ?></td></tr>
+<tr><td class="tw-font-bold" width="50%">Processing History</td><td width="50%"> :: <?php echo(isset($lead) && $lead->processing_history != '' ? e($lead->processing_history) : '-') ?></td></tr>
+<tr><td class="tw-font-bold" width="50%">Accept Cards</td><td width="50%"> :: <?php echo(isset($lead) && $lead->accept_cards != '' ? e($lead->accept_cards) : '-') ?> (<?php echo(isset($lead) && $lead->card_tdr != '' ? e($lead->card_tdr) : '-') ?>)</td></tr>
+<tr><td class="tw-font-bold" width="50%">Estimated Total Sales</td><td width="50%"> :: <?php echo(isset($lead) && $lead->estimated_total_sales != '' ? e($lead->estimated_total_sales) : '-') ?></td></tr>
+<tr><td class="tw-font-bold" width="50%">Number of Transactions</td><td width="50%"> :: <?php echo(isset($lead) && $lead->number_of_transactions != '' ? e($lead->number_of_transactions) : '-') ?></td></tr>
+<tr><td class="tw-font-bold" width="50%">Minimum Ticket Amount</td><td width="50%"> :: <?php echo(isset($lead) && $lead->minimum_ticket_amount != '' ? e($lead->minimum_ticket_amount) : '-') ?></td></tr>
+<tr><td class="tw-font-bold" width="50%">Maximum Ticket Amount</td><td width="50%"> :: <?php echo(isset($lead) && $lead->maximum_ticket_amount != '' ? e($lead->maximum_ticket_amount) : '-') ?></td></tr>
+</tbody></table>
+</div>
+
+
+<div class="lead-info-heading tw-mt-5">SPOC Info : </div>
+<div><?php echo(isset($lead) && $lead->spoc_info != '' ? $this->leads_model->jsonToTable($lead->spoc_info) : '-') ?></div>
+<div class="lead-info-heading tw-mt-5">Customer Service : </div>
+<div><?php echo(isset($lead) && $lead->customer_info != '' ? $this->leads_model->jsonToTable($lead->customer_info) : '-') ?></div>
+<div class="lead-info-heading tw-mt-5">Website Info : </div>
+<div><?php echo(isset($lead) && $lead->website_info != '' ? $this->leads_model->jsonToTable($lead->website_info) : '-') ?></div>
+<div class="lead-info-heading tw-mt-5">Old History : </div>
+<div><?php echo(isset($lead) && $lead->old_history != '' ? $this->leads_model->jsonToTable($lead->old_history) : '-') ?></div>
+	
+</div>
+</div>
+</div>
+</div>
+			
+			
             <div class="clearfix"></div>
 			<div class="col-md-12 col-xs-12 lead-information-col">
                 
@@ -464,29 +504,18 @@
 				
                 $value = (isset($lead) ? $lead->country_code : ''); ?>
                 <?php echo render_input('country_code', 'ISD Code', $value); ?>
-				</div><div class="col-md-8 tw-px-0">
+				</div>
+				
+				<div class="col-md-8 tw-px-0">
 				<?php $value = (isset($lead) ? $lead->phonenumber : ''); ?>
                 <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $value); ?>
 				</div>
-				<?php
-				/*?>
-                <div class="form-group">
-                    <label for="lead_value"><?php echo _l('lead_value'); ?></label>
-                    <div class="input-group" data-toggle="tooltip" title="<?php echo _l('lead_value_tooltip'); ?>">
-                        <input type="number" class="form-control" name="lead_value" value="<?php if (isset($lead)) {
-                echo $lead->lead_value;
-            }?>">
-                        <div class="input-group-addon">
-                            <?php echo e($base_currency->symbol); ?>
-                        </div>
-                    </div>
-                    </label>
-                </div>
-				<?php
-				*/
-				?>
+				
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
                 <?php echo render_input('company', 'Business Name', $value); //lead_company to Business Name ?>  
+				
+				 <?php $value = (isset($lead) ? $lead->BusinessNature : ''); ?>
+                <?php echo render_input('BusinessNature', 'Business Nature', $value); //lead_company to Business Name ?>  
             </div>
             <div class="col-md-6">
 			   <?php if ((isset($lead) && empty($lead->website)) || !isset($lead)) {
@@ -510,16 +539,20 @@
                 <?php }?>
                 <?php $value = (isset($lead) ? $lead->address : ''); ?>
                 <?php echo render_textarea('address', 'lead_address', $value, ['rows' => 1, 'style' => 'height:36px;font-size:100%;']); ?>
-                <?php //$value = (isset($lead) ? $lead->city : ''); ?>
-                <?php //echo render_input('city', 'lead_city', $value); ?>
-                <?php //$value = (isset($lead) ? $lead->state : ''); ?>
-                <?php //echo render_input('state', 'lead_state', $value); ?>
+
                 <?php
                $countries                = get_all_countries();
                $customer_default_country = get_option('customer_default_country');
                $selected                 = (isset($lead) ? $lead->country : $customer_default_country);
                echo render_select('country', $countries, [ 'country_id', [ 'short_name']], 'lead_country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
                ?>
+			   
+			    <?php
+               $customer_default_country = get_option('customer_default_country');
+               $selected                 = (isset($lead) ? $lead->IncorporationCountry : $customer_default_country);
+               echo render_select('IncorporationCountry', $countries, [ 'country_id', [ 'short_name']], 'Incorporation Country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
+               ?>
+			   
                 <?php //$value = (isset($lead) ? $lead->zip : ''); ?>
                 <?php //echo render_input('zip', 'lead_zip', $value); ?>
                 <?php if (!is_language_disabled()) { ?>
@@ -1305,11 +1338,11 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
  
 <div class="col-md-3">
  <?php
-echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name']], 'lead_country'); 
+echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name']], 'Target Country'); 
 ?>
  </div>  
  <div class="col-md-3">
- <?php echo render_input('products_services', 'Products / Services / Industries', '','',['required' => 'true']); //lead_company to Business Name ?>  
+ <?php echo render_input('products_services', 'Products / Services', '','',['required' => 'true']); //lead_company to Business Name ?>  
  </div>   
 <div class="col-md-3">
  <?php echo render_input('descriptor', 'Descriptor', ''); //lead_company to Business Name ?>  
@@ -1407,7 +1440,7 @@ echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name
  <?php echo render_input('old_history[total_no_of_refunds]', 'Total No. of Refunds', ''); ?>  
  </div>
  <div class="col-md-3">
- <?php echo render_input('old_history[reason_of_switching ]', 'Reason of Switching', ''); ?>  
+ <?php echo render_input('old_history[reason_of_switching]', 'Reason of Switching', ''); ?>  
  </div>
 
   <div class="col-md-3">
@@ -1704,6 +1737,7 @@ $(function() {
     });
 });
  
+
 
 </script>
 

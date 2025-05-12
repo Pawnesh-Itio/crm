@@ -22,7 +22,7 @@ $rules = [
         ]);
     }),
 	App_table_filter::new('website', 'TextRule')->label(_l('lead_website')),
-	App_table_filter::new('products_services', 'TextRule')->label(_l('Industries')),
+	App_table_filter::new('BusinessNature', 'TextRule')->label(_l('Industries')),
     App_table_filter::new('city', 'TextRule')->label(_l('lead_city')),
     App_table_filter::new('state', 'TextRule')->label(_l('lead_state')),
     App_table_filter::new('zip', 'TextRule')->label(_l('lead_zip')),
@@ -119,7 +119,7 @@ return App_table::find('leads')
             db_prefix() . 'leads.hash as hash',
             db_prefix() . 'leads.phonenumber as phonenumber',
 			db_prefix() . 'leads.website as website',
-			db_prefix() . 'leads.products_services as products_services',
+			db_prefix() . 'leads.BusinessNature as BusinessNature',
             'lead_value',
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'leads.id and rel_type="lead" ORDER by tag_order ASC LIMIT 1) as tags',
             'firstname as assigned_firstname',
@@ -256,7 +256,7 @@ return App_table::find('leads')
            /* $row[] = ($aRow['phonenumber'] != '' ? '<a href="tel:' . e($aRow['phonenumber']) . '">' . e($aRow['phonenumber']) . '</a>' : '');*/
 			$row[] = ($aRow['website'] != '' ? '<a href="' . e($aRow['website']) . '" target="_blank" title="Move to website">' . e($aRow['website']) . '</a>' : '');
 			e($aRow['website']);
-			$row[] = e($aRow['products_services']);
+			$row[] = e($aRow['BusinessNature']);
 
             $base_currency = get_base_currency();
 //            $row[]         = e(($aRow['lead_value'] != 0 ? app_format_money($aRow['lead_value'], $base_currency->id) : ''));
