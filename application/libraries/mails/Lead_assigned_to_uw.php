@@ -23,8 +23,6 @@ class lead_assigned_to_uw extends App_mail_template
     public function __construct($staff_email, $staffid, $lead_id, $dealdata, $companyname)
     {
 
-
-//echo $lead_id."====>>>>>";exit;
 	
 $table="<table border='1' cellpadding='5' cellspacing='0'>";
 foreach ($dealdata as $key => $value) {
@@ -36,7 +34,9 @@ $_SESSION['templatesub']=" # ".$lead_id;
 if(isset($companyname)&&$companyname){
 $_SESSION['templatesub']=" ".$companyname." # ".$lead_id;
 }
-
+if(isset($dealdata['website'])&&$dealdata['website']){
+$_SESSION['templatesub'].=" ".$dealdata['website'];
+}
 
 $cc="vikashg@itio.in";
 

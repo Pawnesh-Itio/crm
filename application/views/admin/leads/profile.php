@@ -1270,7 +1270,11 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
  </div>
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->IncorporationCountry : ''); ?>
- <?php echo render_input('IncorporationCountry', 'Incorporation Country', $value); //lead_company to Business Name ?>  
+  
+  <?php 
+  
+  $selected = (isset($lead->IncorporationCountry) ? $lead->IncorporationCountry : '');
+  echo render_select('IncorporationCountry', $countries, [ 'country_id', [ 'short_name']], 'Incorporation Country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]); ?>  
  </div>    
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->MonthlyVolume : ''); ?>
@@ -1299,14 +1303,25 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
 }elseif(isset($lead->deal_status)&&$lead->deal_status==1){ ?>
 <input type="hidden" name="vtype" value="hot" />
  
-<div class="col-md-4">
+<div class="col-md-3">
+ <?php
+echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name']], 'lead_country'); 
+?>
+ </div>  
+ <div class="col-md-3">
  <?php echo render_input('products_services', 'Products / Services / Industries', '','',['required' => 'true']); //lead_company to Business Name ?>  
- </div>    
-<div class="col-md-4">
+ </div>   
+<div class="col-md-3">
  <?php echo render_input('descriptor', 'Descriptor', ''); //lead_company to Business Name ?>  
  </div>
-<div class="col-md-4">
- <?php echo render_input('processing_history', 'Processing History', ''); //lead_company to Business Name ?>  
+<div class="col-md-3">
+ <label for="date" class="control-label">Processing History</label>
+ <select name="processing_history" id="processing_history" class="form-control" required>
+<option value="">Select Processing History</option>
+<option value="Durations">Durations</option>
+<option value="Issues">Issues</option>
+<option value="Prior processors">Prior processors</option>
+</select>
  </div>
  
 
@@ -1344,6 +1359,108 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
  </div>
 
 </div>
+</div>
+
+<div class="col-md-12">
+  <label for="dealsstatus">&nbsp;<?php echo _l('Website Info'); ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+  
+<div class="col-md-4">
+ <?php echo render_input('website_info[website_traffic_d]', 'Website Traffic (D) ', ''); ?>  
+ </div>
+<div class="col-md-4">
+ <?php echo render_input('website_info[website_traffic_m]', 'Website Traffic (M) ', ''); ?>  
+ </div>    
+<div class="col-md-4">
+ <?php echo render_input('website_info[website_age]', 'Website Age', ''); ?>  
+ </div>
+<div class="col-md-4">
+ <?php echo render_input('website_info[contact_us]', 'Contact Us', ''); ?>  
+ </div>
+ <div class="col-md-4">
+ <?php echo render_input('website_info[terms_conditions]', 'Terms & Conditions', ''); ?>  
+ </div>
+ <div class="col-md-4">
+ <?php echo render_input('website_info[privacy_policy]', 'Privacy Policy', ''); ?>  
+ </div>
+</div>
+</div>
+
+
+<div class="col-md-12">
+  <label for="dealsstatus">&nbsp;<?php echo _l('Old History'); ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+  
+<div class="col-md-3">
+ <?php echo render_input('old_history[current_processor]', 'Current Processor', ''); ?>  
+ </div>
+<div class="col-md-3">
+ <?php echo render_input('old_history[duration]', 'Duration', ''); ?>  
+ </div>    
+<div class="col-md-3">
+ <?php echo render_input('old_history[total_transaction_monthly]', 'Total Transaction (Monthly)', ''); ?>  
+ </div>
+<div class="col-md-3">
+ <?php echo render_input('old_history[charge_back_ratio]', 'Charge Back Ratio', ''); ?>  
+ </div>
+ <div class="col-md-3">
+ <?php echo render_input('old_history[total_no_of_refunds]', 'Total No. of Refunds', ''); ?>  
+ </div>
+ <div class="col-md-3">
+ <?php echo render_input('old_history[reason_of_switching ]', 'Reason of Switching', ''); ?>  
+ </div>
+
+  <div class="col-md-3">
+ <?php echo render_input('old_history[existing_processor_rates]', 'Existing Processor Rates', ''); ?>  
+ </div>
+ <div class="col-md-3">
+ <?php echo render_input('old_history[product_prices]', 'Product Prices', ''); ?>  
+ </div>
+   <div class="col-md-12">
+ <?php echo render_textarea('old_history[description]', 'Description'); ?>
+ </div>
+</div>
+</div>
+
+
+
+<div class="col-md-12">
+<label for="transinfo">&nbsp;<?php echo _l('Accept Cards'); ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+        <div class="col-md-6">
+  
+        <strong> Does merchant currently accept cards?</strong>
+        <input type="radio" name="accept_cards" value="1">
+        <label for="status">Yes </label>
+		<input type="radio" name="accept_cards" value="0" checked>
+        <label for="status">No </label> 
+	</div>	
+		<div class="col-md-6">
+		<div class="form-group " id="cardsDiv" style="display: none;">
+		<?php echo render_input('card_tdr', 'TDR', ''); ?>
+		</div>
+		
+ </div>
+
+
+  </div>
+</div>
+<div class="col-md-12">
+<label for="transinfo">&nbsp;<?php echo _l('Transaction Information'); ?></label>
+  <div class="row panel_s tw-p-2 tw-mx-1">
+<div class="col-md-3">
+<?php echo render_input('estimated_total_sales', 'Estimated total sales/month', ''); //lead_company to Business Name ?>  
+ </div>
+<div class="col-md-3">
+ <?php echo render_input('number_of_transactions', 'Number of transactions/month ', ''); //lead_company to Business Name ?>  
+ </div>    
+<div class="col-md-3">
+ <?php echo render_input('minimum_ticket_amount', 'Minimum ticket amount', ''); //lead_company to Business Name ?>  
+ </div>
+ <div class="col-md-3">
+ <?php echo render_input('maximum_ticket_amount', 'Maximum ticket amount', ''); //lead_company to Business Name ?>  
+ </div>
+ </div>
 </div>
 <?php 
 }elseif(isset($lead->deal_status)&&$lead->deal_status==2){ ?>

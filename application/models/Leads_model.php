@@ -1794,6 +1794,23 @@ class Leads_model extends App_Model
 		unset($data['customername']);
 		unset($data['customertollfree']);
 		unset($data['customeremail']);
+	
+	//convert data from array to json value	
+	$winfo = [];
+    foreach ($data['website_info'] as $key => $value) {
+    $winfo[$key] = htmlspecialchars($value);
+    }
+    // Convert associative array to JSON
+    $data['website_info'] = json_encode($winfo);
+	
+	//convert data from array to json value
+	$ohistory = [];
+    foreach ($data['old_history'] as $key => $value) {
+    $ohistory[$key] = htmlspecialchars($value);
+    }
+    // Convert associative array to JSON
+    $data['old_history'] = json_encode($ohistory);
+	
 		
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $data);
