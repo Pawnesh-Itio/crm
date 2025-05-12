@@ -38,7 +38,6 @@ $_SESSION['templatesub']=" ".$companyname." # ".$lead_id;
 if(isset($dealdata->website)&&$dealdata->website){
 $_SESSION['templatesub'].=" - ".$dealdata->website;
 }
-echo $_SESSION['templatesub'];exit;
 $cc="vikashg@itio.in";
 
         parent::__construct();
