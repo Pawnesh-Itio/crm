@@ -62,7 +62,7 @@ function data_tables_init($aColumns, $sIndexColumn, $sTable, $join = [], $where 
 
             // Security
             if (!in_array($dir, ['ASC', 'DESC'])) {
-                $dir = 'ASC';
+                $dir = 'DESC';
             }
 
             if (strpos($columnName, ' as ') !== false) {
