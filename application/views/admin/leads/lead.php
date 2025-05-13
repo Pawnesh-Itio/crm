@@ -300,9 +300,12 @@ $('input[type="radio"][name="accept_cards"]').on('click', function() {
     }
 });
 
- $('#toggleBtn').click(function(){
-    $('#myDiv').slideToggle(); // Animated toggle
-});
+
+// Toggle slider
+ function togglediv(divdata){
+ $(divdata).slideToggle(); // Animated toggle
+ }
+
 </script>
 
 <style>
