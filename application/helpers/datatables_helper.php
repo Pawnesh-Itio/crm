@@ -85,7 +85,7 @@ function data_tables_init($aColumns, $sIndexColumn, $sTable, $join = [], $where 
                 } elseif ($type === 'date_picker_time') {
                     $sOrder .= hooks()->apply_filters('datatables_query_order_column', 'CAST(' . $columnName . ' as DATETIME)', $sTable);
                 } else {
-                    $sOrder .= hooks()->apply_filters('datatables_query_order_column', $columnName, $sTable);
+                    $sOrder .= "$sTable.$sIndexColumn";
                 }
             }
 
@@ -286,6 +286,7 @@ function data_tables_init($aColumns, $sIndexColumn, $sTable, $join = [], $where 
             'iTotalRecords'        => $iTotal,
             'iTotalDisplayRecords' => $iFilteredTotal,
             'aaData'               => [],
+            'sOrder'               => $sOrder
         ],
     ];
 }
