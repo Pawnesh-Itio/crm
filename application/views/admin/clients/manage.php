@@ -321,7 +321,7 @@ socket.on('error', (error) => {
 
 $(function() {
     var tAPI = initDataTable('.table-clients', admin_url + 'clients/table', [0], [0], {},
-        <?php echo hooks()->apply_filters('customers_table_default_order', json_encode([2, 'asc'])); ?>);
+        <?php echo hooks()->apply_filters('customers_table_default_order', json_encode([2, 'desc'])); ?>);
 });
 
 function customers_bulk_action(event) {
