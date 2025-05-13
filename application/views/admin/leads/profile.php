@@ -221,7 +221,7 @@
                         <?php echo(isset($lead) && $lead->phonenumber != '' ? '<a href="tel:' . e($lead->country_code).e($lead->phonenumber). '">' . e($lead->country_code).' - '.e($lead->phonenumber) . '</a>' : '-') ?>
                     </dd>
 					
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business URL77'); ?>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business URL'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->website != '' ? '<a href="' . e(maybe_add_http($lead->website)) . '" target="_blank">' . e($lead->website) . '</a>' : '-') ?>
@@ -352,7 +352,25 @@
 			<div class="clearfix"></div>
 			<div class="col-md-12 col-xs-12">
                
-<div class="alert alert-warning" id="toggleBtn"><?php echo _l('Deal Details'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div class="alert alert-warning" onclick="togglediv('#myDiv4')"><?php echo _l('Business Description'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv4" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+
+<?php echo process_text_content_for_display((isset($lead) && $lead->description != '' ? $lead->description : '-')); ?>
+
+
+	
+</div>
+</div>
+</div>
+</div>
+
+			
+			<div class="clearfix"></div>
+			<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" onclick="togglediv('#myDiv')"><?php echo _l('Deal Details'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
 <div id="myDiv" class="tw-border-neutral-200" style="display:none;">
 <div class="panel-body tw-mb-4">
 <div class="form-group">
@@ -384,17 +402,105 @@
 </div>
 </div>
 </div>
-			
-			
-            <div class="clearfix"></div>
-			<div class="col-md-12 col-xs-12 lead-information-col">
-                
-                <div class="lead-info-heading">
-                    <h4>
-                        <?php echo _l('Custom Fields - Staff'); ?>
-                    </h4>
-                </div>
-                <dl>
+
+			<div class="clearfix"></div>
+			<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" onclick="togglediv('#myDiv2')"><?php echo _l('Deal Document'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv2" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+
+<?php
+
+$this->db->select('*,');
+$this->db->limit(1);
+$this->db->where('deal_id', $lead->id);
+$this->db->order_by('id', 'DESC');
+
+$docs=$this->db->get('deal_document')->row();
+if ($this->db->affected_rows() > 0) {
+
+?>
+<div class="lead-info-heading tw-mt-5">Ownership Info 1 : </div>
+<div><?php echo(isset($docs) && $docs->ownership_info1 != '' ? $this->leads_model->jsonToTable($docs->ownership_info1) : '-') ?></div>
+<div class="lead-info-heading tw-mt-5">Ownership Info 2 : </div>
+<div><?php echo(isset($docs) && $docs->ownership_info2 != '' ? $this->leads_model->jsonToTable($docs->ownership_info2) : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Bank Info : </div>
+<div><?php echo(isset($docs) && $docs->bank_info != '' ? $this->leads_model->jsonToTable($docs->bank_info) : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Business And Operations Description : </div>
+<div><?php echo(isset($docs) && $docs->business_and_operations_description != '' ? $docs->business_and_operations_description : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Fulfillment And Delivery Explanation : </div>
+<div><?php echo(isset($docs) && $docs->fulfillment_and_delivery_explanation != '' ? $docs->fulfillment_and_delivery_explanation : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Marketing Activities Overview : </div>
+<div><?php echo(isset($docs) && $docs->marketing_activities_overview != '' ? $docs->marketing_activities_overview : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Added On : </div>
+<div><?php echo(isset($docs) && $docs->dateadded != '' ? $docs->dateadded : '-') ?></div>
+
+<?php
+
+}else{ echo "    Document Data Not Found"; }
+
+?>
+
+
+	
+</div>
+</div>
+</div>
+</div>
+
+			<div class="clearfix"></div>
+			<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" onclick="togglediv('#myDiv3')"><?php echo _l('Deal Quotation'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv3" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+<?php
+
+$this->db->select('*,');
+$this->db->limit(1);
+$this->db->where('deal_id', $lead->id);
+$this->db->order_by('id', 'DESC');
+
+$quote=$this->db->get('deal_quotation')->row();
+if ($this->db->affected_rows() > 0) {
+
+echo "<table border='1' cellpadding='5' cellspacing='5' width='100%'><tbody>";
+
+foreach ($quote as $key => $value) {
+    echo "<tr><td width='50%'><strong>{$key}</strong></td><td width='50%'> :: {$value}</td></tr>";
+}
+
+echo "<tbody></table>";
+?>
+
+
+<?php
+
+}else{ echo "    Quotation Data Not Found"; }
+
+?>	
+</div>
+</div>
+</div>
+</div>
+
+			<div class="clearfix"></div>
+			<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" onclick="togglediv('#myDiv5')"><?php echo _l('Custom Fields - Staff'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv5" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+
+<dl>
       <?php
 	  if ((isset($lead) && !empty($lead->custom_field))) {
       // Convert to associative array
@@ -404,7 +510,17 @@
       <div><?php echo $key; ?> : <?php echo $value; ?></div>
       <?php } ?> <?php } ?>
                 </dl>
-            </div>
+
+
+	
+</div>
+</div>
+</div>
+</div>			
+			
+
+			
+			
 			<div class="clearfix"></div>
 			<div class="col-md-12 col-xs-12 lead-information-col">
                 <?php if (total_rows(db_prefix() . 'customfields', ['fieldto' => 'leads', 'active' => 1]) > 0 && isset($lead)) { ?>
@@ -427,15 +543,7 @@
                     <?php } ?>
                 </dl>
             </div>
-            <div class="clearfix"></div>
-            <div class="col-md-12">
-                <dl>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
-                        <?php echo _l('lead_description'); ?></dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1">
-                        <?php echo process_text_content_for_display((isset($lead) && $lead->description != '' ? $lead->description : '-')); ?></dd>
-                </dl>
-            </div>
+            
         </div>
 		
 		

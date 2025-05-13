@@ -1574,7 +1574,7 @@ class Leads_model extends App_Model
 	
 	public function get_deal_name_companyname($id)
     {
-	    $this->db->select('name,company');
+	    $this->db->select('name,company,website');
         $this->db->where('id', $id);
 		return $deal_status = $this->db->get(db_prefix() . 'leads')->result_array();
     }
@@ -1588,6 +1588,7 @@ class Leads_model extends App_Model
 		if (isset($data['vtype'])&&$data['vtype']=="doc") {
 		
 		$lead_id=$data['deal_id'];
+		
 		unset($data['deal_id']);
 		unset($data['vtype']);
 		
@@ -1663,8 +1664,9 @@ class Leads_model extends App_Model
 		unset($data['bank_account_number']);
 	
 		
-		
+		$data['deal_id']=$lead_id;
 		 $this->db->insert(db_prefix().'deal_document', $data);
+		 unset($data['deal_id']);
 		
 		
 		if ($this->db->affected_rows() > 0) {
@@ -1673,10 +1675,26 @@ class Leads_model extends App_Model
         $this->db->update(db_prefix().'leads', $datax);
 		
 		// For Email Data
-		$this->db->select('name,title,company,description,country,address,email,website,country_code,phonenumber,BusinessNature,MonthlyVolume,IncorporationCountry,AverageProductPrice,products_services,descriptor,processing_history,subject');
+		$this->db->select('name,title,company,description,country,address,email,website,country_code,phonenumber,BusinessNature,MonthlyVolume,IncorporationCountry,AverageProductPrice,products_services,descriptor,processing_history,subject,target_countries,website_info,old_history');
 		$this->db->where('id', $id);
         $dealdata=$this->db->get('leads')->row();
         $dealdata->country=get_country($dealdata->country)->short_name ?? null; // Get Country name from country code
+		$dealdata->IncorporationCountry=get_country($dealdata->IncorporationCountry)->short_name ?? null; // Get Country name from country code
+		if(isset($dealdata->target_countries)&&$dealdata->target_countries<>0){
+		$dealdata->target_countries=get_country($dealdata->target_countries)->short_name ?? null; // Get Country name from country code
+		}
+		
+		
+		if(isset($dealdata->website_info)&&$dealdata->website_info){
+		$dealdata->website_info=$this->leads_model->jsonToTable($dealdata->website_info);
+		}
+		
+		if(isset($dealdata->old_history)&&$dealdata->old_history){
+		$dealdata->old_history=$this->leads_model->jsonToTable($dealdata->old_history);
+		}
+		
+		
+		//print_r($dealdata);exit;
 		
 		//Get UW Department email
 		$this->db->select('email,staffid');
@@ -1714,8 +1732,9 @@ class Leads_model extends App_Model
 		unset($data['MonthlyFee']);
 		unset($data['Descriptor']);
 		$data["quotation_status"]="Rejected";
-		
+		$data['deal_id']=$lead_id;
 		 $this->db->insert(db_prefix().'deal_quotation', $data);
+		 unset($data['deal_id']);
 		//echo $this->db->last_query();
 		
 		if ($this->db->affected_rows() > 0) {
@@ -1730,7 +1749,9 @@ class Leads_model extends App_Model
 		unset($data['vtype']);
 		unset($data['Reason']);
 		$data["quotation_status"]="Approved";
+		$data['deal_id']=$lead_id;
 		 $this->db->insert(db_prefix().'deal_quotation', $data);
+		 unset($data['deal_id']);
 		//echo $this->db->last_query();
 		
 		if ($this->db->affected_rows() > 0) {
@@ -1756,6 +1777,10 @@ class Leads_model extends App_Model
 		///////////////////////////////////////
 		$datax=array_merge($data,$datax);
 		$cname=$this->leads_model->get_deal_name_companyname($lead_id);
+		
+		if(isset($cname[0]['website'])&&$cname[0]['website']){
+		$datax['website']=$cname[0]['website'];
+		}
 		$companyname = isset($cname[0]['company']) ? $cname[0]['company'] : $cname[0]['name'];
 		send_mail_template('lead_assigned_to_uw', $staffemail, $staffidx, $lead_id, $datax, $companyname);
 		
@@ -1787,8 +1812,8 @@ class Leads_model extends App_Model
 		// Create associative array and encode to JSON
 		$data['customer_info'] = json_encode([
 		'name'  => $data['customername'],
-		'email' => $data['customertollfree'],
-		'phone' => $data['customeremail']
+		'phone' => $data['customertollfree'],
+		'email' => $data['customeremail']
 		]);
 		
 		unset($data['customername']);
