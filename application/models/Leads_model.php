@@ -1708,6 +1708,12 @@ class Leads_model extends App_Model
 		///////////////////////////////////////
 		$cname=$this->leads_model->get_deal_name_companyname($lead_id);
 		$companyname = isset($cname[0]['company']) ? $cname[0]['company'] : $cname[0]['name'];
+		
+		if(isset($cname[0]['website'])&&$cname[0]['website']){
+		$datax['website']=$cname[0]['website'];
+		$companyname=$companyname." # ".$lead_id." - ".$datax['website'];
+		}
+		
 		send_mail_template('lead_assigned_to_uw', $staffemail, $staffidx, $lead_id, $dealdata, $companyname);
 		
 		///////////////////End Email///////////////////////////////////////////////////
@@ -1731,10 +1737,12 @@ class Leads_model extends App_Model
 		unset($data['MinSettlement']);
 		unset($data['MonthlyFee']);
 		unset($data['Descriptor']);
-		$data["quotation_status"]="Rejected";
+		
+		
 		$data['deal_id']=$lead_id;
 		 $this->db->insert(db_prefix().'deal_quotation', $data);
 		 unset($data['deal_id']);
+		 $data["quotation_status"]="Rejected";
 		//echo $this->db->last_query();
 		
 		if ($this->db->affected_rows() > 0) {
@@ -1748,10 +1756,12 @@ class Leads_model extends App_Model
 		
 		unset($data['vtype']);
 		unset($data['Reason']);
-		$data["quotation_status"]="Approved";
+		$data['CardType']=json_encode($data['CardType']);
 		$data['deal_id']=$lead_id;
+		
 		 $this->db->insert(db_prefix().'deal_quotation', $data);
 		 unset($data['deal_id']);
+		 $data["quotation_status"]="Approved";
 		//echo $this->db->last_query();
 		
 		if ($this->db->affected_rows() > 0) {
@@ -1762,8 +1772,12 @@ class Leads_model extends App_Model
 		
 		}
 		
-		
-		if(isset($datax['deal_status'])&&$datax['deal_status']==4){$datax['deal_status']="Final Invoice";}else{$datax['deal_status']="Documentation";}
+		$deal_statusx="";
+		if(isset($datax['deal_status'])&&$datax['deal_status']==4){
+		$deal_statusx=$datax['deal_status']="Final Invoice";
+		}else{
+		$deal_statusx=$datax['deal_status']="Documentation";
+		}
 		//////////////////////////////////////////////
 		//Get UW Department email
 		$this->db->select('email,staffid');
@@ -1778,10 +1792,35 @@ class Leads_model extends App_Model
 		$datax=array_merge($data,$datax);
 		$cname=$this->leads_model->get_deal_name_companyname($lead_id);
 		
+		
+		
+		
+		$companyname = isset($cname[0]['company']) ? $cname[0]['company'] : $cname[0]['name'];
+		
 		if(isset($cname[0]['website'])&&$cname[0]['website']){
 		$datax['website']=$cname[0]['website'];
+		$companyname=$companyname." # ".$lead_id." - ".$datax['website'];
 		}
-		$companyname = isset($cname[0]['company']) ? $cname[0]['company'] : $cname[0]['name'];
+		//print_r($datax);exit;	
+	$keyChanges = [
+    'MDR' => 'MDR (%)',
+    'SetupFee' => 'Setup Fee (USD)',
+    'HoldBack' => 'Hold Back (%)',
+    'CardType' => 'Card Type',
+    'Settlement' => 'Settlement (No. of Working Day)',
+    'SettlementFee' => 'Settlement Fee',
+    'MinSettlement' => 'Minimum Settlement',
+    'MonthlyFee' => 'Monthly Fee (USD)',
+    'website' => 'Website URL'
+];
+$datax = [];
+foreach ($data as $key => $value) {
+    $newKey = isset($keyChanges[$key]) ? $keyChanges[$key] : $key;
+    $datax[$newKey] = $value;
+}
+	$datax['deal_status']=$deal_statusx;
+	//print_r($datax);exit;	
+	
 		send_mail_template('lead_assigned_to_uw', $staffemail, $staffidx, $lead_id, $datax, $companyname);
 		
 		//////////////////////////////////////////////
