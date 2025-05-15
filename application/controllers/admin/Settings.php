@@ -54,17 +54,33 @@ class Settings extends AdminController
                 $botToken = $_POST['settings']['telegram_token'];
 
                 // Telegram API URL to set webhook
-                $apiUrl = "https://api.telegram.org/bot{$botToken}/setWebhook?url=" . urlencode($webhookUrl);
-                $response = file_get_contents($apiUrl);
-                $result = json_decode($response, true);
-                if($result['ok'] != true && $result['result'] === true) {
-                    set_alert('danger', "Webhook Setup Failed try again later!");
-                    $redUrl = admin_url('settings?group=' . $tab);
+                    try {
+                    $apiUrl = "https://api.telegram.org/bot{$botToken}/setWebhook?url=" . urlencode($webhookUrl);
+                    $response = @file_get_contents($apiUrl); // suppress warning
+
+                    if ($response === FALSE) {
+                        throw new Exception("Failed to call Telegram API.");
+                    }
+
+                    // Optionally decode and check response
+                    $result = json_decode($response, true);
+                    if (!$result['ok']) {
+                        set_alert('danger', "Error: ".$result);
+                        $redUrl = admin_url('settings?group=' . $tab);
                         if ($this->input->get('active_tab')) {
                             $redUrl .= '&tab=' . $this->input->get('active_tab');
                         }
-                    redirect($redUrl);
-                } 
+                            redirect($redUrl);
+                    }
+
+                    } catch (Exception $e) {
+                        set_alert('danger', "Error: ".$e->getMessage());
+                        $redUrl = admin_url('settings?group=' . $tab);
+                        if ($this->input->get('active_tab')) {
+                            $redUrl .= '&tab=' . $this->input->get('active_tab');
+                        }
+                            redirect($redUrl);
+                    }
             }
             if(isset($post_data))
             //print_r($post_data);
