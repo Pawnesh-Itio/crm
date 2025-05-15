@@ -76,33 +76,37 @@
 							}
 						}
 					?>
-					<div class="chat-top-bar">
-						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram');?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?php echo $chat_name;?></span>
-					</div>
-					<?php
-					}?>
-					<div class="chat-screen"
-						style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
-						<?php
-						$telegram_token = get_option('telegram_token');
-						$response = '<div id="message-container" class="chat-container">';
-	
-						$response .= '</div>';
-						echo $response;
-						if(isset($chat_id)&&$chat_id)
-						{
-						?>
-						<div class="button">
-							<div class="message-input">
-								<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
-								<button type="submit" class="btn wa-btn" id="send-button" onclick="sendMessage()">
-									<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-								</button>	
-							</div>
+					<div class="wa-chat-screen"
+						style="background: url('<?= base_url('assets/images/chatbackground3.jpg')?>">
+						<div class="chat-top-bar">
+							<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram');?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?php echo $chat_name;?></span>
 						</div>
-						<?php
-						}
-						?>
+					<?php
+					}
+					?>
+						<div class="chat-container"
+							style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
+							<?php
+							$telegram_token = get_option('telegram_token');
+							$response = '<div id="message-container" class="chat-container">';
+		
+							$response .= '</div>';
+							echo $response;
+							if(isset($chat_id)&&$chat_id)
+							{
+							?>
+							<div class="button">
+								<div class="message-input">
+									<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
+									<button type="submit" class="btn wa-btn" id="send-button" onclick="sendMessage()">
+										<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+									</button>	
+								</div>
+							</div>
+							<?php
+							}
+							?>
+						</div>
 					</div>
 				</div>
 			</div>
