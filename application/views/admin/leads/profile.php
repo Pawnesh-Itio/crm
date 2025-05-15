@@ -221,7 +221,7 @@
                         <?php echo(isset($lead) && $lead->phonenumber != '' ? '<a href="tel:' . e($lead->country_code).e($lead->phonenumber). '">' . e($lead->country_code).' - '.e($lead->phonenumber) . '</a>' : '-') ?>
                     </dd>
 					
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business URL77'); ?>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business URL'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->website != '' ? '<a href="' . e(maybe_add_http($lead->website)) . '" target="_blank">' . e($lead->website) . '</a>' : '-') ?>
@@ -352,7 +352,25 @@
 			<div class="clearfix"></div>
 			<div class="col-md-12 col-xs-12">
                
-<div class="alert alert-warning" id="toggleBtn"><?php echo _l('Deal Details'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div class="alert alert-warning" onclick="togglediv('#myDiv4')"><?php echo _l('Business Description'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv4" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+
+<?php echo process_text_content_for_display((isset($lead) && $lead->description != '' ? $lead->description : '-')); ?>
+
+
+	
+</div>
+</div>
+</div>
+</div>
+
+			
+			<div class="clearfix"></div>
+			<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" onclick="togglediv('#myDiv')"><?php echo _l('Deal Details'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
 <div id="myDiv" class="tw-border-neutral-200" style="display:none;">
 <div class="panel-body tw-mb-4">
 <div class="form-group">
@@ -384,30 +402,120 @@
 </div>
 </div>
 </div>
-			
-			
-            <div class="clearfix"></div>
-			<div class="col-md-12 col-xs-12 lead-information-col">
-                
-                <div class="lead-info-heading">
-                    <h4>
-                        <?php echo _l('Custom Fields - Staff'); ?>
-                    </h4>
-                </div>
-                <dl>
-      <?php
-	  if ((isset($lead) && !empty($lead->custom_field))) {
-      // Convert to associative array
-      $custom_field_array = json_decode($lead->custom_field, true);
-	  foreach ($custom_field_array as $key => $value) {
-	  ?>
-      <div><?php echo $key; ?> : <?php echo $value; ?></div>
-      <?php } ?> <?php } ?>
-                </dl>
-            </div>
+
+<?php
+
+$this->db->select('*,');
+$this->db->limit(1);
+$this->db->where('deal_id', $lead->id);
+$this->db->order_by('id', 'DESC');
+
+$docs=$this->db->get('deal_document')->row();
+if ($this->db->affected_rows() > 0) {
+
+?>
+
 			<div class="clearfix"></div>
-			<div class="col-md-12 col-xs-12 lead-information-col">
-                <?php if (total_rows(db_prefix() . 'customfields', ['fieldto' => 'leads', 'active' => 1]) > 0 && isset($lead)) { ?>
+			<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" onclick="togglediv('#myDiv2')"><?php echo _l('Deal Document'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv2" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+
+
+<div class="lead-info-heading tw-mt-5">Ownership Info 1 : </div>
+<div><?php echo(isset($docs) && $docs->ownership_info1 != '' ? $this->leads_model->jsonToTable($docs->ownership_info1) : '-') ?></div>
+<div class="lead-info-heading tw-mt-5">Ownership Info 2 : </div>
+<div><?php echo(isset($docs) && $docs->ownership_info2 != '' ? $this->leads_model->jsonToTable($docs->ownership_info2) : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Bank Info : </div>
+<div><?php echo(isset($docs) && $docs->bank_info != '' ? $this->leads_model->jsonToTable($docs->bank_info) : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Business And Operations Description : </div>
+<div><?php echo(isset($docs) && $docs->business_and_operations_description != '' ? $docs->business_and_operations_description : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Fulfillment And Delivery Explanation : </div>
+<div><?php echo(isset($docs) && $docs->fulfillment_and_delivery_explanation != '' ? $docs->fulfillment_and_delivery_explanation : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Marketing Activities Overview : </div>
+<div><?php echo(isset($docs) && $docs->marketing_activities_overview != '' ? $docs->marketing_activities_overview : '-') ?></div>
+
+<div class="lead-info-heading tw-mt-5">Added On : </div>
+<div><?php echo(isset($docs) && $docs->dateadded != '' ? $docs->dateadded : '-') ?></div>
+	
+</div>
+</div>
+</div>
+</div>
+<?php
+ }
+?>
+<?php
+
+$this->db->select('*,');
+$this->db->limit(1);
+$this->db->where('deal_id', $lead->id);
+$this->db->order_by('id', 'DESC');
+
+$quote=$this->db->get('deal_quotation')->row();
+if ($this->db->affected_rows() > 0) {
+?>
+
+<div class="clearfix"></div>
+<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" onclick="togglediv('#myDiv3')"><?php echo _l('Deal Quotation'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv3" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+<?php
+
+
+echo "<table border='1' cellpadding='5' cellspacing='5' width='100%'><tbody>";
+
+foreach ($quote as $key => $value) {
+    echo "<tr><td width='50%'><strong>".ucwords(str_replace("_"," ",$key))."</strong></td><td width='50%'> :: {$value}</td></tr>";
+}
+
+echo "<tbody></table>";
+?>
+
+
+	
+</div>
+</div>
+</div>
+</div>
+<?php
+}
+?>
+<?php
+if ((isset($lead) && !empty($lead->custom_field))) {
+?>
+			<div class="clearfix"></div>
+			<div class="col-md-12 col-xs-12">
+               
+<div class="alert alert-warning" onclick="togglediv('#myDiv5')"><?php echo _l('Custom Fields - Staff'); ?> <span class="pull-right mt-2 lead-view"><i class="fa-solid fa-angle-down"></i></span></div>
+<div id="myDiv5" class="tw-border-neutral-200" style="display:none;">
+<div class="panel-body tw-mb-4">
+<div class="form-group">
+<?php
+// Convert to associative array
+$custom_field_array = json_decode($lead->custom_field, true);
+foreach ($custom_field_array as $key => $value) {
+?>
+<div><?php echo $key; ?> : <?php echo $value; ?></div>
+<?php } ?>
+</div>
+</div>
+</div>
+</div>			
+<?php } ?>			
+			
+<div class="clearfix"></div>
+<div class="col-md-12 col-xs-12 lead-information-col">
+<?php if (total_rows(db_prefix() . 'customfields', ['fieldto' => 'leads', 'active' => 1]) > 0 && isset($lead)) { ?>
                 <div class="lead-info-heading">
                     <h4>
                         <?php echo _l('custom_fields'); ?>
@@ -427,15 +535,7 @@
                     <?php } ?>
                 </dl>
             </div>
-            <div class="clearfix"></div>
-            <div class="col-md-12">
-                <dl>
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
-                        <?php echo _l('lead_description'); ?></dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1">
-                        <?php echo process_text_content_for_display((isset($lead) && $lead->description != '' ? $lead->description : '-')); ?></dd>
-                </dl>
-            </div>
+            
         </div>
 		
 		
@@ -711,18 +811,11 @@
 						<ul style="background: #a0bec6;" class="nav-tabs-horizontal nav nav-tabs<?php if (!isset($lead)) {
 							echo ' lead-new';
 						} ?>" role="tablist">
-						<?php //if(isset($lead->is_deal)&&$lead->is_deal==1){ ?>
 						<li role="presentation" class="active">
-								<a href="#tab_lead_task" aria-controls="tab_lead_task" role="tab"
-									data-toggle="tab">
-									<?php echo _l('Task'); 
-									if (count($deal_task) > 0) {
-										echo ' <span class="badge">' . count($deal_task) . '</span>';
-									}
-									?>
+								<a href="#lead_activity" aria-controls="lead_activity" role="tab" data-toggle="tab">
+									<?php echo _l('lead_add_edit_activity'); ?>
 								</a>
 							</li>
-						<?php //} ?>
 							
 							<?php if (isset($lead)) { ?>
 							<?php if (count($mail_activity) > 0 || isset($show_email_activity) && $show_email_activity) { ?>
@@ -785,11 +878,19 @@
 									?>
 								</a>
 							</li>
-							<li role="presentation">
-								<a href="#lead_activity" aria-controls="lead_activity" role="tab" data-toggle="tab">
-									<?php echo _l('lead_add_edit_activity'); ?>
+							<?php //if(isset($lead->is_deal)&&$lead->is_deal==1){ ?>
+						<li role="presentation">
+								<a href="#tab_lead_task" aria-controls="tab_lead_task" role="tab"
+									data-toggle="tab">
+									<?php echo _l('Task'); 
+									if (count($deal_task) > 0) {
+										echo ' <span class="badge">' . count($deal_task) . '</span>';
+									}
+									?>
 								</a>
 							</li>
+						<?php //} ?>
+							
 							<?php if (is_gdpr() && (get_option('gdpr_enable_lead_public_form') == '1' || get_option('gdpr_enable_consent_for_leads') == '1')) { ?>
 							<li role="presentation">
 								<a href="#gdpr" aria-controls="gdpr" role="tab" data-toggle="tab">
@@ -828,7 +929,7 @@
 			<div class="tab-content">
 				<!-- from leads modal -->
 				<?php //if(isset($lead->is_deal)&&$lead->is_deal==1){ ?>
-				<div role="tabpanel" class="tab-pane active" id="tab_lead_task">
+				<div role="tabpanel" class="tab-pane " id="tab_lead_task">
 <?php echo form_open(admin_url('leads/add_deal_task/' . $lead->id), ['id' => 'lead-notes']); ?>
 <?php 
 $this->db->select('id,name,');
@@ -984,7 +1085,7 @@ if ($currentDateTime > $assignDateTime) {
 					<?php } ?>
 				</div>
 				<?php } ?>
-				<div role="tabpanel" class="tab-pane" id="lead_activity">
+				<div role="tabpanel" class="tab-pane active" id="lead_activity">
 					<div>
 						<div class="activity-feed">
 							<?php foreach ($activity_log as $log) { ?>
@@ -1294,7 +1395,7 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
  </div>    
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->website : ''); ?>
- <?php echo render_input('website', 'Business URL', $value,'text'); //,['required' => 'true'] ?>  
+ <?php echo render_input('website', 'Business URL', $value,'text',['required' => 'true']); //,['required' => 'true'] ?>  
  </div>
 
  <div class="col-md-4">
@@ -1311,19 +1412,19 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
  </div>    
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->MonthlyVolume : ''); ?>
- <?php echo render_input('MonthlyVolume', 'Monthly Volume', $value); //lead_company to Business Name ?>  
+ <?php echo render_input('MonthlyVolume', 'Monthly Volume', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->AverageProductPrice : ''); ?>
- <?php echo render_input('AverageProductPrice', 'Average Product Price', $value); //lead_company to Business Name ?>  
+ <?php echo render_input('AverageProductPrice', 'Average Product Price', $value,'text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>
  <div class="col-md-12">
  <?php $value = (isset($lead) ? $lead->address : ''); ?>
- <?php echo render_textarea('address', 'Address', $value); ?>
+ <?php echo render_textarea('address', 'Address', $value,['required' => 'true']); ?>
  </div>
 <div class="col-md-12">
  <?php $value = (isset($lead) ? $lead->description : ''); ?>
- <?php echo render_textarea('description', 'Business Description', $value); ?>
+ <?php echo render_textarea('description', 'Business Description', $value,['required' => 'true']); ?>
  </div>
 
  <div class="col-md-12 checkbox last:tw-mb-0">
@@ -1363,16 +1464,16 @@ echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name
   <div class="row panel_s tw-p-2 tw-mx-1">
   
 <div class="col-md-3">
- <?php echo render_input('spocname', 'Name', ''); ?>  
+ <?php echo render_input('spocname', 'Name', '','text',['required' => 'true']); ?>  
  </div>
 <div class="col-md-3">
- <?php echo render_input('spocphone', 'Phone', ''); ?>  
+ <?php echo render_input('spocphone', 'Phone', '','text',['required' => 'true']); ?>  
  </div>    
 <div class="col-md-3">
- <?php echo render_input('spocemail', 'Email', ''); ?>  
+ <?php echo render_input('spocemail', 'Email', '','text',['required' => 'true']); ?>  
  </div>
 <div class="col-md-3">
- <?php echo render_input('spocim', 'IM', ''); ?>  
+ <?php echo render_input('spocim', 'IM', '','text',['required' => 'true']); ?>  
  </div>
 </div>
 </div>
@@ -1382,13 +1483,13 @@ echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name
   <div class="row panel_s tw-p-2 tw-mx-1">
   
 <div class="col-md-4">
-<?php echo render_input('customername', 'Name', ''); //lead_company to Business Name ?>  
+<?php echo render_input('customername', 'Name', '','text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>
 <div class="col-md-4">
- <?php echo render_input('customertollfree', 'Toll-Free', ''); //lead_company to Business Name ?>  
+ <?php echo render_input('customertollfree', 'Toll-Free', '','text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>    
 <div class="col-md-4">
- <?php echo render_input('customeremail', 'Email', ''); //lead_company to Business Name ?>  
+ <?php echo render_input('customeremail', 'Email', '','text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>
 
 </div>
@@ -1399,22 +1500,22 @@ echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name
   <div class="row panel_s tw-p-2 tw-mx-1">
   
 <div class="col-md-4">
- <?php echo render_input('website_info[website_traffic_d]', 'Website Traffic (D) ', ''); ?>  
+ <?php echo render_input('website_info[website_traffic_d]', 'Website Traffic (D) ', '','text',['required' => 'true']); ?>  
  </div>
 <div class="col-md-4">
- <?php echo render_input('website_info[website_traffic_m]', 'Website Traffic (M) ', ''); ?>  
+ <?php echo render_input('website_info[website_traffic_m]', 'Website Traffic (M) ', '','text',['required' => 'true']); ?>  
  </div>    
 <div class="col-md-4">
- <?php echo render_input('website_info[website_age]', 'Website Age', ''); ?>  
+ <?php echo render_input('website_info[website_age]', 'Website Age', '','text',['required' => 'true']); ?>  
  </div>
 <div class="col-md-4">
- <?php echo render_input('website_info[contact_us]', 'Contact Us', ''); ?>  
+ <?php echo render_input('website_info[contact_us]', 'Contact Us', '','text',['required' => 'true']); ?>  
  </div>
  <div class="col-md-4">
- <?php echo render_input('website_info[terms_conditions]', 'Terms & Conditions', ''); ?>  
+ <?php echo render_input('website_info[terms_conditions]', 'Terms & Conditions', '','text',['required' => 'true']); ?>  
  </div>
  <div class="col-md-4">
- <?php echo render_input('website_info[privacy_policy]', 'Privacy Policy', ''); ?>  
+ <?php echo render_input('website_info[privacy_policy]', 'Privacy Policy', '','text',['required' => 'true']); ?>  
  </div>
 </div>
 </div>
@@ -1482,16 +1583,16 @@ echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name
 <label for="transinfo">&nbsp;<?php echo _l('Transaction Information'); ?></label>
   <div class="row panel_s tw-p-2 tw-mx-1">
 <div class="col-md-3">
-<?php echo render_input('estimated_total_sales', 'Estimated total sales/month', ''); //lead_company to Business Name ?>  
+<?php echo render_input('estimated_total_sales', 'Estimated total sales/month', '','text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>
 <div class="col-md-3">
- <?php echo render_input('number_of_transactions', 'Number of transactions/month ', ''); //lead_company to Business Name ?>  
+ <?php echo render_input('number_of_transactions', 'Number of transactions/month ', '','text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>    
 <div class="col-md-3">
- <?php echo render_input('minimum_ticket_amount', 'Minimum ticket amount', ''); //lead_company to Business Name ?>  
+ <?php echo render_input('minimum_ticket_amount', 'Minimum ticket amount', '','text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>
  <div class="col-md-3">
- <?php echo render_input('maximum_ticket_amount', 'Maximum ticket amount', ''); //lead_company to Business Name ?>  
+ <?php echo render_input('maximum_ticket_amount', 'Maximum ticket amount', '','text',['required' => 'true']); //lead_company to Business Name ?>  
  </div>
  </div>
 </div>
@@ -1655,35 +1756,61 @@ echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name
 
 <div class="col-md-4">
  
- <?php echo render_input('MDR', 'MDR', '','text',['required' => 'true']); ?>  
+ <?php echo render_input('MDR', 'MDR (%)', '','number',['required' => 'true']); ?>  
  </div>
 <div class="col-md-4">
  
- <?php echo render_input('SetupFee', 'Setup Fee', '','number',['required' => 'true']); ?>  
+ <?php echo render_input('SetupFee', 'Setup Fee (USD)', '','number',['required' => 'true']); ?>  
  </div>    
 <div class="col-md-4">
 
- <?php echo render_input('HoldBack', 'Hold Back', '','text',['required' => 'true']); ?>  
+ <?php echo render_input('HoldBack', 'Hold Back (%)', '','number',['required' => 'true']); ?>  
  </div>
  
  <div class="col-md-4">
- <?php echo render_input('CardType', 'Card Type', '','text',['required' => 'true']); ?>  
+ <div class="form-group">
+  <label for="default_language" class="control-label">Card Type</label>
+ <select name="CardType[]" id="CardType" class="form-control" multiple="multiple" style="height:105px;" required>
+<option value="">Select Card Type</option>
+<option value="VISA 3ds">VISA 3ds</option>
+<option value="MASTER 3ds">MASTER 3ds</option>
+<option value="AMEX">AMEX</option>
+<option value="JCB">JCB</option>
+<option value="RUPAY">RUPAY</option>
+<option value="DINER">DINER</option>
+</select>  
+ </div>
  </div>
   <div class="col-md-4">
 
- <?php echo render_input('Settlement', 'Settlement', '','text',['required' => 'true']); ?>  
+ <?php echo render_input('Settlement', 'Settlement (No. of Working Day)', '','number',['required' => 'true']); ?>  
+ </div>
+ <div class="col-md-4">
+<div class="form-group">
+  <label for="SettlementFee" class="control-label">Settlement Fee</label> 
+ <select name="SettlementFee" id="SettlementFee" class="form-control" required>
+<option value="">Select Settlement Fee</option>
+<option value="2%" selected="selected">2%</option>
+<option value="3%">3%</option>
+<option value="4%">4%</option>
+<option value="5%">5%</option>
+</select> 
+</div> 
+ </div>
+ <div class="col-md-4">
+<div class="form-group">
+ <label for="default_language" class="control-label">Min Settlement</label>
+<select name="MinSettlement" id="MinSettlement" class="form-control" required>
+<option value="">Select Min Settlement</option>
+<option value="5K">5K</option>
+<option value="10K">10K</option>
+<option value="20K">20K</option>
+</select>  
+</div>
  </div>
  <div class="col-md-4">
 
- <?php echo render_input('SettlementFee', 'Settlement Fee', '','text',['required' => 'true']); ?>  
- </div>
- <div class="col-md-4">
-
- <?php echo render_input('MinSettlement', 'Min Settlement', '','text',['required' => 'true']); ?>  
- </div>
- <div class="col-md-4">
-
- <?php echo render_input('MonthlyFee', 'Monthly Fee', '','text',['required' => 'true']); ?>  
+ <?php echo render_input('MonthlyFee', 'Monthly Fee (USD)', '350','number',['required' => 'true']); ?>  
  </div>
 
 

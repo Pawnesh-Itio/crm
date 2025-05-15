@@ -112,8 +112,9 @@ background: #dc2626 !important;
  <table class="table table-clients number-index-2 dataTable no-footer">
 
 <?php $cnt=101; foreach ($inboxemail as $message) { $cnt++; 
-//echo $message->getMessageId();//exit;
-//print_r($message);
+//echo $message->getMessageId();exit;
+//echo $message->uid;exit;
+//print_r($message);//exit;
 $string = "tw-bg-warning-600 tw-bg-primary-600 tw-bg-danger-600 tw-bg-danger-600 tw-bg-neutral-600 tw-bg-success-600 tw-bg-warning-800 tw-bg-primary-800 tw-bg-danger-800 tw-bg-danger-800 tw-bg-neutral-800 tw-bg-success-800";
 // Step 1: Convert string to array of words
 $words = preg_split('/\s+/', $string); // Split by spaces or multiple spaces
