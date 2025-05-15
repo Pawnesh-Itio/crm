@@ -17,7 +17,8 @@ class Settings extends AdminController
         if (staff_cant('view', 'settings')) {
             access_denied('settings');
         }
-
+        $siteUrl =site_url();
+        $webhookUrl = $siteUrl."import-telegram.php";
         $tab = $this->input->get('group');
 		$data['staffList']=$this->settings_model->get_staff_list();
 			
@@ -49,6 +50,23 @@ class Settings extends AdminController
             if (isset($post_data['settings']['smtp_password'])) {
                 $post_data['settings']['smtp_password'] = $tmpData['settings']['smtp_password'];
             }
+            if(isset($_POST['settings']['telegram_token'])){
+                $botToken = $_POST['settings']['telegram_token'];
+
+                // Telegram API URL to set webhook
+                $apiUrl = "https://api.telegram.org/bot{$botToken}/setWebhook?url=" . urlencode($webhookUrl);
+                $response = file_get_contents($apiUrl);
+                $result = json_decode($response, true);
+                if($result['ok'] != true && $result['result'] === true) {
+                    set_alert('danger', "Webhook Setup Failed try again later!");
+                    $redUrl = admin_url('settings?group=' . $tab);
+                        if ($this->input->get('active_tab')) {
+                            $redUrl .= '&tab=' . $this->input->get('active_tab');
+                        }
+                    redirect($redUrl);
+                } 
+            }
+            if(isset($post_data))
             //print_r($post_data);
             $success = $this->settings_model->update($post_data);
 

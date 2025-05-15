@@ -12,6 +12,19 @@ message->text;
 
 // Include the database configuration file
 require_once "application/config/db.php";
+// Fetch tel token
+// If the message is not '/start', we check for an existing lead in the database
+$sqlStmt = "SELECT name, value FROM `it_crm_options` WHERE name='telegram_token' ";
+$res = mysqli_query($conn, $sqlStmt);
+// If the lead already exists, update its description
+if (mysqli_num_rows($res) > 0) {
+	$row = mysqli_fetch_assoc($res);
+	if($row['name']=='telegram_token' && !empty($row['value'])){
+	 $token = $row['value'];
+	}
+}else{
+	$token = "7750960478:AAHs_kjrNFODTpGA-J3xSzK6vDHxZOXKHSY";
+}
 
 // Read the incoming JSON data from the request body
 $input = file_get_contents('php://input');
@@ -42,7 +55,6 @@ if (isset($web_data->message->chat->id) && ($web_data->message->chat->id)) {
 		$text = urlencode($msg); // The message to send
 	
 		// Set your Telegram Bot Token (replace with your actual token)
-		$token = "7588093840:AAHllbIf3S_qqgCBOYW-B1ZB6ZNIJEY-sPM";
 	
 		// Build the Telegram API URL for sending the message
 		$url = "https://api.telegram.org/bot$token/sendMessage?text=$text&chat_id=$chat_id";
