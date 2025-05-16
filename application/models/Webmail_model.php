@@ -248,6 +248,8 @@ class Webmail_model extends App_Model
 
     // Email settings
 	$mail->isHTML(true); // Set email format to plain text
+	$mail->CharSet = 'UTF-8';
+	$mail->Encoding = 'base64';
 	$mail->WordWrap = 50;               // set word wrap
     $mail->Priority = 1; 
     $mail->setFrom($senderEmail, $senderName);

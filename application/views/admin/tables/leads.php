@@ -254,7 +254,7 @@ return App_table::find('leads')
             $row[] = ($aRow['email'] != '' ? '<a href="mailto:' . e($aRow['email']) . '">' . e($aRow['email']) . '</a>' : '');
 
            /* $row[] = ($aRow['phonenumber'] != '' ? '<a href="tel:' . e($aRow['phonenumber']) . '">' . e($aRow['phonenumber']) . '</a>' : '');*/
-			$row[] = ($aRow['website'] != '' ? '<a href="' . e($aRow['website']) . '" target="_blank" title="Move to website">' . e($aRow['website']) . '</a>' : '');
+			$row[] = ($aRow['website'] != '' ? '<a href="' . maybe_add_http(e($aRow['website'])) . '" target="_blank" title="Move to website">' . e($aRow['website']) . '</a>' : '');
 			e($aRow['website']);
 			$row[] = e($aRow['BusinessNature']);
 
