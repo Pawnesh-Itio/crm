@@ -5,6 +5,51 @@
     echo 'lead-is-junk-or-lost';
 } ?>>
 
+<?php /*?>
+##########Shift on css file#############
+<style>
+.toggle-next{
+  border-radius: 0;
+  }
+  
+label {
+  cursor: pointer;
+  }
+  
+.ellipsis {
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  }
+
+.apply-selection{
+  display: none;
+  width: 100%;
+  margin: 0;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ccc;
+  }
+  
+  .ajax-link{ 
+    display: none;
+	}
+    
+.checkboxes{
+  margin: 0;
+  display: none;
+  border: 1px solid #ccc;
+  border-top: 0;
+  }
+
+  .inner-wrap{
+    padding: 5px 10px;
+    max-height: 140px;
+    overflow: auto;
+	}
+</style>	
+	<?php */?>
+
     <?php if (isset($lead)) { ?>
     <!-- Conversation Dropdown By TechWizard -->
     <div class="btn-group pull-right mleft5">
@@ -290,14 +335,14 @@
                         <?php echo _l('lead_add_edit_source'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 mbot15">
                         <?php echo(isset($lead) && $lead->source_name != '' ? e($lead->source_name) : '-') ?></dd>
-                    <?php if (!is_language_disabled()) { ?>
+                    <?php /*?><?php if (!is_language_disabled()) { ?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l('localization_default_language'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 mbot15">
                         <?php echo(isset($lead) && $lead->default_language != '' ? e(ucfirst($lead->default_language)) : _l('system_default_string')) ?>
                     </dd>
-                    <?php } ?>
+                    <?php } ?><?php */?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l('lead_add_edit_assigned'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 mbot15">
@@ -376,7 +421,7 @@
 <div class="form-group">
 <div>
 <table border="1" cellpadding="5" cellspacing="5" width="100%"><tbody>
-<tr><td class="tw-font-bold" width="50%">Target Country</td><td width="50%"> :: <?php echo(isset($lead) && $lead->target_countries != 0 ? e(get_country($lead->target_countries)->short_name) : '-') ?></td></tr>
+<tr><td class="tw-font-bold" width="50%">Target Country</td><td width="50%"> :: <?php echo(isset($lead) && $lead->target_countries ? e($lead->target_countries) : '-') ?></td></tr>
 <tr><td class="tw-font-bold" width="50%">Products / Services</td><td width="50%"> :: <?php echo(isset($lead) && $lead->products_services != '' ? e($lead->products_services) : '-') ?></td></tr>
 <tr><td class="tw-font-bold" width="50%">Descriptor</td><td width="50%"> :: <?php echo(isset($lead) && $lead->descriptor != '' ? e($lead->descriptor) : '-') ?></td></tr>
 <tr><td class="tw-font-bold" width="50%">Processing History</td><td width="50%"> :: <?php echo(isset($lead) && $lead->processing_history != '' ? e($lead->processing_history) : '-') ?></td></tr>
@@ -608,7 +653,7 @@ foreach ($custom_field_array as $key => $value) {
 				
 				<div class="col-md-8 tw-px-0">
 				<?php $value = (isset($lead) ? $lead->phonenumber : ''); ?>
-                <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $value); ?>
+                <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $value,'number',['required' => 'true','onkeypress' => 'return event.charCode >= 48 && event.charCode <= 57']); ?>
 				</div>
 				
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
@@ -625,7 +670,7 @@ foreach ($custom_field_array as $key => $value) {
                 <div class="form-group">
                     <label for="website"><?php echo _l('Business URL'); ?></label> 
                     <div class="input-group">
-                        <input type="text" name="website" id="website" value="<?php echo e($lead->website); ?>"
+                        <input type="url" name="website" id="website" value="<?php echo e($lead->website); ?>"
                             class="form-control">
                         <div class="input-group-addon">
                             <span>
@@ -652,10 +697,12 @@ foreach ($custom_field_array as $key => $value) {
                $selected                 = (isset($lead) ? $lead->IncorporationCountry : $customer_default_country);
                echo render_select('IncorporationCountry', $countries, [ 'country_id', [ 'short_name']], 'Incorporation Country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
                ?>
-			   
+			   <?php $value = (isset($lead) ? $lead->subject : ''); ?>
+                <?php echo render_input('subject', 'Lead Subject', $value);  ?>
+				
                 <?php //$value = (isset($lead) ? $lead->zip : ''); ?>
                 <?php //echo render_input('zip', 'lead_zip', $value); ?>
-                <?php if (!is_language_disabled()) { ?>
+                <?php /*?><?php if (!is_language_disabled()) { ?>
                 <div class="form-group">
                     <label for="default_language"
                         class="control-label"><?php echo _l('localization_default_language'); ?></label>
@@ -676,15 +723,14 @@ foreach ($custom_field_array as $key => $value) {
                } ?>
                     </select>
                 </div>
-                <?php } ?>
+                <?php } ?><?php */?>
             </div>
 			
             <div class="col-md-12">
                 <?php $value = (isset($lead) ? $lead->description : ''); ?>
                 <?php echo render_textarea('description', 'lead_description', $value); ?>
 				
-				<?php $value = (isset($lead) ? $lead->subject : ''); ?>
-                <?php echo render_input('subject', 'Lead Subject', $value);  ?>
+				
 				
 				
                 <div class="row">
@@ -882,7 +928,7 @@ foreach ($custom_field_array as $key => $value) {
 						<li role="presentation">
 								<a href="#tab_lead_task" aria-controls="tab_lead_task" role="tab"
 									data-toggle="tab">
-									<?php echo _l('Task'); 
+									<?php echo _l('To Do'); 
 									if (count($deal_task) > 0) {
 										echo ' <span class="badge">' . count($deal_task) . '</span>';
 									}
@@ -938,7 +984,7 @@ $data['taskstatus']   = $this->db->get(db_prefix() . 'task_status')->result_arra
 ?>
 <div class="form-group">
 <label for="date" class="control-label"> 
-<small class="req text-danger">* </small>Task Title</label>
+<small class="req text-danger">* </small>Title</label>
 
 <select name="task_type" id="task_type" class="form-control" required>
 <option value="">Select Task Title</option>
@@ -949,7 +995,7 @@ $data['taskstatus']   = $this->db->get(db_prefix() . 'task_status')->result_arra
 
 </div>
 
-<div class="form-group" id="other_task_title" style="display: none;"><label for="task_title" class="control-label"> <small class="req text-danger">* </small>Other Task Title</label><div><input type="text" id="task_title" name="task_title" class="form-control"  autocomplete="off"></div></div>
+<div class="form-group" id="other_task_title" style="display: none;"><label for="task_title" class="control-label"> <small class="req text-danger">* </small>Other Title</label><div><input type="text" id="task_title" name="task_title" class="form-control"  autocomplete="off"></div></div>
 
 <div class="form-group" app-field-wrapper="date"><label for="date" class="control-label"> <small class="req text-danger">* </small>Date to be notified</label><div class="input-group date"><input type="text" id="date" name="date" class="form-control datetimepicker" data-date-min-date="<?php echo date('Y-m-d');?>" data-step="30" value="" autocomplete="off" required><div class="input-group-addon">
     <i class="fa-regular fa-calendar calendar-icon"></i>
@@ -1009,7 +1055,7 @@ if ($currentDateTime > $assignDateTime) {
 									<?php echo e(get_staff_full_name($task['staff'])); ?> <?php if (isset($tasktype[0]['name']) && $tasktype[0]['color']) { ?> - <span style="color:<?php echo $tasktype[0]['color'];?>; font-weight:bolder;">Type : <?php echo $tasktype[0]['name'];?> <?php } ?> <?php if (isset($task['task_title']) && $task['task_title']) { echo " - (".$task['task_title'].")"; } ?></span>
 									</h5>
 <p><?php echo $task['description']; ?></p>
-<span class="tw-text-sm tw-text-neutral-500" style="color:<?php echo $task_bg;?>"> Task Time : <?php echo $task['date']; ?> Task Added on : <?php echo $task['dateadded']; ?> </span>
+<span class="tw-text-sm tw-text-neutral-500" style="color:<?php echo $task_bg;?>"> To Do Time : <?php echo $task['date']; ?> To Do Added on : <?php echo $task['dateadded']; ?> </span>
 									
 									
 							
@@ -1395,7 +1441,7 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
  </div>    
 <div class="col-md-4">
  <?php $value = (isset($lead) ? $lead->website : ''); ?>
- <?php echo render_input('website', 'Business URL', $value,'text',['required' => 'true']); //,['required' => 'true'] ?>  
+ <?php echo render_input('website', 'Business URL', $value,'url',['required' => 'true']); //,['required' => 'true'] ?>  
  </div>
 
  <div class="col-md-4">
@@ -1437,10 +1483,26 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
 }elseif(isset($lead->deal_status)&&$lead->deal_status==1){ ?>
 <input type="hidden" name="vtype" value="hot" />
  
-<div class="col-md-3">
- <?php
-echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name']], 'Target Country'); 
+<div class="col-md-3"> 
+ <?php 
+//echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name']], 'Target Country'); 
 ?>
+
+<label for="target_countries" class="control-label">Target Country</label> 
+    <div class="wrapper">
+      <button class="form-control toggle-next ellipsis">All Target Country (250)</button>
+      <div class="checkboxes" id="Target Countries">
+        <div class="inner-wrap">
+          
+<?php foreach ($countries as $key => $value) { ?>
+          <label>
+            <input type="checkbox" name="target_countries[]" value="<?php echo $value['short_name'];?>" class="ckkBox val" />
+            <span><?php echo $value['short_name'];?></span>
+          </label><br>
+<?php } ?>
+        </div>
+      </div>
+    </div>
  </div>  
  <div class="col-md-3">
  <?php echo render_input('products_services', 'Products / Services', '','',['required' => 'true']); //lead_company to Business Name ?>  
@@ -1767,7 +1829,7 @@ echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name
  <?php echo render_input('HoldBack', 'Hold Back (%)', '','number',['required' => 'true']); ?>  
  </div>
  
- <div class="col-md-4">
+ <?php /*?><div class="col-md-4">
  <div class="form-group">
   <label for="default_language" class="control-label">Card Type</label>
  <select name="CardType[]" id="CardType" class="form-control" multiple="multiple" style="height:105px;" required>
@@ -1780,7 +1842,49 @@ echo render_select('target_countries', $countries, [ 'country_id', [ 'short_name
 <option value="DINER">DINER</option>
 </select>  
  </div>
- </div>
+ </div><?php */?>
+ 
+ <div class="col-md-4">
+ <label for="SettlementFee" class="control-label">Card Type</label> 
+    <div class="wrapper">
+      <button class="form-control toggle-next ellipsis">All Card Type (6)</button>
+      <div class="checkboxes" id="CardType">
+        <div class="inner-wrap">
+          
+
+          <label>
+            <input type="checkbox" name="CardType[]" value="VISA 3ds" class="ckkBox val" />
+            <span>VISA 3ds</span>
+          </label><br>
+
+          <label>
+            <input type="checkbox" name="CardType[]" value="MASTER 3ds" class="ckkBox val" />
+            <span>MASTER 3ds</span>
+          </label><br>
+
+          <label>
+            <input type="checkbox" name="CardType[]" value="AMEX" class="ckkBox val" />
+            <span>AMEX</span>
+          </label><br>
+          
+          <label>
+            <input type="checkbox" name="CardType[]" value="JCB" class="ckkBox val" />
+            <span>JCB</span>
+          </label><br>
+
+          <label>
+            <input type="checkbox" name="CardType[]" value="RUPAY" class="ckkBox val" />
+            <span>RUPAY</span>
+          </label><br>
+
+          <label>
+            <input type="checkbox" name="CardType[]" value="DINER" class="ckkBox val" />
+            <span>DINER</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="col-md-4">
 
  <?php echo render_input('Settlement', 'Settlement (No. of Working Day)', '','number',['required' => 'true']); ?>  

@@ -1,5 +1,6 @@
 <?php
 
+
 use app\services\AbstractKanban;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -1680,9 +1681,8 @@ class Leads_model extends App_Model
         $dealdata=$this->db->get('leads')->row();
         $dealdata->country=get_country($dealdata->country)->short_name ?? null; // Get Country name from country code
 		$dealdata->IncorporationCountry=get_country($dealdata->IncorporationCountry)->short_name ?? null; // Get Country name from country code
-		if(isset($dealdata->target_countries)&&$dealdata->target_countries<>0){
-		$dealdata->target_countries=get_country($dealdata->target_countries)->short_name ?? null; // Get Country name from country code
-		}
+		$dealdata->target_countries=$dealdata->target_countries ?? null; // Get Country name from country code
+		
 		
 		
 		if(isset($dealdata->website_info)&&$dealdata->website_info){
@@ -1858,7 +1858,7 @@ foreach ($data as $key => $value) {
 		unset($data['customername']);
 		unset($data['customertollfree']);
 		unset($data['customeremail']);
-	
+	$data['target_countries']=json_encode($data['target_countries']);
 	//convert data from array to json value	
 	$winfo = [];
     foreach ($data['website_info'] as $key => $value) {
