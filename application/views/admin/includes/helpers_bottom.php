@@ -38,6 +38,9 @@
 
 <!--Lead reminder modal-->
 <div id="lead_reminder_modal"></div>
+<style>
+#leads_filter{ display:none !important;}
+</style>
 
 <?php 
 if (!is_client_logged_in() && !is_admin() && is_staff_logged_in()) {
@@ -57,6 +60,7 @@ if (!is_client_logged_in() && !is_admin() && is_staff_logged_in()) {
 </style>
 <?php
 }else{
+	
 //echo "Not staff";
 }
 

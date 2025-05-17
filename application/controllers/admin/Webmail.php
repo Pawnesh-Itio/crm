@@ -126,7 +126,7 @@ class Webmail extends AdminController
 		//print_r($data);exit;
 		$entry_id=get_staff_user_id();
         $this->webmail_model->reply($data, $entry_id);
-        set_alert('success', _l('Emai Sent Successfully', _l('Emai Sent')));
+        set_alert('success', _l('Email Sent Successfully', _l('Email Sent')));
         redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
 	} 
 	

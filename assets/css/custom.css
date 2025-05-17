@@ -469,6 +469,126 @@ background-color: #1e293bff;
     padding: 2px;
 }
 
+.toggle-next{
+  border-radius: 0;
+  }
+  
+label {
+  cursor: pointer;
+  }
+  
+.ellipsis {
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  }
+
+.apply-selection{
+  display: none;
+  width: 100%;
+  margin: 0;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ccc;
+  }
+  
+  .ajax-link{ 
+    display: none;
+	}
+    
+.checkboxes{
+  margin: 0;
+  display: none;
+  border: 1px solid #ccc;
+  border-top: 0;
+  }
+
+  .inner-wrap{
+    padding: 5px 10px;
+    max-height: 140px;
+    overflow: auto;
+	}
+	
+	/* Set a standard font size for all messages */
+.message-text {
+	font-size: 14px; /* Adjust to your preferred font size */
+	line-height: 1.2;
+}
+
+/* Container for messages */
+.message-container {
+	display: flex;
+	/*flex-direction: column-reverse; /* Ensure new messages are at the bottom */
+	flex-direction: column; /* Ensure new messages are at the bottom */
+	gap: 10px; /* Space between messages */
+	height: 300px; /* Fixed height for the container */
+	overflow-y: auto; /* Enable vertical scrolling */
+	padding-right: 10px; /* Add padding to the right to prevent scrollbar overlap */
+	width: 100%;
+}
+
+/* display date styles */
+.disp_date {
+	display: flex;
+	flex-direction: column;
+	align-items: center; /* Align to the center*/
+	background-color:#00cc66; /* green background for incoming */
+	color:#ffffff;
+	padding: 1px;
+	border-radius: 10px; /* Rounded corners*/
+	margin: 0 auto;
+	position: relative; /* To position*/
+	width: 200px; /* Set width*/
+}
+
+/* Incoming message styles */
+.incoming-msg {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start; /* Align incoming messages to the left */
+	background-color: #e1e1e1; /* Light gray background for incoming */
+	padding: 10px;
+	
+	border-radius: 10px 20px 20px 0px; /* Rounded corners on top-left, top-right, bottom-right*/
+	margin-right:auto;
+	margin-left: 0; /* Keep incoming message on the left */
+	max-width: 90%; /* Set max width for incoming messages */
+	width: auto; /* Remove width restriction, let it expand based on content */
+	position: relative; /* To position the cloud arrow */
+	min-width: 200px; /* Set min width for incoming messages */
+}
+
+/* Outgoing message styles */
+.outgoing-msg {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end; /* Align outgoing messages to the right */
+	background-color: #d5e8f8; /* Blue background for outgoing */
+	/*color: white; /* Text color for outgoing message */
+	padding: 10px;
+	border-radius: 20px 10px 0px 20px; /* Rounded corners on top-left, top-right, bottom-left */
+	max-width: 90%; /* Set max width for outgoing messages */
+	width: auto; /* Remove width restriction, let it expand based on content */
+	margin-right: 0; /* Keep outgoing message on the right */
+	margin-left:auto;
+	position: relative; /* To position the cloud arrow */
+	min-width: 200px;	/* Set min width for outgoing messages */
+}
+
+
+/* Time stamp styles */
+.send-time {
+	font-size: 12px; /* Smaller font size for timestamp */
+	color: #00CC66; /* Green color for send time */
+	text-align: right;
+	margin-top: 5px; /* Space between message and time */
+	align-self: flex-end; /* Align timestamp to the right */
+}
+
+/* Make sure the message container takes full width if needed */
+.message-container {
+	width: 100%;
+}
 
 @media only screen and (min-width: 769px) and (max-width: 992px) {
 }

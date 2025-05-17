@@ -14,6 +14,7 @@ border-color: rgb(37 99 235 / var(--tw-border-opacity)) !important;
 color: rgb(37 99 235 / var(--tw-text-opacity)) !important;
 font-weight: bolder !important;
 }
+
 </style>
  
 <div class="modal-header">
@@ -305,91 +306,154 @@ $('input[type="radio"][name="accept_cards"]').on('click', function() {
  function togglediv(divdata){
  $(divdata).slideToggle(); // Animated toggle
  }
+ 
+  function closemodal(divdata){ $('#dealModal').modal('hide');
+  //alert(divdata);
+  //$(divdata).hide(); // Or:
+  //$(divdata).fadeOut(); // Or:
+  //$(divdata).removeClass('show');
+  //$(divdata).dialog('close');
+  //$('#lead-modal').modal('hide');
+  //$('.modal-backdrop').remove();      // Remove the dark overlay
+  //$('body').removeClass('modal-open'); // Allow scrolling again
+  }
+$(function() {
+  
+  setCheckboxSelectLabels();
+  
+  $('.toggle-next').click(function() {
+    $(this).next('.checkboxes').slideToggle(400);
+  });
+  
+  $('.ckkBox').change(function() {
+    toggleCheckedAll(this);
+    setCheckboxSelectLabels(); 
+  });
+  
+});
+  
+function setCheckboxSelectLabels(elem) {
+  var wrappers = $('.wrapper'); 
+  $.each( wrappers, function( key, wrapper ) {
+    var checkboxes = $(wrapper).find('.ckkBox');
+    var label = $(wrapper).find('.checkboxes').attr('id');
+    var prevText = '';
+    $.each( checkboxes, function( i, checkbox ) {
+      var button = $(wrapper).find('button');
+      if( $(checkbox).prop('checked') == true) {
+        var text = $(checkbox).next().html();
+        var btnText = prevText + text;
+        var numberOfChecked = $(wrapper).find('input.val:checkbox:checked').length;
+        if(numberOfChecked >= 4) {
+           btnText = numberOfChecked +' '+ label + ' selected';
+        }
+        $(button).text(btnText); 
+        prevText = btnText + ', ';
+      }
+    });
+  });
+}
 
+function toggleCheckedAll(checkbox) {
+  var apply = $(checkbox).closest('.wrapper').find('.apply-selection');
+  apply.fadeIn('slow'); 
+  
+  var val = $(checkbox).closest('.checkboxes').find('.val');
+  var all = $(checkbox).closest('.checkboxes').find('.all');
+  var ckkBox = $(checkbox).closest('.checkboxes').find('.ckkBox');
+
+  if(!$(ckkBox).is(':checked')) {
+    $(all).prop('checked', true);
+    return;
+  }
+
+  if( $(checkbox).hasClass('all') ) {
+    $(val).prop('checked', false);
+  } else {
+    $(all).prop('checked', false);
+  }
+}
 </script>
 
+<?php /*?>
+##########Shift on css file#############
 <style>
-/* Set a standard font size for all messages */
 .message-text {
-	font-size: 14px; /* Adjust to your preferred font size */
+	font-size: 14px; 
 	line-height: 1.2;
 }
 
-/* Container for messages */
 .message-container {
 	display: flex;
-	/*flex-direction: column-reverse; /* Ensure new messages are at the bottom */
-	flex-direction: column; /* Ensure new messages are at the bottom */
-	gap: 10px; /* Space between messages */
-	height: 300px; /* Fixed height for the container */
-	overflow-y: auto; /* Enable vertical scrolling */
-	padding-right: 10px; /* Add padding to the right to prevent scrollbar overlap */
+	
+	flex-direction: column; 
+	gap: 10px; 
+	height: 300px; 
+	overflow-y: auto; 
+	padding-right: 10px; 
 	width: 100%;
 }
 
-/* display date styles */
 .disp_date {
 	display: flex;
 	flex-direction: column;
-	align-items: center; /* Align to the center*/
-	background-color:#00cc66; /* green background for incoming */
+	align-items: center;
+	background-color:#00cc66; 
 	color:#ffffff;
 	padding: 1px;
-	border-radius: 10px; /* Rounded corners*/
+	border-radius: 10px; 
 	margin: 0 auto;
-	position: relative; /* To position*/
-	width: 200px; /* Set width*/
+	position: relative; 
+	width: 200px; 
 }
 
-/* Incoming message styles */
+
 .incoming-msg {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start; /* Align incoming messages to the left */
-	background-color: #e1e1e1; /* Light gray background for incoming */
+	align-items: flex-start; 
+	background-color: #e1e1e1; 
 	padding: 10px;
 	
-	border-radius: 10px 20px 20px 0px; /* Rounded corners on top-left, top-right, bottom-right*/
+	border-radius: 10px 20px 20px 0px; 
 	margin-right:auto;
-	margin-left: 0; /* Keep incoming message on the left */
-	max-width: 90%; /* Set max width for incoming messages */
-	width: auto; /* Remove width restriction, let it expand based on content */
-	position: relative; /* To position the cloud arrow */
-	min-width: 200px; /* Set min width for incoming messages */
+	margin-left: 0; 
+	max-width: 90%; 
+	width: auto; 
+	position: relative; 
+	min-width: 200px; 
 }
 
-/* Outgoing message styles */
+
 .outgoing-msg {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end; /* Align outgoing messages to the right */
-	background-color: #d5e8f8; /* Blue background for outgoing */
-	/*color: white; /* Text color for outgoing message */
+	align-items: flex-end; 
+	background-color: #d5e8f8; 
+	/*color: white; 
 	padding: 10px;
-	border-radius: 20px 10px 0px 20px; /* Rounded corners on top-left, top-right, bottom-left */
-	max-width: 90%; /* Set max width for outgoing messages */
-	width: auto; /* Remove width restriction, let it expand based on content */
-	margin-right: 0; /* Keep outgoing message on the right */
+	border-radius: 20px 10px 0px 20px; 
+	max-width: 90%; 
+	width: auto; 
+	margin-right: 0; 
 	margin-left:auto;
-	position: relative; /* To position the cloud arrow */
-	min-width: 200px;	/* Set min width for outgoing messages */
+	position: relative; 
+	min-width: 200px;	
 }
 
 
-/* Time stamp styles */
 .send-time {
-	font-size: 12px; /* Smaller font size for timestamp */
-	color: #00CC66; /* Green color for send time */
+	font-size: 12px; 
+	color: #00CC66; 
 	text-align: right;
-	margin-top: 5px; /* Space between message and time */
-	align-self: flex-end; /* Align timestamp to the right */
+	margin-top: 5px; 
+	align-self: flex-end; 
 }
 
-/* Make sure the message container takes full width if needed */
 .message-container {
 	width: 100%;
 }
-</style>
+</style><?php */?>
 <?php 
 hooks()->do_action('lead_modal_profile_bottom', (isset($lead) ? $lead->id : '')); 
 ?>

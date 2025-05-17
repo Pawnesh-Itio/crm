@@ -105,15 +105,15 @@ if ($lead['status'] == $status['id']) { ?>
                 <p class="bold tw-text-sm"><?php echo e($lead['company'] != '' ? $lead['company'] : '-') ?></p>
                 <p class="text-muted lead-field-heading"><?php echo _l('lead_address'); ?></p>
                 <p class="bold tw-text-sm"><?php echo e($lead['address'] != '' ? $lead['address'] : '-') ?></p>
-                <p class="text-muted lead-field-heading"><?php echo _l('lead_city'); ?></p>
+                <?php /*?><p class="text-muted lead-field-heading"><?php echo _l('lead_city'); ?></p>
                 <p class="bold tw-text-sm"><?php echo e($lead['city'] != '' ? $lead['city'] : '-') ?></p>
                 <p class="text-muted lead-field-heading"><?php echo _l('lead_state'); ?></p>
-                <p class="bold tw-text-sm"><?php echo e($lead['state'] != '' ? $lead['state'] : '-') ?></p>
+                <p class="bold tw-text-sm"><?php echo e($lead['state'] != '' ? $lead['state'] : '-') ?></p><?php */?>
                 <p class="text-muted lead-field-heading"><?php echo _l('lead_country'); ?></p>
                 <p class="bold tw-text-sm">
                     <?php echo e($lead['country'] != 0 ? get_country($lead['country'])->short_name : '-') ?></p>
-                <p class="text-muted lead-field-heading"><?php echo _l('lead_zip'); ?></p>
-                <p class="bold tw-text-sm"><?php echo e($lead['zip'] != '' ? $lead['zip'] : '-') ?></p>
+                <?php /*?><p class="text-muted lead-field-heading"><?php echo _l('lead_zip'); ?></p>
+                <p class="bold tw-text-sm"><?php echo e($lead['zip'] != '' ? $lead['zip'] : '-') ?></p><?php */?>
             </div>
         </div>
     </div>
