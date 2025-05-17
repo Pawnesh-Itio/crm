@@ -309,14 +309,12 @@ $('input[type="radio"][name="accept_cards"]').on('click', function() {
  
   function closemodal(divdata){ $('#dealModal').modal('hide');
   //alert(divdata);
-  //$(divdata).hide(); // Or:
-  //$(divdata).fadeOut(); // Or:
-  //$(divdata).removeClass('show');
-  //$(divdata).dialog('close');
-  //$('#lead-modal').modal('hide');
-  //$('.modal-backdrop').remove();      // Remove the dark overlay
-  //$('body').removeClass('modal-open'); // Allow scrolling again
+  //$('#dealModal').modal('hide');
+  //$('#lead-modal').modal('show');
+  //$('body').addClass('modal-open');
+
   }
+
 $(function() {
   
   setCheckboxSelectLabels();

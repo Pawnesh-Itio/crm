@@ -1074,7 +1074,7 @@ class Leads extends AdminController
         $data['title']    = 'Leads statuses';
         $this->load->view('admin/leads/manage_statuses', $data);
     }
-	
+////////////////////////// END Deal Status /////////////////////////	
 	
 	/* View Deal status */
 	 public function deal_status()
@@ -1140,8 +1140,25 @@ class Leads extends AdminController
         }
         redirect(admin_url('leads/deal_status'));
     }
+
+////////////////////////// END y Status /////////////////////////
 	
-	/* View Deal status */
+////////////////////////// UW Status /////////////////////////	
+	/* View UW status */
+	 public function uw_status()
+    {
+        if (!is_admin()) {
+            //access_denied('UW Status');
+        }
+        $data['statuses'] = $this->leads_model->get_uw_status();
+        $data['title']    = 'UW Status';
+        $this->load->view('admin/leads/uw_status', $data);
+    }
+	
+////////////////////////// END UW Status /////////////////////////
+
+////////////////////////// Task Status /////////////////////////	
+	/* View Tasks status */
 	 public function task_status()
     {
         if (!is_admin()) {
@@ -1152,7 +1169,7 @@ class Leads extends AdminController
         $this->load->view('admin/leads/task_status', $data);
     }
 	
-	 /* Add or update deal status */
+	 /* Add or update task status */
     public function taskstatus()
     {
         if (!is_admin()) {
@@ -1186,7 +1203,7 @@ class Leads extends AdminController
         }
     }
 	
-	  /* Delete leads status from databae */
+	  /* Delete task status from databae */
     public function delete_task_status($id)
     {
         if (!is_admin()) {
@@ -1205,7 +1222,7 @@ class Leads extends AdminController
         }
         redirect(admin_url('leads/task_status'));
     }
-
+////////////////////////// End Task Status /////////////////////////
     /* Add or update leads status */
     public function status()
     {

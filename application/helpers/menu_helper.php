@@ -196,6 +196,16 @@ function app_init_admin_sidebar_menu_items()
 		]);
     }
 	
+		if (is_staff_member() && get_staff_rolex()<>3) {
+		$CI->app_menu->add_sidebar_menu_item('UW Status', [
+			'name'     => _l('UW Status'),
+			'href'     => admin_url('leads/uw_status'),
+			'icon'     => 'fa-solid fa-file-signature',
+			'position' => 20,
+			'badge'    => [],
+		]);
+    }
+	
 	  /*  if (is_staff_member()) {
 		$CI->app_menu->add_sidebar_menu_item('task', [
 			'name'     => _l('Deal Task'),
