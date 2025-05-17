@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 use app\services\imap\Imap;
 use app\services\LeadProfileBadges;
@@ -67,10 +67,10 @@ class Leads extends AdminController
             access_denied('Leads');
         }
 
-        $data['switch_kanban'] = true;
+        $data['switch_kanban_deal'] = true;
 
-        if ($this->session->userdata('leads_kanban_view') == 'true') {
-            $data['switch_kanban'] = false;
+        if ($this->session->userdata('deals_kanban_view') == 'true') {
+            $data['switch_kanban_deal'] = false;
             $data['bodyclass']     = 'kan-ban-body';
         }
 
@@ -92,7 +92,8 @@ class Leads extends AdminController
         $data['leadid']   = $id;
         $data['isKanBan'] = $this->session->has_userdata('leads_kanban_view') &&
             $this->session->userdata('leads_kanban_view') == 'true';
-
+        $data['isKanBanDeal'] = $this->session->has_userdata('deals_kanban_view') &&
+                                $this->session->userdata('deals_kanban_view') == 'true';
         $this->load->view('admin/leads/manage_leads', $data);
     }
 
@@ -110,8 +111,12 @@ class Leads extends AdminController
         if (!is_staff_member()) {
             ajax_access_denied();
         }
-
-        $data['statuses']      = $this->leads_model->get_status();
+        if($_SESSION['leads_page_type']=='leads'){
+            $data['statuses'] = $this->leads_model->get_status();
+        }
+        if($_SESSION['leads_page_type']=='deals'){
+            $data['statuses'] = $this->leads_model->get_deal_status();
+        }
         $data['base_currency'] = get_base_currency();
         $data['summary']       = get_leads_summary();
 
@@ -267,6 +272,18 @@ class Leads extends AdminController
         }
         $this->session->set_userdata([
             'leads_kanban_view' => $set,
+        ]);
+        redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
+    }
+    public function switch_kanban_deal($set = 0)
+    {
+        if ($set == 1) {
+            $set = 'true';
+        } else {
+            $set = 'false';
+        }
+        $this->session->set_userdata([
+            'deals_kanban_view' => $set,
         ]);
         redirect(previous_url() ?: $_SERVER['HTTP_REFERER']);
     }
@@ -1718,6 +1735,21 @@ class Leads extends AdminController
 				}
         }
 
+    }
+    public function get_lead_details($id){
+        if($id){
+           $leadData =  $this->leads_model->get_lead_by_id( $id);
+           $staff_role = get_staff_rolex();
+           echo json_encode([
+                'status' => 'success',
+                'lead'    => $leadData,
+                'staff_role' => $staff_role
+            ]);
+        }else{
+            echo json_encode([
+                'status' => 'failed'
+            ]);
+        }
     }
 
 

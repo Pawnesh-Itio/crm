@@ -64,6 +64,13 @@ class Leads_model extends App_Model
 
         return $this->db->get('leads')->row();
     }
+    public function get_lead_by_id($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->limit(1);
+
+        return $this->db->get('leads')->row();
+    }
 
     /**
      * Add new lead to database

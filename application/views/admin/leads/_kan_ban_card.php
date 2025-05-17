@@ -4,7 +4,7 @@ $lead_is_client              = $lead['is_lead_client'] !== '0';
 if ($lead_is_client) {
     $lead_already_client_tooltip = ' data-toggle="tooltip" title="' . _l('lead_have_client_profile') . '"';
 }
-if ($lead['status'] == $status['id']) { ?>
+if ($_SESSION['leads_page_type']=='leads' && $lead['status'] == $status['id'] || $_SESSION['leads_page_type']=='deals' && $lead['deal_status'] == $status['id'] ) { ?>
 <li data-lead-id="<?php echo e($lead['id']); ?>" <?php echo e($lead_already_client_tooltip); ?> class="lead-kan-ban<?php if ($lead['assigned'] == get_staff_user_id()) {
     echo ' current-user-lead';
 } ?><?php if ($lead_is_client && get_option('lead_lock_after_convert_to_customer') == 1 && !is_admin()) {

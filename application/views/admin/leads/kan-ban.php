@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed'); 
 $is_admin = is_admin();
 $i        = 0;
 foreach ($statuses as $status) {
@@ -9,8 +9,6 @@ foreach ($statuses as $status) {
         $kanBan->refresh($this->input->get('refresh')[$status['id']] ?? null);
     }
     $leads       = $kanBan->get();
-	
-	
     $total_leads = count($leads);
     $total_pages = $kanBan->totalPages();
 
@@ -32,10 +30,11 @@ foreach ($statuses as $status) {
         $status_color = 'style="background:' . $status['color'] . ';border:1px solid ' . $status['color'] . '"';
     } ?>
             <div class="panel-heading tw-bg-neutral-700 tw-text-white"
-                <?php if ($status['isdefault'] == 1) { ?>data-toggle="tooltip"
+                <?php if (isset($status['isdefault']) && $status['isdefault'] == 1) { ?>data-toggle="tooltip"
                 data-title="<?php echo _l('leads_converted_to_client') . ' - ' . _l('client'); ?>" <?php } ?>
                 <?php echo $status_color; ?> data-status-id="<?php echo e($status['id']); ?>">
                 <i class="fa fa-reorder pointer"></i>
+                <!-- Kan Ban Card Box Setup Like (Color Order Status Names) -->
                 <span class="heading pointer tw-ml-1" <?php if ($is_admin) { ?>
                     data-order="<?php echo e($status['statusorder']); ?>" data-color="<?php echo e($status['color']); ?>"
                     data-name="<?php echo e($status['name']); ?>"
@@ -45,9 +44,13 @@ foreach ($statuses as $status) {
                 <?php echo app_format_money(
         $summary[$statusSummaryIndex = array_search($status['id'], array_column($summary, 'id'))]['value'],
         $base_currency
-    ); ?> - <small><?php //echo $summary[$statusSummaryIndex]['total'] . ' ' . _l('leads') ?>
-	<?php echo $total_leads . ' ' . _l('leads')// ?></small>
-                <a href="#" onclick="return false;" class="pull-right color-white kanban-color-picker kanban-stage-color-picker<?php if ($status['isdefault'] == 1) {
+    ); ?> - <small>
+        <?php 
+        $label = $this->session->userdata('leads_page_type') === 'leads' ? "Leads" : "Deals";
+                 echo $total_leads . ' ' . $label
+        ?>
+        </small>
+                <a href="#" onclick="return false;" class="pull-right color-white kanban-color-picker kanban-stage-color-picker<?php if (isset($status['isdefault']) && $status['isdefault'] == 1) {
         echo ' kanban-stage-color-picker-last';
     } ?>" data-placement="bottom" data-toggle="popover" data-content="
             <div class='text-center'>
@@ -87,7 +90,10 @@ foreach ($statuses as $status) {
                 } ?>">
                             <h4>
                                 <i class="fa-solid fa-circle-notch" aria-hidden="true"></i><br /><br />
-                                <?php echo _l('no_leads_found'); ?>
+                                <?php 
+                                $notFoundMessage = $this->session->userdata('leads_page_type') === 'leads' ? "Lead not found!" : "Deal not found!";
+                                echo $notFoundMessage 
+                                ?>
                             </h4>
                         </li>
                     </ul>
