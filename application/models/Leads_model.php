@@ -1,6 +1,5 @@
 <?php
 
-
 use app\services\AbstractKanban;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -759,27 +758,20 @@ class Leads_model extends App_Model
         //print_r($statuses);//exit;
         return $statuses;
     }
-	
+////////////////////////// Deal Status /////////////////////////	
+
 	 public function get_deal_status($id = '', $where = [])
-    {
+       {
         if (is_numeric($id)) {
             $this->db->where($where);
             $this->db->where('id', $id);
-
             return $this->db->get(db_prefix() . 'deals_status')->row();
         }
-
-
        
             $this->db->where($where);
             $this->db->order_by('statusorder', 'asc');
-
             $result = $this->db->get(db_prefix() . 'deals_status')->result_array();
-           
-       
-
-        //print_r($statuses);//exit;
-        return $result;
+            return $result;
     }
 	
 	 public function add_deal_status($data)
@@ -837,6 +829,31 @@ class Leads_model extends App_Model
 
         return false;
     }
+////////////////////////// Deal Status /////////////////////////
+
+
+////////////////////////// UW Status /////////////////////////	
+	 public function get_uw_status($id = '', $where = [])
+     {
+        /*if (is_numeric($id)) {
+            $this->db->where($where);
+            $this->db->where('id', $id);
+            return $this->db->get(db_prefix() . 'deal_quotation')->row();
+        }*/
+            
+		if (!is_admin() && get_staff_rolex()<>4) {
+		$this->db->where(db_prefix() . 'leads.assigned', $_SESSION['staff_logged_in']);	// Use condition
+		}
+			
+		$this->db->select('' . db_prefix() . 'deal_quotation.*');
+        $this->db->join(db_prefix() . 'leads', '' . db_prefix() . 'leads.id=' . db_prefix() . 'deal_quotation.deal_id');
+		$this->db->order_by(db_prefix() . 'deal_quotation.id', 'DESC');
+        $result     = $this->db->get(db_prefix() . 'deal_quotation')->result_array();
+		//echo $this->db->last_query();exit;	
+        return $result;
+    }
+
+////////////////////////// End UW Status /////////////////////////	
 	
 	//=========================Task=====================
 	 public function get_task_status($id = '', $where = [])
