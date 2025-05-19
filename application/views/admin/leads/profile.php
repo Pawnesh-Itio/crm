@@ -287,7 +287,7 @@ label {
                     <dd class="tw-text-neutral-900 tw-mt-1">
                     <?php echo(isset($lead) && $lead->address != '' ? process_text_content_for_display($lead->address) : '-') ?></dd>
                    
-                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('lead_country'); ?>
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Resident`s Country'); ?>
                     </dt>
                     <dd class="tw-text-neutral-900 tw-mt-1">
                         <?php echo(isset($lead) && $lead->country != 0 ? e(get_country($lead->country)->short_name) : '-') ?>
@@ -689,7 +689,7 @@ foreach ($custom_field_array as $key => $value) {
                $countries                = get_all_countries();
                $customer_default_country = get_option('customer_default_country');
                $selected                 = (isset($lead) ? $lead->country : $customer_default_country);
-               echo render_select('country', $countries, [ 'country_id', [ 'short_name']], 'lead_country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
+               echo render_select('country', $countries, [ 'country_id', [ 'short_name']], 'Resident`s Country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
                ?>
 			   
 			    <?php

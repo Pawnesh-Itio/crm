@@ -62,14 +62,16 @@
                       $where .= '(addedfrom = ' . get_staff_user_id() . ' OR assigned = ' . get_staff_user_id() . ')';
                   }
                     // Junk leads are excluded from total
-                    $total_leads = total_rows(db_prefix() . 'leads', $where == '' ? 'junk=0' : $where . ' AND junk=0');
+                    $total_leads = total_rows(db_prefix() . 'leads', $where == '' ? 'status!=4' : $where . ' AND status!=4');
+					
                     if ($where == '') {
-                        $where = "date_converted IS NOT NULL";
+                        $where = "is_deal=1";  //date_converted IS NOT NULL
                     } else {
-                        $where .= " AND date_converted IS NOT NULL";
+                        $where .= " AND is_deal=1"; //AND date_converted IS NOT NULL"
                     }
 
                   $total_leads_converted         = total_rows(db_prefix() . 'leads', $where);
+				  //echo $this->db->last_query();exit;
                   $percent_total_leads_converted = ($total_leads > 0 ? number_format(($total_leads_converted * 100) / $total_leads, 2) : 0);
                   ?>
                 <div class="tw-text-neutral-800 mtop5 tw-flex tw-items-center tw-justify-between">
