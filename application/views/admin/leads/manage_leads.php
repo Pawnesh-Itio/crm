@@ -703,10 +703,26 @@ function leads_kanban_update(e, t) {
                 if (
                     (dealStatus === 1 && statusId !== 2) ||
                     (dealStatus === 2 && statusId !== 3) ||
-                    (dealStatus === 3 && statusId !== 4) ||
                     (dealStatus === 4 && statusId !== 4)
                 ) {
                     alert('Operation cannot be performed due to invalid status transition.');
+
+                    // Refresh the Kanban
+                    setTimeout(function () {
+                        $.post(admin_url + "leads/update_lead_status", {
+                            status: statusId,
+                            leadid: leadId,
+                            order: []
+                        }).done(function () {
+                            update_kan_ban_total_when_moving(e, statusId);
+                            leads_kanban();
+                        });
+                    }, 200);
+
+                    return; // Stop further execution
+                }
+                if((dealStatus === 3 && statusId !== 3)){
+                    alert('Operation cannot be performed, Underwriting is pending by Approver.');
 
                     // Refresh the Kanban
                     setTimeout(function () {
