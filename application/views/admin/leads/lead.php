@@ -1,4 +1,13 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<?php
+function ensureHttps($url) {
+    if (!preg_match('/^https?:\/\//i', $url)) {
+        return 'https://' . $url;
+    }
+    return $url;
+}
+
+?>
 
 <style>
 #lead-modal .modal-lg{
