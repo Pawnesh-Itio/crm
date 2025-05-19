@@ -684,56 +684,91 @@ $.ajax({
     }
 });
 }
-function leads_kanban_update(e, t) { //alert(11);
+function leads_kanban_update(e, t) {
     if (t === e.item.parent()[0]) {
         var $item = $(e.item);
         var leadId = $item.attr("data-lead-id");
-        var statusId = $item.parent().attr("data-lead-status-id");
+        var statusId = parseInt($item.parent().attr("data-lead-status-id")); // Ensure it's an integer
+
         // Check if Deal or Lead
         var isDeal = 1;
-        // Deal Logic
+
         if (isDeal) {
             $.get(admin_url + "leads/get_lead_details/" + leadId, function (response) {
-            var data = typeof response === 'string' ? JSON.parse(response) : response;
-            console.log(`Staff Role: ${data.staff_role}`);
-            console.log(`UW status: ${data.lead.uw_status}`);
-            console.log(`Deal Status: ${data.lead.deal_status}`);
-                if (data.lead.deal_status == 3 && data.lead.uw_status == 0 && data.staff_role != 4) {
-                    // Do nothing or show "Pending by UW Approver"
+                var data = typeof response === 'string' ? JSON.parse(response) : response;
+
+                var dealStatus = parseInt(data.lead.deal_status); // Ensure it's an integer
+
+                // === VALIDATION LOGIC ===
+                if (
+                    (dealStatus === 1 && statusId !== 2) ||
+                    (dealStatus === 2 && statusId !== 3) ||
+                    (dealStatus === 3 && statusId !== 4)
+                ) {
+                    alert('Operation cannot be performed due to invalid status transition.');
+
+                    // Refresh the Kanban
+                    setTimeout(function () {
+                        $.post(admin_url + "leads/update_lead_status", {
+                            status: statusId,
+                            leadid: leadId,
+                            order: []
+                        }).done(function () {
+                            update_kan_ban_total_when_moving(e, statusId);
+                            leads_kanban();
+                        });
+                    }, 200);
+
+                    return; // Stop further execution
+                }
+
+                //  MODAL HANDLING LOGIC 
+                if (dealStatus === 3 && data.lead.uw_status == 0 && data.staff_role != 4) {
                     console.log('Dont Show modal');
                 } else if (data.lead.uw_status == 0 && data.staff_role == 4) {
-                    console.log('Show modal');
-                    $('#dealModal').modal('show');
+                    init_lead(leadId);
+                    setTimeout(() => {
+                        if ($('#dealModal').length) {
+                            $('#dealModal').modal('show');
+                        } else {
+                            console.error('Modal still not found');
+                        }
+                    }, 500);
                 } else {
                     console.log('Show modal 2');
-                    // Trigger modal for other statuses as fallback
                     init_lead(leadId);
+                    $('#lead-modal').one('shown.bs.modal', function () {
+                        setTimeout(() => {
+                            $('#dealModal').modal('show');
+                        }, 100); // small buffer
+                    });
 
-                    // Wait shortly, then show modal
-                    setTimeout(() => {
-                    if ($('#dealModal').length) {
-                        $('#dealModal').modal('show');
-                    } else {
-                        console.error('Modal still not found');
-                    }
-                    }, 500);  // 200ms delay (adjust if needed)
                 }
             });
             return;
         }
 
-        var a = { status: $(e.item.parent()[0]).attr("data-lead-status-id"), leadid: $(e.item).attr("data-lead-id"), order: [] };
+        // Regular lead logic
+        var a = {
+            status: statusId,
+            leadid: leadId,
+            order: []
+        };
+
         $.each($(e.item).parents(".leads-status").find("li"), function (e, t) {
             var i = $(t).attr("data-lead-id");
-            i && a.order.push([i, e + 1]);
-        }),
-            setTimeout(function () { //alert(JSON.stringify(a)); // Alerts the full JSON string
-                $.post(admin_url + "leads/update_lead_status", a).done(function (t) {
-                    update_kan_ban_total_when_moving(e, a.status), leads_kanban();
-                });
-            }, 200);
+            if (i) a.order.push([i, e + 1]);
+        });
+
+        setTimeout(function () {
+            $.post(admin_url + "leads/update_lead_status", a).done(function (t) {
+                update_kan_ban_total_when_moving(e, a.status);
+                leads_kanban();
+            });
+        }, 200);
     }
 }
+
 </script>
 </body>
 </html>
