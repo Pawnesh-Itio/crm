@@ -703,7 +703,8 @@ function leads_kanban_update(e, t) {
                 if (
                     (dealStatus === 1 && statusId !== 2) ||
                     (dealStatus === 2 && statusId !== 3) ||
-                    (dealStatus === 3 && statusId !== 4)
+                    (dealStatus === 3 && statusId !== 4) ||
+                    (dealStatus === 4 && statusId !== 4)
                 ) {
                     alert('Operation cannot be performed due to invalid status transition.');
 
