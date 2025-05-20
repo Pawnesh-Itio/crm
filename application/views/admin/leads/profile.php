@@ -5,50 +5,7 @@
     echo 'lead-is-junk-or-lost';
 } ?>>
 
-<?php /*?>
-##########Shift on css file#############
-<style>
-.toggle-next{
-  border-radius: 0;
-  }
-  
-label {
-  cursor: pointer;
-  }
-  
-.ellipsis {
-  text-overflow: ellipsis;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  }
 
-.apply-selection{
-  display: none;
-  width: 100%;
-  margin: 0;
-  padding: 5px 10px;
-  border-bottom: 1px solid #ccc;
-  }
-  
-  .ajax-link{ 
-    display: none;
-	}
-    
-.checkboxes{
-  margin: 0;
-  display: none;
-  border: 1px solid #ccc;
-  border-top: 0;
-  }
-
-  .inner-wrap{
-    padding: 5px 10px;
-    max-height: 140px;
-    overflow: auto;
-	}
-</style>	
-	<?php */?>
 
     <?php if (isset($lead)) { ?>
     <!-- Conversation Dropdown By TechWizard -->
@@ -268,7 +225,7 @@ label {
 					
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500"><?php echo _l('Business URL'); ?>
                     </dt>
-                    <dd class="tw-text-neutral-900 tw-mt-1">
+                    <dd class="tw-text-neutral-900 tw-mt-1" style="word-break: break-all;">
                         <?php echo(isset($lead) && $lead->website != '' ? '<a href="' . e(maybe_add_http($lead->website)) . '" target="_blank">' . e($lead->website) . '</a>' : '-') ?>
                     </dd>
                     
@@ -668,9 +625,12 @@ foreach ($custom_field_array as $key => $value) {
                    echo render_input('website', 'Business URL', $value);//lead_website to Business URL 
                } else { ?>
                 <div class="form-group">
-                    <label for="website"><?php echo _l('Business URL'); ?></label> 
+                    <label for="website"><?php echo _l('Business URL'); ?> (add with https:// or http:// )</label> 
                     <div class="input-group">
-                        <input type="url" name="website" id="website" value="<?php echo e($lead->website); ?>"
+					<?php
+					
+					?>
+                        <input type="url" name="website" id="website" value="<?php echo ensureHttps(e($lead->website)); ?>"
                             class="form-control">
                         <div class="input-group-addon">
                             <span>
@@ -853,8 +813,8 @@ foreach ($custom_field_array as $key => $value) {
 					<div class="scroller arrow-left"><i class="fa fa-angle-left"></i></div>
 					<div class="scroller arrow-right"><i class="fa fa-angle-right"></i></div>
 					<?php /*?>============Tab Section=========<?php */?>
-					<div class="horizontal-tabs">
-						<ul style="background: #a0bec6;" class="nav-tabs-horizontal nav nav-tabs<?php if (!isset($lead)) {
+					<div class="horizontal-tabs" id="global">
+						<ul class="nav-tabs-horizontal nav nav-tabs<?php if (!isset($lead)) {
 							echo ' lead-new';
 						} ?>" role="tablist">
 						<li role="presentation" class="active">
@@ -928,7 +888,7 @@ foreach ($custom_field_array as $key => $value) {
 						<li role="presentation">
 								<a href="#tab_lead_task" aria-controls="tab_lead_task" role="tab"
 									data-toggle="tab">
-									<?php echo _l('To Do'); 
+									<?php echo _l('To Do List'); 
 									if (count($deal_task) > 0) {
 										echo ' <span class="badge">' . count($deal_task) . '</span>';
 									}

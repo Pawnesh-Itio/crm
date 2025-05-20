@@ -852,7 +852,7 @@ class Leads_model extends App_Model
 		$this->db->where(db_prefix() . 'leads.assigned', $_SESSION['staff_logged_in']);	// Use condition
 		}
 			
-		$this->db->select('' . db_prefix() . 'deal_quotation.*');
+		$this->db->select('' . db_prefix() . 'deal_quotation.*,leads.name,leads.company,leads.email');
         $this->db->join(db_prefix() . 'leads', '' . db_prefix() . 'leads.id=' . db_prefix() . 'deal_quotation.deal_id');
 		$this->db->order_by(db_prefix() . 'deal_quotation.id', 'DESC');
         $result     = $this->db->get(db_prefix() . 'deal_quotation')->result_array();
@@ -1108,10 +1108,11 @@ class Leads_model extends App_Model
      */
     public function get_lead_activity_log($id)
     {
-        $sorting = hooks()->apply_filters('lead_activity_log_default_sort', 'ASC');
+        $sorting = hooks()->apply_filters('lead_activity_log_default_sort', 'DESC');
 
         $this->db->where('leadid', $id);
         $this->db->order_by('date', $sorting);
+		
 
         return $this->db->get(db_prefix() . 'lead_activity_log')->result_array();
     }
@@ -1715,7 +1716,7 @@ class Leads_model extends App_Model
         $this->db->update(db_prefix().'leads', $datax);
 		
 		// For Email Data
-		$this->db->select('name,title,company,description,country,address,email,website,country_code,phonenumber,BusinessNature,MonthlyVolume,IncorporationCountry,AverageProductPrice,products_services,descriptor,processing_history,subject,target_countries,website_info,old_history');
+		$this->db->select('name,company,description,country,address,email,website,country_code,phonenumber,BusinessNature,MonthlyVolume,IncorporationCountry,AverageProductPrice,products_services,descriptor,processing_history,subject,target_countries,website_info,old_history');
 		$this->db->where('id', $id);
         $dealdata=$this->db->get('leads')->row();
         $dealdata->country=get_country($dealdata->country)->short_name ?? null; // Get Country name from country code

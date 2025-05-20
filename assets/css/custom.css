@@ -590,6 +590,78 @@ label {
 	width: 100%;
 }
 
+#global {position:relative;
+  width:100%;
+  min-width:400px;
+  height:100px;
+  margin:0 auto;
+  padding-top:12px;
+  border-bottom:4px solid #8fa11d;
+  overflow:hidden;
+}
+
+#global li {
+  display: block;
+  float: right;
+  padding: 10px 14px 8px;
+  background-color: #6a7a0f;
+  border-radius:8px 8px 0 0;
+  margin-right:10px;
+  z-index:2;
+  position:relative;
+  cursor:pointer;
+  color:#cfd08b;
+  
+  font:bold 12px/20px Arial, Helvetica, sans-serif;
+  
+  text-shadow:rgba(0,0,0,.16) -1px -1px;
+}
+#global li:before, #global li:after {
+  display:block; content:" "; position:absolute;  top:0; height:100%; width:18px;   
+  background-color: #6a7a0f;
+}
+#global li:before {
+  right:-8px;
+  transform: skew(30deg, 0deg) ;
+  -webkit-transform: skew(30deg, 0deg) ;
+  -moz-transform: skew(30deg, 0deg) ;
+  -o-transform: skew(30deg, 0deg) ;
+  -ms-transform: skew(30deg, 0deg) ;
+  border-radius:0 8px 0 0;
+  box-shadow:rgba(0,0,0,.1)3px 2px 5px, inset rgba(255,255,255,.09)-1px 0;
+}
+#global li:after {
+  left:-8px;
+  transform: skew(-30deg, 0deg) ;
+  -webkit-transform: skew(-30deg, 0deg) ;
+  -moz-transform: skew(-30deg, 0deg) ;
+  -o-transform: skew(-30deg, 0deg) ;
+  -ms-transform: skew(-30deg, 0deg) ;
+  border-radius:8px 0 0 0;
+  box-shadow:rgba(0,0,0,.1)-3px 2px 5px, inset rgba(255,255,255,.09)1px 0;
+}
+#global li:hover, #global li:hover:before, #global li:hover:after {
+  background-color:#5C6A0D;
+}
+#global .active, #global .active:before, #global .active:after, #global .active:hover, #global .active:hover:before, #global .active:hover:after { background-color:#8fa11d; color:#fff;}
+#global .active {z-index:3;}
+
+#global .nav-tabs>li.active>a{
+border-color: #FFFFFF !important;
+color: #FFFFFF !important;
+font-size: 14px !important;
+}
+#global .nav>li>a:focus,#global  .nav>li>a:hover {
+border-color: #FFFFFF !important;
+color: #FFFFFF !important;
+font-size: 13px !important;
+}
+#global .nav-tabs>li>a {
+    border-color: #FFFFFF !important;
+color: #FFFFFF !important;
+font-size: 12px !important;
+}
+
 @media only screen and (min-width: 769px) and (max-width: 992px) {
 }
 @media only screen and (max-width: 768px) {
