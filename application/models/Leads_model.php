@@ -1027,10 +1027,9 @@ class Leads_model extends App_Model
     public function update_lead_status($data)
     {
 
-        $this->db->select('status');
+        $this->db->select('status, assigned');
         $this->db->where('id', $data['leadid']);
         $_old = $this->db->get(db_prefix() . 'leads')->row();
-
         $old_status = '';
 
         if ($_old) {
@@ -1052,6 +1051,17 @@ class Leads_model extends App_Model
 
         if ($this->db->affected_rows() > 0) {
             $affectedRows++;
+            // Notify the user that the lead status has been changed
+                        // add_notification
+                $notification_data = [
+                    'description'     => 'lead_stauss_updated',
+                    'touserid'        => $_old->assigned,
+                    'link'            => 'leads/index/' . $data['leadid']
+                ];
+                if (add_notification($notification_data)) {
+                    pusher_trigger_notification([$_old->assigned]);
+                }
+
             if ($current_status != $old_status && $old_status != '') {
                 $_log_message    = 'not_lead_activity_status_updated';
                 $additional_data = serialize([
@@ -1526,16 +1536,21 @@ class Leads_model extends App_Model
         $data['staff']   = get_staff_user_id();
         $data['rel_id']      = $rel_id;
         $data['description'] = nl2br($data['description']);
-		//$data['task_title'] = "hiiiiiii";
-
-
-
-        
-        $this->db->insert(db_prefix() . 'deal_task', $data);
-		//echo $this->db->last_query();exit;
+        $insert_data = $data;
+        unset($insert_data['assigned_id']); // Remove assign_id only from insert data
+        $this->db->insert(db_prefix() . 'deal_task', $insert_data);
         $insert_id = $this->db->insert_id();
-
+        $assigned = $data['assigned_id'];
         if ($insert_id) {
+            // add_notification
+            $notification_data = [
+                'description'     => 'lead_todo_task_created',
+                'touserid'        => $assigned,
+                'link'            => 'leads/index/' . $rel_id
+            ];
+            if (add_notification($notification_data)) {
+                pusher_trigger_notification([$assigned]);
+            }
             hooks()->do_action('note_created', $insert_id, $data);
 
             return $insert_id;

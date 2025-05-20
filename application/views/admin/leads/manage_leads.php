@@ -691,7 +691,8 @@ function leads_kanban_update(e, t) {
         var statusId = parseInt($item.parent().attr("data-lead-status-id")); // Ensure it's an integer
 
         // Check if Deal or Lead
-        var isDeal = 1;
+        var pageType = "<?= $_SESSION['leads_page_type'] ?>"; //now it's a string
+        var isDeal = pageType === "deals" ? 1 : 0;
 
         if (isDeal) {
             $.get(admin_url + "leads/get_lead_details/" + leadId, function (response) {

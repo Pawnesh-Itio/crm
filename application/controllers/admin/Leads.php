@@ -142,17 +142,59 @@ class Leads extends AdminController
                     'leadView' => $id ? $this->_get_lead_data($id) : [],
                 ]);
             } else {
-                $emailOriginal   = $this->db->select('email')->where('id', $id)->get(db_prefix() . 'leads')->row()->email;
+                $leadOriginal   = $this->db
+                ->select('email, status, source, assigned')
+                ->where('id', $id)
+                ->get(db_prefix() . 'leads')
+                ->row();
                 $proposalWarning = false;
                 $message         = '';
                 $success         = $this->leads_model->update($this->input->post(), $id);
 
                 if ($success) {
-                    $emailNow = $this->db->select('email')->where('id', $id)->get(db_prefix() . 'leads')->row()->email;
+
+                    $leadNow = $this->db
+                    ->select('email, status, source, assigned')
+                    ->where('id', $id)
+                    ->get(db_prefix() . 'leads')
+                    ->row();
+                    // Notification on lead status change
+                    if($leadOriginal->status != $leadNow->status){
+                        $notification_data = [
+                            'description'     => 'lead_stauss_updated',
+                            'touserid'        => $leadNow->assigned,
+                            'link'            => 'leads/index/' . $id
+                        ];
+                        if (add_notification($notification_data)) {
+                            pusher_trigger_notification([$leadNow->assigned]);
+                        }
+                    }
+                    // Notification on lead source change
+                    if($leadOriginal->source != $leadNow->source){
+                        $notification_data = [
+                            'description'     => 'lead_source_updated',
+                            'touserid'        => $leadNow->assigned,
+                            'link'            => 'leads/index/' . $id
+                        ];
+                        if (add_notification($notification_data)) {
+                            pusher_trigger_notification([$leadNow->assigned]);
+                        }
+                    }
+                    // Notification on lead assigned change
+                    if($leadOriginal->assigned != $leadNow->assigned){
+                        $notification_data = [
+                            'description'     => 'lead_assigned_updated',
+                            'touserid'        => $leadNow->assigned,
+                            'link'            => 'leads/index/' . $id
+                        ];
+                        if (add_notification($notification_data)) {
+                            pusher_trigger_notification([$leadNow->assigned]);
+                        }
+                    }
 
                     $proposalWarning = (total_rows(db_prefix() . 'proposals', [
                         'rel_type' => 'lead',
-                        'rel_id'   => $id, ]) > 0 && ($emailOriginal != $emailNow) && $emailNow != '') ? true : false;
+                        'rel_id'   => $id, ]) > 0 && ($leadOriginal->email != $leadNow->email) && $leadNow->email != '') ? true : false;
 
                     $message = _l('updated_successfully', _l('lead'));
                 }
@@ -1333,7 +1375,7 @@ class Leads extends AdminController
 			//print_r($data);exit;
             
 
-            $note_id = $this->leads_model->add_deal_task($data, 'lead', $rel_id);
+            $note_id = $this->leads_model->add_deal_task($data, 'lead', $rel_id); 
 
             if ($note_id) {
                 if (isset($contacted_date)) {

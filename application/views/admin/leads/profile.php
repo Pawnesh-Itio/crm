@@ -982,6 +982,7 @@ $this->db->select('id,name,');
 $this->db->order_by('statusorder', 'asc');
 $data['taskstatus']   = $this->db->get(db_prefix() . 'task_status')->result_array(); 
 ?>
+<input type="hidden" name="assigned_id" id="assigned_id" value="<?php echo $lead->assigned;?>"  />
 <div class="form-group">
 <label for="date" class="control-label"> 
 <small class="req text-danger">* </small>Title</label>
