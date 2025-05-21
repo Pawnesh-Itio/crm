@@ -197,7 +197,30 @@
             <div class="col-md-6 col-xs-12 lead-information-col">
                 <div class="lead-info-heading">
                     <h4>
-                        <?php echo _l('lead_info'); ?>
+                        <?php echo _l('lead_info') ; ?>
+                        <?php
+                        if($lead->is_child == 1){
+                            echo '<span class="text-warning"> (Child)</span>';
+                            $hrefAttr = 'href="' . admin_url('leads/index/' . $lead->parent_id) . '" onclick="init_lead(' . $lead->parent_id . ');return false;"';
+                      ?>
+                            <a <?php echo $hrefAttr; ?> class="text-info"  >
+                                Go to Parent
+                            </a>
+                      <?php
+                      }
+                        if($lead->merged_lead_ids && !empty($lead->merged_lead_ids)){
+                        $mergedIds = $lead->merged_lead_ids;
+                        $mergedIds = explode(',', $mergedIds);
+                        foreach($mergedIds as $ids){ 
+                          $hrefAttr = 'href="' . admin_url('leads/index/' . $ids) . '" onclick="init_lead(' . $ids . ');return false;"';
+                          ?>
+                            <a <?php echo $hrefAttr; ?> class="text-info"  >
+                                <?php echo $ids; ?>
+                            </a>
+                          <?php
+                        }
+                    }
+                        ?>
                     </h4>
                 </div>
                 <dl>

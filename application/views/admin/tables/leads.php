@@ -111,7 +111,7 @@ return App_table::find('leads')
             db_prefix() . 'leads.name as name',
         ];
         if (is_gdpr() && $consentLeads == '1') {
-            $aColumns[] = '1';
+            $aColumns[] = '1';;
         }
         $aColumns = array_merge($aColumns, [
             'company',
@@ -169,6 +169,30 @@ return App_table::find('leads')
 		array_push($where, ' AND (deal_status = 3)'); // display only list for UW Deals
 		
 		}
+        // Excluding merged leads
+        // Exclude all leads whose ID is included in someone else's merged_lead_ids
+        $CI =& get_instance();
+        $merged_lead_ids = $CI->db->select('merged_lead_ids')
+            ->from(db_prefix() . 'leads')
+            ->where('is_merged', 1)
+            ->get()
+            ->result_array();
+
+            $exclude_ids = [];
+
+            foreach ($merged_lead_ids as $row) {
+                if (!empty($row['merged_lead_ids'])) {
+                    $ids = explode(',', $row['merged_lead_ids']);
+                    $exclude_ids = array_merge($exclude_ids, $ids);
+                }
+            }
+
+            $exclude_ids = array_unique(array_filter($exclude_ids)); // clean array
+            if (!empty($exclude_ids)) {
+                $where[] = 'AND ' . db_prefix() . 'leads.id NOT IN (' . implode(',', $exclude_ids) . ')';
+            }
+
+
 
         $aColumns = hooks()->apply_filters('leads_table_sql_columns', $aColumns);
 

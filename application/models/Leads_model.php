@@ -2221,7 +2221,35 @@ foreach ($data as $key => $value) {
     $html .= "</table>";
     return $html;
 }
+    public function get_multiple($ids = []){
+            if (empty($ids)) {
+                return [];
+            }
+            $this->db->select('leads.*, it_crm_leads_status.name as status_name, it_crm_staff.firstname, it_crm_staff.lastname,it_crm_countries.short_name as country_name ');
+            $this->db->from('it_crm_leads as leads');
+            $this->db->where_in('leads.id', $ids);
+            $this->db->join('it_crm_leads_status', 'leads.status = it_crm_leads_status.id', 'left');
+            $this->db->join('it_crm_staff', 'leads.assigned = it_crm_staff.staffid', 'left');
+            $this->db->join('it_crm_countries', 'it_crm_countries.country_id = leads.country', 'left');
+            $query = $this->db->get();
+            return $query->result_array();
+        }
+    public function insert_merged_lead($data){
+        $this->db->insert(db_prefix() . 'leads', $data);
+        $insert_id = $this->db->insert_id();
+        if ($insert_id) {
+            if (!empty($data['merged_lead_ids'])) {
+            $merged_ids = explode(',', $data['merged_lead_ids']);
 
-	
-
+            $this->db->where_in('id', $merged_ids);
+            $this->db->update(db_prefix() . 'leads', [
+                'parent_id' => $insert_id,
+                'is_child'  => 1
+            ]);
+        }
+            return $insert_id;
+        } else {
+            return false;
+        }
+    }
 }

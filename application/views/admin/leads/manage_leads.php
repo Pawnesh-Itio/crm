@@ -161,6 +161,10 @@
                                                     <h4 class="modal-title"><?php echo _l('bulk_actions'); ?></h4>
                                                 </div>
                                                 <div class="modal-body">
+                                                    <div>
+                                                        <button class="btn btn-sm btn-info" onclick="merge_leads()">Merge Leads</button>
+                                                    </div>
+                                                    <hr class="mass_delete_separator" />
                                                     <?php if (staff_can('delete',  'leads')) { ?>
                                                     <div class="checkbox checkbox-danger">
                                                         <input type="checkbox" name="mass_delete" id="mass_delete">
@@ -461,8 +465,16 @@
     </div>
   </div>
 </div>
-
  <!-- End Lead Assign Model -->
+  <!-- Create the model for lead merge -->
+<div class="modal fade" id="mergeModal" tabindex="-1" role="dialog" aria-labelledby="mergeModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+<!-- End Lead Merge Model -->
 <!-- MySocket logic -->
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
@@ -786,7 +798,92 @@ function leads_kanban_update(e, t) {
         }, 200);
     }
 }
+// Function to merge leads
+function merge_leads() {
+  var ids = [];
+  var rows = table_leads.find("tbody tr");
+  $.each(rows, function () {
+    var checkbox = $($(this).find("td").eq(0)).find("input");
+    if (checkbox.prop("checked") === true) {
+      ids.push(checkbox.val());
+    }
+  });
+  if (ids.length !== 2) {
+    alert_float("warning", "Please select exactly 2 leads to merge.");
+    return;
+  }
+//Fetch lead details
+  $.post(admin_url + "leads/get_leads_details", { ids: ids }, function (response) {
+    var data = typeof response === 'string' ? JSON.parse(response) : response;
+    console.log(data);
+    if (data.status === 'success') {
+        $('#mergeModal .modal-content').html(data.html);
+        $('#leads_bulk_actions').modal('hide');
+        $('#mergeModal').modal('show');
+    } else {
+        alert_float('danger', data.message || 'Unable to load leads.');
+    }
+  });
+}
+</script>
+<script>
+  function toggleCheckAll(checkbox, columnIndex) {
+    const card = checkbox.closest('.card');
+    if (!card) return;
 
+    var inputs = card.querySelectorAll('input[type="checkbox"]:not(.check-all), input[type="radio"]');
+    inputs.forEach(function(input) {
+      input.checked = checkbox.checked;
+    });
+
+    updateFieldHighlights();
+  }
+
+  function updateFieldHighlights() {
+    const fields = ['email', 'website', 'phonenumber'];
+
+    fields.forEach(field => {
+      const allInputs = document.querySelectorAll(`input[data-field="${field}"]`);
+
+      const checkedByColumn = {};
+      allInputs.forEach(input => {
+        if (input.checked) {
+          const col = input.getAttribute('data-column');
+          if (!checkedByColumn[col]) checkedByColumn[col] = [];
+          checkedByColumn[col].push(input);
+        }
+      });
+
+      // Reset all highlights
+      allInputs.forEach(input => {
+        const label = input.closest('p').querySelector('.field-label');
+        if (label) label.classList.remove('field-selected-primary', 'field-selected-additional');
+      });
+
+      const sortedCols = Object.keys(checkedByColumn).sort(); // Lower index gets primary
+      if (sortedCols.length > 0) {
+        const primaryCol = sortedCols[0];
+        checkedByColumn[primaryCol].forEach(input => {
+          const label = input.closest('p').querySelector('.field-label');
+          if (label) label.classList.add('field-selected-primary');
+        });
+
+        for (let i = 1; i < sortedCols.length; i++) {
+          const col = sortedCols[i];
+          checkedByColumn[col].forEach(input => {
+            const label = input.closest('p').querySelector('.field-label');
+            if (label) label.classList.add('field-selected-additional');
+          });
+        }
+      }
+    });
+  }
+
+  document.addEventListener('change', function (e) {
+    if (e.target.matches('.field-checkbox')) {
+      updateFieldHighlights();
+    }
+  });
 </script>
 </body>
 </html>

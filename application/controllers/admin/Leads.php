@@ -1810,9 +1810,99 @@ class Leads extends AdminController
             ]);
         }
     }
-
-
-
-	
-
+    public function get_leads_details() {
+        $ids = $this->input->post('ids');
+        // Example logic
+        $leads = $this->leads_model->get_multiple($ids);
+        if($leads){
+            // Render the view into HTML
+            $html = $this->load->view('admin/leads/leads_merge_model', ['leads' => $leads], true);
+            echo json_encode([
+                'status' => 'success',
+                'html' => $html
+            ]);
+        }else{
+            echo json_encode([
+                'status' => 'failed',
+                'message' => 'Leads not found.'
+            ]);
+        }
+    }
+    public function merge_leads(){
+        $lead_ids = $this->input->post('lead_ids');
+        $lead_ids = implode(',', $lead_ids);
+        $name = $this->input->post('name');
+        $email = $this->input->post('email');
+        $phonenumber = $this->input->post('phonenumber');
+        $website = $this->input->post('website');
+        $country = $this->input->post('country');
+        $address = $this->input->post('address');
+        $company = $this->input->post('company');
+        $status = $this->input->post('status');
+        $source = $this->input->post('source');
+        $assigned = $this->input->post('assigned');
+        $country_code = $this->input->post('country_code');
+        if(sizeof($email) > 1){
+            $primaryEmail = $email[0];
+            $additionalEmails = $email[1];
+        }else{
+            $primaryEmail = $email[0];
+            $additionalEmails="";
+        }
+        if(sizeof($phonenumber) > 1){
+            $primaryPhone = $phonenumber[0];
+            $additionalPhones = $phonenumber[1];
+        }else{
+            $primaryPhone = $phonenumber[0];
+            $additionalPhones="";
+        }
+        if(sizeof($website) > 1){
+            $primaryWebsite = $website[0];
+            $additionalWebsites = $website[1]; 
+        }else{
+            $primaryWebsite = $website[0];
+             $additionalWebsites="";
+        }
+        if(sizeof($country_code) > 1){
+            $primaryCountryCode = $country_code[0];
+            $additionalCountryCodes = $country_code[1];
+        }else{
+            $primaryCountryCode = $country_code[0];
+            $additionalCountryCodes="";
+        }
+        $additionalArray = array(
+            'email' => $additionalEmails,
+            'phonenumber' => $additionalPhones,
+            'website' => $additionalWebsites,
+            'country_code' => $additionalCountryCodes
+        );
+        $additionalArrayJson = json_encode($additionalArray);
+        $current_datetime = date('Y-m-d H:i:s');
+        $data = array(
+            'name' => $name,
+            'email' => $primaryEmail,
+            'phonenumber' => $primaryPhone,
+            'assigned'=>$assigned,
+            'website' => $primaryWebsite,
+            'country' => $country,
+            'address' => $address,
+            'company' => $company,
+            'status' => $status,
+            'source' => $source,
+            'dateadded' => $current_datetime,
+            'country_code' => $primaryCountryCode,
+            'additional_data' => $additionalArrayJson,
+            'merged_lead_ids' => $lead_ids,
+            'is_merged' => 1
+        );
+        $lead_id = $this->leads_model->insert_merged_lead($data);
+        if($lead_id){
+            // rediret to the leads page with alert message of success
+             set_alert('success', 'Leads merged successfully.');
+             redirect(admin_url('leads/'));
+        }else{
+              set_alert('danger', 'Something went wrong while merging leads.');
+        }
+        redirect(admin_url('leads'));
+    }
 }
