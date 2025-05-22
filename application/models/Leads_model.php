@@ -2240,6 +2240,17 @@ foreach ($data as $key => $value) {
         if ($insert_id) {
             if (!empty($data['merged_lead_ids'])) {
             $merged_ids = explode(',', $data['merged_lead_ids']);
+            $mergedLeadOneLink = '<a href="' . admin_url('leads/index/' . $merged_ids[0]) . '" onclick="init_lead(' . $merged_ids[0] . ');return false;">' . $merged_ids[0] . '</a>';
+            $mergedLeadTwoLink = '<a href="' . admin_url('leads/index/' . $merged_ids[1]) . '" onclick="init_lead(' . $merged_ids[1] . ');return false;">' . $merged_ids[1] . '</a>';
+            // Additional data as array
+            $additional_data = serialize([
+                $mergedLeadOneLink,
+                $mergedLeadTwoLink,
+            ]);
+            $description_key = 'leads_merged';
+            // Log activity
+            $SaveLog = $this->leads_model->log_lead_activity($insert_id, $description_key, false, $additional_data);
+
 
             $this->db->where_in('id', $merged_ids);
             $this->db->update(db_prefix() . 'leads', [
@@ -2249,6 +2260,16 @@ foreach ($data as $key => $value) {
         }
             return $insert_id;
         } else {
+            return false;
+        }
+    }
+    public function getLeadNameById($lead_id){
+        $this->db->select('name');
+        $this->db->where('id', $lead_id);
+        $result = $this->db->get(db_prefix() . 'leads')->row();
+        if($result){
+            return $result->name;
+        }else{
             return false;
         }
     }

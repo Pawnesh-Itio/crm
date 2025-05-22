@@ -1905,4 +1905,17 @@ class Leads extends AdminController
         }
         redirect(admin_url('leads'));
     }
+    public function getLeadNameById($id){
+        $lead = $this->leads_model->getLeadNameById($id);
+        if($lead){
+            echo json_encode([
+                'status' => 'success',
+                'lead' => $lead
+            ]);
+        }else{
+            echo json_encode([
+                'status' => 'failed'
+            ]);
+        }
+    }
 }

@@ -825,65 +825,23 @@ function merge_leads() {
     }
   });
 }
-</script>
-<script>
-  function toggleCheckAll(checkbox, columnIndex) {
-    const card = checkbox.closest('.card');
-    if (!card) return;
-
-    var inputs = card.querySelectorAll('input[type="checkbox"]:not(.check-all), input[type="radio"]');
-    inputs.forEach(function(input) {
-      input.checked = checkbox.checked;
-    });
-
-    updateFieldHighlights();
-  }
-
-  function updateFieldHighlights() {
-    const fields = ['email', 'website', 'phonenumber'];
-
-    fields.forEach(field => {
-      const allInputs = document.querySelectorAll(`input[data-field="${field}"]`);
-
-      const checkedByColumn = {};
-      allInputs.forEach(input => {
-        if (input.checked) {
-          const col = input.getAttribute('data-column');
-          if (!checkedByColumn[col]) checkedByColumn[col] = [];
-          checkedByColumn[col].push(input);
+// Get Lead name by id
+function getLeadNameById(leadId) {
+    var leadName = '';
+    $.ajax({
+        url: admin_url + 'leads/getLeadNameById',
+        type: 'POST',
+        data: { lead_id: leadId },
+        async: false,
+        success: function (response) {
+            var data = typeof response === 'string' ? JSON.parse(response) : response;
+            if (data.status === 'success') {
+                leadName = data.lead_name;
+            }
         }
-      });
-
-      // Reset all highlights
-      allInputs.forEach(input => {
-        const label = input.closest('p').querySelector('.field-label');
-        if (label) label.classList.remove('field-selected-primary', 'field-selected-additional');
-      });
-
-      const sortedCols = Object.keys(checkedByColumn).sort(); // Lower index gets primary
-      if (sortedCols.length > 0) {
-        const primaryCol = sortedCols[0];
-        checkedByColumn[primaryCol].forEach(input => {
-          const label = input.closest('p').querySelector('.field-label');
-          if (label) label.classList.add('field-selected-primary');
-        });
-
-        for (let i = 1; i < sortedCols.length; i++) {
-          const col = sortedCols[i];
-          checkedByColumn[col].forEach(input => {
-            const label = input.closest('p').querySelector('.field-label');
-            if (label) label.classList.add('field-selected-additional');
-          });
-        }
-      }
     });
-  }
-
-  document.addEventListener('change', function (e) {
-    if (e.target.matches('.field-checkbox')) {
-      updateFieldHighlights();
-    }
-  });
+    return leadName;
+}
 </script>
 </body>
 </html>

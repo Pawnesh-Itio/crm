@@ -2975,6 +2975,7 @@ $lang['no_child_found']                                     = 'No Child %s Found
 $lang['company_vat_number']                                 = 'VAT Number';
 $lang['not_lead_assigned_from_form']                        = 'New lead is assigned to you';
 $lang['not_lead_activity_assigned_from_form']               = 'Lead assigned to %s';
+$lang['leads_merged']                                       = 'These leads were merged into a single record: %s, %s';
 $lang['form_allow_duplicate']                               = 'Allow duplicate %s to be inserted into database?';
 $lang['track_duplicate_by_field']                           = 'Prevent duplicate on field';
 $lang['and_track_duplicate_by_field']                       = '+ field (leave blank to track duplicates only by 1 field)';
