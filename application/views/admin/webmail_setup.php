@@ -29,6 +29,7 @@
         <th class="toggleable">IMAP HOST</th>
 		<th class="toggleable">Status</th>
 		<th class="">Created</th>
+		<th class="">Download Email</th>
       </tr>
     </thead>
     <tbody>
@@ -66,6 +67,7 @@ Dep - <?php echo e($entry['departmentid']); ?> <!--- Staff -<?php echo e($entry[
 				 </td>
 		  <td><?php echo e($entry['creator_name']); ?> - <?php echo e(time_ago($entry['date_created'])); ?><br />
 <?php echo e(_dt($entry['date_created'])); ?></td>
+<td><a href="<?php echo base_url('cronjob/download_email_from_cron/' . $entry['id']);?>" target="_blank" title="Download / Update Email"><i class="fa-solid fa-cloud-arrow-down"></i></a></td>
       </tr>
 	  <?php } ?>
     </tbody>

@@ -43,17 +43,9 @@
 				
 				<?php  foreach ($_SESSION['folderlist'] as $item => $val) { ?>
                     <li role="presentation" class="menu-item-leads">
-                        <a href="inbox?fd=<?=$val;?>"><?=$val;?></a>
+                        <a href="inbox?fd=<?php echo $val['folder'];?>"><?php echo $val['folder'];?></a>
                     </li>
-					<?php  if(!empty($_SESSION['subfolderlist'][$val])){ 
-					foreach ($_SESSION['subfolderlist'][$val] as $sitem => $sval) {
-					?>
-					<li role="presentation" class="menu-item-leads">
-                        <a href="inbox?fd=<?=$val;?>/<?=$sval;?>"><i class="fa-solid fa-arrow-right-long tw-mx-2 "></i> <?=$sval;?></a>
-                    </li>
-					<?php
 					
-					}} ?>
 				  <?php  } ?>  
                 </ul>
             </div>

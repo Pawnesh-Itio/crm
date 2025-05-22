@@ -17,6 +17,7 @@ class Webmail extends AdminController
 		
 		$wheredata="";
 		$data['staffid']="";
+		$_SESSION['mail_limit']=30;
 		$staffid=get_staff_user_id();
 		if (!is_client_logged_in() && !is_admin() && is_staff_logged_in()) {
 		$wheredata=' staffid=' . $staffid;
@@ -145,6 +146,43 @@ class Webmail extends AdminController
 		////////////////////////////////////////////
 		$this->load->view('admin/webmail/compose', $data);
 		}
+	} 
+	
+	//Download Email From Cron
+	public function download_email_from_cron_test($id)
+	{
+	
+	    $data['title'] = _l('Download Email From Cron');
+		$data['message']=$this->webmail_model->downloadmail($id);
+		$this->load->view('admin/webmail/download_email_from_cron', $data);
 	}
+	
+	public function make_isflag()
+    {
+	
+	    $data = $this->input->post();
+		$fid=$data['fid'];
+		$mid=$data['mid'];
+		
+		$data['msg']=$this->webmail_model->make_isflag($mid,$fid);
+		
+		if(isset($data['msg'])&&$data['msg']==1){
+		//echo $data['ai_content']['error'];
+		//$data['content_description']=$data['ai_content']['error'];
+		echo json_encode([
+                'alert_type' => "success",
+                'message'    => "Flaged",
+            ]);
+		
+		}else{
+		
+		
+		echo json_encode([
+                'alert_type' => 'danger',
+                'message'    => "UnFlaged",
+            ]);
+		}
+		
+    }
 
 }
