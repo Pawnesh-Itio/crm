@@ -455,9 +455,9 @@ foreach ($folders as $folder) {
 	  $messages = $mailbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page')->filter(function($messages) use ($last_email_id) {
     return $messages->getUid() > $last_email_id;
 });*/
-      $pg=floor($last_email_id / 1000) +1;
+      $pg=floor($last_email_id / 50) +1;
 	  $messages = $mailbox->query()
-    ->all()->limit($limit = 1000, $page = $pg)
+    ->all()->limit($limit = 50, $page = $pg)
     ->get() // fetch messages
     ->filter(function($message) use ($last_email_id) {
         return $message->getUid() > $last_email_id;
