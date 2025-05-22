@@ -24,44 +24,7 @@ background: #dc2626 !important;
         <div class="row">
 		<?php if(!empty($_SESSION['mailersdropdowns'])){ ?>
             
-			
-			<?php /*?><div class="col-md-2 picker">
 
-<div>			
-<span class="dropdown">
-  <button class="btn btn-default buttons-collection btn-default-dt-options dropdown-toggle" type="button" data-toggle="dropdown" style="width: 180px !important;"><span title="<?=$_SESSION['webmail']['mailer_email'];?>"><?=substr($_SESSION['webmail']['mailer_email'],0,18);?></span>
-  <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-	<?php  foreach ($_SESSION['mailersdropdowns'] as $item) { ?>
-	<li><a href="?mt=<?=$item['id'];?>"><?=$item['mailer_email'];?></a></li>
-	<?php  } ?>
-  </ul>
-</span>
-</div>
-<div>
-<a href="<?php echo site_url('admin/webmail/compose'); ?>" target="_blank" class="btn btn-primary mtop10" style="width: 180px !important;">
-        <i class="fa-regular fa-paper-plane tw-mr-1"></i>
-        <?php echo _l('New Mail'); ?>
-    </a>
-</div>
-                <ul class="nav navbar-pills navbar-pills-flat nav-tabs nav-stacked mtop10" id="theme_styling_areas">
-				
-				<?php  foreach ($_SESSION['folderlist'] as $item => $val) { ?>
-                    <li role="presentation" class="menu-item-leads ">
-                        <a href="inbox?fd=<?=$val;?>" class="mail-loader <?php if($_SESSION['webmail']['folder']==$val){ echo 'folder-active';} ?>"><?=$val;?></a>
-                    </li>
-					<?php if(count($_SESSION['subfolderlist'])>0 && isset($_SESSION['subfolderlist'][$val])){ ?>
-                    </li>
-                    <?php
-                    foreach ($_SESSION['subfolderlist'][$val] as $sitem => $sval) {
-
-					?>
-                    <li role="presentation" class="menu-item-leads">
-                        <a href="inbox?fd=<?=$sval;?>" class="mail-loader <?php if($_SESSION['webmail']['folder']==$sval){ echo 'folder-active';} ?>"><i class="fa-solid fa-arrow-right-long tw-mx-2 "></i> <?=$sval;?></a>
-                    </li>
-				  <?php } } } ?>  
-                </ul>
-            </div><?php */?>
             <div class="col-md-12">
 			
 			 <div class="row">
@@ -86,23 +49,7 @@ background: #dc2626 !important;
 			  
 			  </div>
 			  <div class="col-md-5 mbot10">
-			  <?php /*?><form>
-			  <div class="dt-buttons btn-group55 tw-text-right">
-			  <div class="w-full tw-inline-flex sm:max-w-xs">
-			  <select name="stype" class="form-control input-sm input-group-addon" style="width:auto;border-top-left-radius: .375rem;border-bottom-left-radius: .375rem;" required>
-			  <option value="">Select type</option>
-			  <option value="FROM">FROM</option>
-			  <option value="TO">TO</option>
-			  <option value="CC">CC</option>
-			  <option value="BCC">BCC</option>
-			  <option value="SUBJECT">SUBJECT</option>
-			  <option value="TEXT">TEXT</option>
-			  </select>
-              <input type="text" class="form-control input-sm" name="skey" placeholder="Enter Search Keywords" required>
-              <button type="submit" class="input-group-addon" style="padding-right: 25px;"><span class="fa fa-search"></span></button>
-                </div>
-				</div>
-				</form><?php */?>
+			  
 				</div>
 				
 			  </div>
@@ -128,8 +75,9 @@ background: #dc2626 !important;
  <table class="table table-clients number-index-2 dataTable no-footer">
 
 <?php $cnt=101; foreach ($inboxemail as $message) { $cnt++; 
-//echo $message->getMessageId();//exit;
-//print_r($message);
+//echo $message->getMessageId();exit;
+//echo $message->uid;//exit;
+//print_r($message);//exit;
 $string = "tw-bg-warning-600 tw-bg-primary-600 tw-bg-danger-600 tw-bg-danger-600 tw-bg-neutral-600 tw-bg-success-600 tw-bg-warning-800 tw-bg-primary-800 tw-bg-danger-800 tw-bg-danger-800 tw-bg-neutral-800 tw-bg-success-800";
 // Step 1: Convert string to array of words
 $words = preg_split('/\s+/', $string); // Split by spaces or multiple spaces
@@ -138,36 +86,40 @@ $randomWord = $words[array_rand($words)];
 
 ?>
 <tr>
-<td class="w-10"><div class="tw-rounded-full <?php echo $randomWord;?> tw-text-white tw-inline-flex tw-items-center tw-justify-center tw-h-8 tw-w-8 -tw-mt-1 group-hover:!tw-bg-primary-700"><?=strtoupper(substr($message->from,0,2));?></div></td>
-	<td class="hrefmodal tw-cursor-pointer" data-tid="<?=$message->subject;?>" data-id="msg<?=$cnt;?>" title="<?=$message->subject;?>" mailto="<?=htmlspecialchars($message->from);?>" mailtox="<?=htmlspecialchars($message->to);?>" mailcc="<?=htmlspecialchars($message->cc);?>" mailbcc="<?=htmlspecialchars($message->bcc);?>" data-date="<?=$message->date;?>"><div class="w-36 h-36 bg-red-600 rounded-full"></div> <span> <b><?=$message->subject;?></b><br><?=htmlspecialchars($message->from);?></span></td>
-	<td class="w-25 text-end" style="min-width: 140px;"><?=$message->date;?></td>
+<td style="width:32px;"><div class="tw-rounded-full <?php echo $randomWord;?> tw-text-white tw-inline-flex tw-items-center tw-justify-center tw-h-8 tw-w-8 -tw-mt-1 group-hover:!tw-bg-primary-700"><?=strtoupper(substr($message['from_email'],0,2));?></div></td>
+<td style="width:35px;"><div>
+<?php if(isset($message['isfalg'])&&$message['isfalg']==1){ ?>
+<i class="fa-solid fa-fire-flame-simple tw-text-warning-500 isflag" data-mid="<?=$message['id'];?>" data-fid="0" title="Click for normal"></i>
+<?php }else{ ?>
+<i class="fa-solid fa-fire-flame-simple tw-text-warning-100 isflag isflag<?=$message['id'];?>" data-mid="<?=$message['id'];?>" data-fid="1" title="Click for important"></i>
+<?php } ?>
+<?php if(isset($message['isattachments'])&&$message['isattachments']==1){ ?>
+&nbsp;<i class="fa-solid fa-paperclip" style="color: #000000;"></i>
+<?php } ?>
+
+</div>
+</td>
+
+	<td class="hrefmodal tw-cursor-pointer" data-tid="<?=$message['subject'];?>" data-id="msg<?=$cnt;?>" title="<?=$message['subject'];?>" mailto="<?=htmlspecialchars($message['from_email']);?>" mailtox="<?=htmlspecialchars($message['to_emails']);?>" mailcc="<?=htmlspecialchars($message['cc_emails']);?>" mailbcc="<?=htmlspecialchars($message['bcc_emails']);?>" data-date="<?=$message['date'];?>"><div class="w-36 h-36 bg-red-600 rounded-full"></div> <span> <b><?=$message['subject'];?></b><br><?=htmlspecialchars($message['from_email']);?></span></td>
+	<td class="w-25 text-end" style="min-width: 140px;"><?=$message['date'];?></td>
 </tr>
 <tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>">
 
 
 <?php
-echo '<iframe srcdoc="' . htmlspecialchars($message->getHtmlBody()) . '" style="width: 100%; min-height:50px; border: none;" onload="adjustIframeHeight(this)"></iframe>';
+echo '<iframe srcdoc="' . htmlspecialchars($message['body']) . '" style="width: 100%; min-height:50px; border: none;" onload="adjustIframeHeight(this)"></iframe>';
 // Directory to save attachments
-$attachmentDir = 'attachments';
-// Create directory if it doesn't exist
-if (!file_exists($attachmentDir)) {
-mkdir($attachmentDir, 0777, true);
-}
-// Retrieve and save attachments
-$attachments = $message->getAttachments();
-foreach ($attachments as $attachment) {
-$fileName = $attachment->name;
-$filePath = site_url('attachments') . '/' . $fileName;
-// Save the attachment
-$attachment->save($attachmentDir);
-?>
-<i class="fa-solid fa-paperclip"></i> <a href="<?=$filePath;?>" target="_blank" title="Click to view"><?=$fileName;?></a><br>
-<?php
-} 
-//====================================== 
-
 
 ?>
+<?php if(isset($message['attachments'])&&$message['attachments']){
+
+$attachments = explode(',', $message['attachments']);
+
+foreach($attachments as $attach){
+$filePath = site_url() . '/' . $attach;
+?>
+<i class="fa-solid fa-paperclip"></i> <a href="<?=$filePath;?>" target="_blank" title="Click to view"><?=$filePath;?></a><br>
+<?php }} ?>
 
 
 
@@ -182,7 +134,7 @@ $attachment->save($attachmentDir);
 // Paging
 // Configuration
 $totalRecords = $_SESSION['inbox-total-email']; // Total number of records (replace with your DB query result)
-$recordsPerPage = 30; // Records per page
+$recordsPerPage = $_SESSION['mail_limit']; // Records per page
 $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page from URL
 $current_page = max(1, $current_page); // Ensure current page is at least 1
 
@@ -353,11 +305,46 @@ $(function() {
 <script>
 function adjustIframeHeight(iframe) {
     setTimeout(() => {
-        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + "px";
+        iframe.style.height = (iframe.contentWindow.document.body.scrollHeight + 20) + "px";
     }, 100);
 }
+$(document).ready(function() {
+  setTimeout(function() {
+    $('#lead-modal').removeAttr('id');
+    console.log('ID removed from modal');
+  }, 5000); // 5000 ms = 5 seconds
+});
 </script>
-
+<script> 
+ 
+$('.isflag').click(function(){ 
+         //alert(11111);
+         var mid=$(this).attr('data-mid');
+		 var fid=$(this).attr('data-fid');
+		 var resultid='.isflag'+mid;
+		 //alert(resultid);
+		 
+		 $.post(admin_url + 'webmail/make_isflag', {
+            mid: mid,
+			fid: fid
+        })
+        .done(function(response) { 
+            response = JSON.parse(response);
+			//alert(response.alert_type);
+			//alert(response.message);
+			
+			if(response.alert_type=="success"){
+			 alert_float(response.alert_type, response.message);
+			 $(resultid).removeClass('tw-text-warning-100').addClass('tw-text-warning-500');
+			}else{
+			 alert_float(response.alert_type, response.message);
+			 $(resultid).removeClass('tw-text-warning-500').addClass('tw-text-warning-100');
+			}
+            
+        });
+		 
+});
+</script>
 
 </body>
 
