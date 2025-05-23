@@ -22,6 +22,7 @@ background: #dc2626 !important;
 .jqte {
     margin: 20px 0 !important;
 	}
+.isread span{ color:#000000 !important;}
 </style>
 
 <div id="wrapper">
@@ -58,6 +59,9 @@ background: #dc2626 !important;
                         <a href="inbox?fd=<?php echo $val['folder'];?>" class="mail-loader <?php if($_SESSION['webmail']['folder']==$val['folder']){ echo 'folder-active';} ?>"><?php echo $val['folder'];?></a>
                     </li>
 					<?php } ?>  
+					<li role="presentation" class="menu-item-leads ">
+                        <a href="inbox?fd=Deleted" class="mail-loader <?php if($_SESSION['webmail']['folder']=='Deleted'){ echo 'folder-active';} ?>">Deleted</a>
+                    </li>
                 </ul>
             </div>
             <div class="col-md-10">
@@ -67,7 +71,7 @@ background: #dc2626 !important;
 			  <div class="col-md-7 mbot10"><div class="dt-buttons btn-group">
 			 <?php if(!empty($_SESSION['webmail']['folder'])){ ?>
 			  <button class="btn btn-default buttons-collection btn-sm btn-default-dt-options"  type="button" aria-haspopup="true"><span><?php echo $_SESSION['webmail']['folder'];?></span></button> <?php if(isset($_SESSION['inbox-total-email'])&&!empty($_SESSION['inbox-total-email'])){?><button class="btn btn-default btn-sm btn-default-dt-options bg-danger" type="button" ><span><?=$_SESSION['inbox-total-email'];?></span></button> <?php } ?>
-			  <?php } ?><span>
+			  <?php } ?><button class="btn btn-default btn-sm btn-default-dt-options bg-info hide" type="button" title="Refresh <?php echo $_SESSION['webmail']['folder'];?> Box Online"><span><i class="fa-solid fa-retweet"></i></span></button>
 			  <span id="mail-loader"></span>
 			  
 			  </div></div>
@@ -106,33 +110,38 @@ background: #dc2626 !important;
  <table class="table table-clients number-index-2 dataTable no-footer">
 
 <?php $cnt=101; foreach ($inboxemail as $message) { $cnt++; 
-//echo $message->getMessageId();exit;
-//echo $message->uid;//exit;
 //print_r($message);//exit;
 $string = "tw-bg-warning-600 tw-bg-primary-600 tw-bg-danger-600 tw-bg-danger-600 tw-bg-neutral-600 tw-bg-success-600 tw-bg-warning-800 tw-bg-primary-800 tw-bg-danger-800 tw-bg-danger-800 tw-bg-neutral-800 tw-bg-success-800";
 // Step 1: Convert string to array of words
 $words = preg_split('/\s+/', $string); // Split by spaces or multiple spaces
 // Step 2: Select a random word
 $randomWord = $words[array_rand($words)];
-
+$mailcss="";
+if(isset($message['status'])&&$message['status']==1){ $mailcss="isread"; }
 ?>
-<tr>
-<td style="width:32px;"><div class="tw-rounded-full <?php echo $randomWord;?> tw-text-white tw-inline-flex tw-items-center tw-justify-center tw-h-8 tw-w-8 -tw-mt-1 group-hover:!tw-bg-primary-700"><?=strtoupper(substr($message['from_email'],0,2));?></div></td>
-<td style="width:35px;"><div>
+<tr class="table<?=$message['id'];?>">
+<td style="width:35px;"><div class="tw-rounded-full <?php echo $randomWord;?> tw-text-white tw-inline-flex tw-items-center tw-justify-center tw-h-8 tw-w-8 -tw-mt-1 group-hover:!tw-bg-primary-700"><?=strtoupper(substr($message['from_email'],0,2));?></div></td>
+<td style="width:50px;"><div>
 <?php if(isset($message['isfalg'])&&$message['isfalg']==1){ ?>
 <i class="fa-solid fa-fire-flame-simple tw-text-warning-500 isflag" data-mid="<?=$message['id'];?>" data-fid="0" title="Click for normal"></i>
 <?php }else{ ?>
 <i class="fa-solid fa-fire-flame-simple tw-text-warning-100 isflag isflag<?=$message['id'];?>" data-mid="<?=$message['id'];?>" data-fid="1" title="Click for important"></i>
 <?php } ?>
+<?php if(isset($message['is_deleted'])&&$message['is_deleted']==0){ ?>
+<i class="fa-solid fa-trash text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="1" title="Delete"></i>
+<?php }else{ ?>
+<i class="fa-solid fa-trash text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="0" title="Un Deleted"></i>
+<?php } ?>
 <?php if(isset($message['isattachments'])&&$message['isattachments']==1){ ?>
 &nbsp;<i class="fa-solid fa-paperclip" style="color: #000000;"></i>
 <?php } ?>
 
+
 </div>
 </td>
 
-	<td class="hrefmodal tw-cursor-pointer" data-tid="<?=$message['subject'];?>" data-id="msg<?=$cnt;?>" title="<?=$message['subject'];?>" mailto="<?=htmlspecialchars($message['from_email']);?>" mailtox="<?=htmlspecialchars($message['to_emails']);?>" mailcc="<?=htmlspecialchars($message['cc_emails']);?>" mailbcc="<?=htmlspecialchars($message['bcc_emails']);?>" data-date="<?=$message['date'];?>"><div class="w-36 h-36 bg-red-600 rounded-full"></div> <span> <b><?=$message['subject'];?></b><br><?=htmlspecialchars($message['from_email']);?></span></td>
-	<td class="w-25 text-end" style="min-width: 140px;"><?=$message['date'];?></td>
+	<td class="hrefmodal tw-cursor-pointer <?php echo $mailcss;?> isread<?=$message['id'];?>" data-mid="<?=$message['id'];?>" data-fid="0" data-tid="<?=$message['subject'];?>" data-id="msg<?=$cnt;?>" title="<?=$message['subject'];?>" mailto="<?=htmlspecialchars($message['from_email']);?>" mailtox="<?=htmlspecialchars($message['to_emails']);?>" mailcc="<?=htmlspecialchars($message['cc_emails']);?>" mailbcc="<?=htmlspecialchars($message['bcc_emails']);?>" messageid="<?=$message['messageid'];?>" data-date="<?=$message['date'];?>"><div class="w-36 h-36 bg-red-600 rounded-full"></div> <span> <b><?=$message['subject'];?></b><br><?=htmlspecialchars($message['from_email']);?></span></td>
+	<td class="w-25 text-end" style="min-width: 140px;"><span><?=$message['date'];?></span></td>
 </tr>
 <tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>">
 
@@ -255,12 +264,22 @@ if ($nextPage) {
         <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" 
                value="<?= $this->security->get_csrf_hash(); ?>">
 	<input type="hidden" name="redirect" value="inbox.php">
+	<input type="hidden" name="messageid" id="messageidIT" value="">
+	<input type="hidden" name="messagetype" value="Reply">
       <div class="mb-3">
         <label for="recipientEmail" class="form-label">Recipient Email</label>
         <input type="text" class="form-control" id="recipientEmailIT" name="recipientEmail" value="" placeholder="Enter recipient email" required>
       </div>
+	  <div class="mb-3">
+        <label for="recipientCCIT" class="form-label mtop10">CC</label>
+        <input type="text" class="form-control" id="recipientCCIT" name="recipientCC" value="" placeholder="Enter CC email" >
+      </div>
+	  <div class="mb-3">
+        <label for="recipientBCCEmail" class="form-label mtop10">BCC</label>
+        <input type="text" class="form-control" id="recipientBCCIT" name="recipientBCC" value="" placeholder="Enter BCC email" >
+      </div>
       <div class="mb-3">
-        <label for="emailSubject" class="form-label">Subject</label>
+        <label for="emailSubject" class="form-label mtop10">Subject</label>
         <input type="text" class="form-control" id="emailSubjectIT" name="emailSubject" value="" placeholder="Enter email subject" required>
       </div>
       <div class="mb-3">
@@ -370,7 +389,11 @@ $(".ailoader").html("<i class='fa-solid fa-spinner fa-spin-pulse'></i>");
             var formattedStr = formattedStr.replace(/\\/g, "");
             //alert(formattedStr);
 			$('.editor').jqteVal(formattedStr);
+			$('.editor').val(formattedStr);
 			$(".ailoader").html('<img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" />');
+			// Usage example: Set cursor after 1 second
+            setTimeout(setCursorToEnd, 2000);
+			alert("Please edit the content before send");
 			
 			}else{
 			alert("Not Generated");
@@ -386,9 +409,43 @@ alert("Enter Correct Email Body with min length 5");
 
    
 }
+function setCursorToEnd() {
+  var iframe = $('.jqte_editor')[0]; // Get the editable div (jqte_editor)
+  var range = document.createRange();
+  var selection = window.getSelection();
+
+  range.selectNodeContents(iframe);
+  range.collapse(false); // false = to end of the content
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
   </script>
 <script>
-
+$('.isread').click(function(){ 
+         var mid=$(this).attr('data-mid');
+		 var fid=$(this).attr('data-fid');
+		 var resultid='.isread'+mid;
+		//return;
+		 $.post(admin_url + 'webmail/make_isread', {
+            mid: mid,
+			fid: fid
+        })
+        .done(function(response) { 
+            response = JSON.parse(response);
+			//alert(response.alert_type);
+			//alert(response.message);
+			
+			if(response.alert_type=="success"){
+			 //alert_float(response.alert_type, response.message);
+			 $(resultid).removeClass('isread');
+			}else{
+			 //alert_float(response.alert_type, response.message);
+			 
+			}
+            
+        });
+		 
+});
   
   $('.hrefmodal').click(function(){ 
 
@@ -398,6 +455,7 @@ alert("Enter Correct Email Body with min length 5");
 		 var mailtox=$(this).attr('mailtox');
 		 var mailcc=$(this).attr('mailcc');
 		 var mailbcc=$(this).attr('mailbcc');
+		 var messageid=$(this).attr('messageid');
 		 var did=$(this).attr('data-id');
 		 var ddate=$(this).attr('data-date');
 		 const formattedDate = moment(ddate).format('ddd, DD MMM YYYY h:mm:ss A Z');
@@ -410,6 +468,9 @@ alert("Enter Correct Email Body with min length 5");
 		// $('#emailSubject').val(tid);
 		 $('#emailSubjectIT').val(tid);
 		 $('#recipientEmailIT').val(mailto);
+		 $('#recipientCCIT').val(mailcc);
+		 $('#recipientBCCIT').val(mailbcc);
+		 $('#messageidIT').val(messageid);
 		 
 		 var contents=$('#'+did).html();
 		 $('#messageDisplay').html(contents);
@@ -472,6 +533,38 @@ $('.isflag').click(function(){
         });
 		 
 });
+
+$('.isdelete').click(function(){ 
+         //alert(11111);
+         var mid=$(this).attr('data-mid');
+		 var fid=$(this).attr('data-fid');
+		 var resultid='.isdelete'+mid;
+		 var tableid='.table'+mid;
+		 //alert(resultid);
+		// return;
+		 $.post(admin_url + 'webmail/make_isdelete', {
+            mid: mid,
+			fid: fid
+        })
+        .done(function(response) { 
+            response = JSON.parse(response);
+			//alert(response.alert_type);
+			//alert(response.message);
+			
+			if(response.alert_type=="success"){
+			 alert_float(response.alert_type, response.message);
+			 $(resultid).removeClass('tw-text-warning-100').addClass('tw-text-warning-500'); 
+			 $(tableid).hide();
+			}else{
+			 alert_float(response.alert_type, response.message);
+			 $(resultid).removeClass('tw-text-warning-500').addClass('tw-text-warning-100');
+			}
+            
+        });
+		 
+});
+
+
 </script>
 </body>
 

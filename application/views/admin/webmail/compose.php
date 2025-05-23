@@ -69,6 +69,10 @@
         <label for="recipientEmail" class="form-label mtop10">CC</label>
         <input type="text" class="form-control" id="recipientCCIT" name="recipientCC" value="" placeholder="Enter CC email" >
       </div>
+	  <div class="mb-3">
+        <label for="recipientBCCEmail" class="form-label mtop10">BCC</label>
+        <input type="text" class="form-control" id="recipientBCCIT" name="recipientBCC" value="" placeholder="Enter BCC email" >
+      </div>
       <div class="mb-3">
 	  <label for="emailSubject" class="form-label mtop10">Subject</label>
 	  <input type="text" class="form-control" id="emailSubjectIT" name="emailSubject" value="" placeholder="Enter email subject"  required>
@@ -182,6 +186,7 @@ $(".ailoader").html("<i class='fa-solid fa-spinner fa-spin-pulse'></i>");
             var formattedStr = formattedStr.replace(/\\/g, "");
             //alert(formattedStr);
 			$('.editor').jqteVal(formattedStr);
+			$('.editor').val(formattedStr);
 			$(".ailoader").html('<img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" />');
 			
 			}else{

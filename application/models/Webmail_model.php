@@ -218,7 +218,12 @@ class Webmail_model extends App_Model
 		$this->db->select('COUNT(*) AS total_email');
 		if($search==1){$this->db->or_like($stype, $skey);}
         $this->db->where('email', $mailer_email);
-		$this->db->where('folder', $folder);
+		
+		if($folder=="Deleted"){
+		$this->db->where('is_deleted', 1);
+		}else{
+		$this->db->where('is_deleted', 0);
+		}
         $counter=$this->db->get(db_prefix() . 'emails')->result_array(); //return
 		$_SESSION['inbox-total-email']=$counter[0]['total_email'];
 		//echo $this->db->last_query();
@@ -230,12 +235,18 @@ class Webmail_model extends App_Model
 		$this->db->select('*,');
 		if($search==1){$this->db->or_like($stype, $skey);}
         $this->db->where('email', $mailer_email);
-		$this->db->where('folder', $folder);
+		
         $this->db->order_by('uniqid', 'desc');
 		$this->db->group_by('uniqid');
+		if($folder=="Deleted"){
+		$this->db->where('is_deleted', 1);
+		}else{
+		$this->db->where('is_deleted', 0);
+		$this->db->where('folder', $folder);
+		}
 		$this->db->limit($_SESSION['mail_limit'],$page);
         return $this->db->get(db_prefix() . 'emails')->result_array(); //return
-		//echo $this->db->last_query();exit;
+		echo $this->db->last_query();exit;
 		///////////////////////////END Fetch Email//////////////
 		
 	  
@@ -292,6 +303,7 @@ class Webmail_model extends App_Model
 	//print_r($data);
 	
 		$recipientEmail=$_POST['recipientEmail'];
+		$messageid=$_POST['messageid'];
 		if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientEmail, $matches)){
 		$recipientEmail = $matches[0] ?? 'Email not found';
 		}
@@ -302,12 +314,26 @@ class Webmail_model extends App_Model
 			$recipientCC = $matches[0] ?? 'Email not found';
 			}
 		}
+		
+		if(isset($_POST['recipientBCC']) && $_POST['recipientBCC'])
+		{
+			$recipientBCC=$_POST['recipientBCC'];
+			if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientBCC, $matches)){
+			$recipientBCC = $matches[0] ?? 'Email not found';
+			}
+		}
+		
 		//echo $recipientEmail;exit;
 		// Form Post Data
-		$recipientEmail;
-		$subject=$_POST['emailSubject'];
-		$body=$_POST['emailBody'];
-		$redirect=$_POST['redirect'];
+		//echo $recipientEmail;
+		echo $subject=$_POST['emailSubject'];
+		echo $body=$_POST['emailBody'];
+		echo $redirect=$_POST['redirect'];
+		//echo $recipientCC;
+		//echo $recipientBCC;
+		//echo $messageid;
+		
+		//exit;
 		// SMTP Details from session
 		$mailer_smtp_host=$_SESSION['webmail']['mailer_smtp_host'];
         $mailer_smtp_port=$_SESSION['webmail']['mailer_smtp_port'];
@@ -338,6 +364,16 @@ class Webmail_model extends App_Model
 	$mail->addAddress($recipientEmail);
 	if (isset($recipientCC) && $recipientCC != "") {
 		$mail->addCC($recipientCC);
+	}
+	
+	if (isset($recipientBCC) && $recipientBCC != "") {
+		$mail->addBCC($recipientBCC);
+	}
+	
+	if (isset($messageid) && $messageid != "") {
+		
+	$mail->addCustomHeader('In-Reply-To', $messageid);
+    $mail->addCustomHeader('References', $messageid);
 	}
 	// Add hardcoded BCC
 	$mail->addBCC('onboarding@paycly.com');
@@ -483,6 +519,8 @@ foreach ($messages as $message) {
     $data['body'] = $message->getHtmlBody() ?? '';
 	if($data['body']==""){$data['body'] = $message->getTextBody() ?? ''; }
 	$data['uniqid'] = $message->uid;
+	$data['messageid'] = $message->getMessageId();
+	
 	
 	 // From
     $from = $message->getFrom(); // Returns array of Address objects
@@ -536,7 +574,7 @@ foreach ($messages as $message) {
  }
  $cnt++;
 		$this->db->insert(db_prefix() . 'emails', $data);
-		$this->db->last_query();
+		//echo $this->db->last_query();exit;
  
 }
 //exit;	  
@@ -592,6 +630,34 @@ $client->disconnect();
     public function make_isflag($mid,$fid)
     {
 	    $data['isfalg']=$fid;
+        $this->db->where('id', $mid);
+		$this->db->update(db_prefix() . 'emails', $data);
+        if ($this->db->affected_rows() > 0) {
+		return 1;
+		}else{
+		return 0;
+		}
+        
+		
+    }
+	
+	 public function make_isdelete($mid,$fid)
+    {
+	    $data['is_deleted']=$fid;
+        $this->db->where('id', $mid);
+		$this->db->update(db_prefix() . 'emails', $data);
+        if ($this->db->affected_rows() > 0) {
+		return 1;
+		}else{
+		return 0;
+		}
+        
+		
+    }
+	
+	 public function make_isread($mid,$fid)
+    {
+	    $data['status']=$fid;
         $this->db->where('id', $mid);
 		$this->db->update(db_prefix() . 'emails', $data);
         if ($this->db->affected_rows() > 0) {

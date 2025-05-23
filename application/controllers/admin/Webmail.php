@@ -184,5 +184,58 @@ class Webmail extends AdminController
 		}
 		
     }
+	
+	public function make_isdelete()
+    {
+	
+	    $data = $this->input->post();
+		$fid=$data['fid'];
+		$mid=$data['mid'];
+		
+		$data['msg']=$this->webmail_model->make_isdelete($mid,$fid);
+		
+		if(isset($data['msg'])&&$data['msg']==1){
+		//echo $data['ai_content']['error'];
+		//$data['content_description']=$data['ai_content']['error'];
+		echo json_encode([
+                'alert_type' => "success",
+                'message'    => "Deleted",
+            ]);
+		
+		}else{
+		
+		
+		echo json_encode([
+                'alert_type' => 'danger',
+                'message'    => "Not Deleted",
+            ]);
+		}
+		
+    }
+	
+	public function make_isread()
+    {
+	
+	    $data = $this->input->post();
+		$fid=$data['fid'];
+		$mid=$data['mid'];
+		
+		$data['msg']=$this->webmail_model->make_isread($mid,$fid);
+		if(isset($data['msg'])&&$data['msg']==1){
+		echo json_encode([
+                'alert_type' => "success",
+                'message'    => "Read",
+            ]);
+		
+		}else{
+		
+		
+		echo json_encode([
+                'alert_type' => 'danger',
+                'message'    => "Not Read",
+            ]);
+		}
+		
+    }
 
 }
