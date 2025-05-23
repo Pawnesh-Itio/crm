@@ -28,6 +28,8 @@ if (mysqli_num_rows($res) > 0) {
 
 // Read the incoming JSON data from the request body
 $input = file_get_contents('php://input');
+// Log the raw input for debugging
+file_put_contents(__DIR__ . '/telegram_webhook.log', date('Y-m-d H:i:s') . "\n" . $input . "\n\n", FILE_APPEND);
 // Decode the JSON data into a PHP object
 $web_data = json_decode($input);
 
