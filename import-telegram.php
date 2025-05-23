@@ -34,6 +34,7 @@ $web_data = json_decode($input);
 // Check if the 'chat' ID exists and is valid
 if (isset($web_data->message->chat->id) && ($web_data->message->chat->id)) {
 	// Retrieve relevant information from the incoming message
+	echo json_encode($web_data);
 	$chat_id	= $web_data->message->chat->id;
 	$username	= $web_data->message->chat->username;
 	$name		= $web_data->message->chat->first_name;
