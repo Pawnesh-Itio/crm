@@ -1842,6 +1842,59 @@ class Leads extends AdminController
         $source = $this->input->post('source');
         $assigned = $this->input->post('assigned');
         $country_code = $this->input->post('country_code');
+        // get the page from the session or default to leads
+        if(isset($_SESSION['leads_page_type']) && $_SESSION['leads_page_type'] == 'deals'){
+            $page = 'leads/deals';
+        }else{
+            $page = 'leads';
+        }
+        // condition to check null or empty values
+        $errors = [];
+        if(empty($name)){
+            $errors[] = 'Please enter a name for the merged lead.';
+        }
+        if(empty($email)){
+            $errors[] = 'Please enter an email for the merged lead.';
+        }
+        if(empty($phonenumber)){
+            $errors[] = 'Please enter a phone number for the merged lead.';
+        }
+        if(empty($website)){
+            $errors[] = 'Please enter a website for the merged lead.';
+        }
+        if(empty($country)){
+            $errors[] = 'Please enter a country for the merged lead.';
+        }
+        if(empty($address)){
+            $errors[] = 'Please enter an address for the merged lead.';
+        }
+        if(empty($company)){
+            $errors[] = 'Please enter a company for the merged lead.';
+        }
+        if(empty($status)){
+            $errors[] = 'Please select a status for the merged lead.';
+        }
+        if(empty($source)){
+            $errors[] = 'Please select a source for the merged lead.';
+        }
+        if(empty($assigned)){
+            $errors[] = 'Please select an assigned user for the merged lead.';
+        }
+        if(empty($country_code)){
+            $errors[] = 'Please select a country code for the merged lead.';
+        }
+        // AJAX support: return JSON if AJAX, else fallback to redirect
+        if ($this->input->is_ajax_request()) {
+            if (!empty($errors)) {
+                echo json_encode(['success' => false, 'message' => implode("\n", $errors)]);
+                return;
+            }
+        } else {
+            if (!empty($errors)) {
+                set_alert('danger', implode("\n", $errors));
+                redirect(admin_url($page));
+            }
+        }
         if(sizeof($email) > 1){
             $primaryEmail = $email[0];
             $additionalEmails = $email[1];
@@ -1896,14 +1949,22 @@ class Leads extends AdminController
             'is_merged' => 1
         );
         $lead_id = $this->leads_model->insert_merged_lead($data);
-        if($lead_id){
-            // rediret to the leads page with alert message of success
-             set_alert('success', 'Leads merged successfully.');
-             redirect(admin_url('leads/'));
-        }else{
-              set_alert('danger', 'Something went wrong while merging leads.');
+        if($this->input->is_ajax_request()) {
+            if($lead_id){
+                echo json_encode(['success' => true, 'message' => 'Leads merged successfully.']);
+            }else{
+                echo json_encode(['success' => false, 'message' => 'Something went wrong while merging leads.']);
+            }
+            return;
+        } else {
+            if($lead_id){
+                set_alert('success', 'Leads merged successfully.');
+                redirect(admin_url('leads/'));
+            }else{
+                set_alert('danger', 'Something went wrong while merging leads.');
+            }
+            redirect(admin_url('leads'));
         }
-        redirect(admin_url('leads'));
     }
     public function getLeadNameById($id){
         $lead = $this->leads_model->getLeadNameById($id);

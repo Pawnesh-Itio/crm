@@ -180,8 +180,9 @@
     updateFieldHighlights();
   };
 
-  // On form submit, create hidden inputs in click order
+  // On form submit, create hidden inputs in click order and submit via AJAX
   document.getElementById('leads_merge_form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent default form submission
     fields.forEach(function(field) {
       // Remove any previously added hidden inputs
       document.querySelectorAll('.dynamic-' + field).forEach(function(el) { el.remove(); });
@@ -200,6 +201,38 @@
           e.target.appendChild(input);
         }
       });
+    });
+    // Collect form data
+    const form = e.target;
+    const formData = new FormData(form);
+    // Submit via fetch
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => response.json().catch(() => response.text()))
+    .then(data => {
+      // Handle response (customize as needed)
+      if (typeof data === 'object' && data.success) {
+        // Success case
+        alert_float('success','Leads merged successfully!');
+        // redirect to leads page or update UI as needed
+        window.location.href = '<?= admin_url('leads') ?>'; // Redirect to leads page
+        // Optionally close modal or update UI here
+      } else {
+         // Show error with line breaks if multiple errors
+         var msg = (data.message || data);
+         if (typeof msg === 'string') {
+           msg = msg.replace(/\n/g, '<br>');
+         }
+         alert_float('danger', msg);
+      }
+    })
+    .catch(err => {
+      alert_float('danger', 'An error occurred: ' + err);
     });
   });
 })();
