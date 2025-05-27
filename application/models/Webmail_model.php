@@ -603,6 +603,168 @@ $client->disconnect();
         //return $this->db->get(db_prefix().'webmail_setup')->result_array();
       }
 	  
+	  // function for get inbox mail list
+        public function downloadmailbyfolder()
+        {
+		
+		
+		
+	
+		
+		
+		
+		
+		$mailer_imap_host=trim($_SESSION['webmail']['mailer_imap_host']);
+        $mailer_imap_port=trim($_SESSION['webmail']['mailer_imap_port']);
+        $mailer_username=trim($_SESSION['webmail']['mailer_username']);
+		$data['email']=trim($_SESSION['webmail']['mailer_username']);
+        $mailer_password=trim($_SESSION['webmail']['mailer_password']);
+		$encryption=trim($_SESSION['webmail']['encryption']);
+		$folder=trim($_SESSION['webmail']['folder']);
+		
+		
+		
+		
+		try {
+		 
+		 $cm = new ClientManager();
+
+    // Define the IMAP connection settings
+    $client = $cm->make([
+        'host'          => $mailer_imap_host,
+        'port'          => $mailer_imap_port,
+        'encryption'    => $encryption,
+        'validate_cert' => true,
+        'username'      => $mailer_username,
+        'password'      => $mailer_password,
+        'protocol'      => 'imap', 
+		//'authentication' => "oauth"            // Protocol (imap/pop3)
+    ]);
+	
+	
+	if ($client->connect()) {
+	
+	
+	
+
+$cnt=0;
+
+ 
+	$mailbox = $client->getFolder($folder);
+	 if ($mailbox === null) {
+      die("The ".$folder." folder could not be found.");exit;
+      }
+	  $data['folder']=$folder;
+
+
+     
+	  $total_Email=$mailbox->query()->all()->count();
+	  $last_email_id=$this->webmail_model->lastemailid($mailer_username, $folder);
+	  $last_email_id=$last_email_id[0]['uniqid']?? 0;//exit;
+	 
+      $pg=floor($last_email_id / 50) +1;
+	  $messages = $mailbox->query()
+    ->all()->limit($limit = 50, $page = $pg)
+    ->get() // fetch messages
+    ->filter(function($message) use ($last_email_id) {
+        return $message->getUid() > $last_email_id;
+    });
+
+   
+
+
+//print_r($messages);exit;
+foreach ($messages as $message) {
+
+    $data['subject'] = $message->getSubject();
+    $data['date'] = $message->getDate(); //->format('Y-m-d H:i:s')
+    $data['body'] = $message->getHtmlBody() ?? '';
+	if($data['body']==""){$data['body'] = $message->getTextBody() ?? ''; }
+	$data['uniqid'] = $message->uid;
+	$data['messageid'] = $message->getMessageId();
+	
+	
+	 // From
+    $from = $message->getFrom(); // Returns array of Address objects
+    $data['from_email'] = $from[0]->mail ?? '';
+    $data['from_name']  = $from[0]->personal ?? '';
+	//print_r($from);
+	//echo "<br><br>";
+	// To
+  
+	
+    $to_list = $message->getTo(); // Returns array of Address objects
+    $data['to_emails'] = $to_list[0]->mail ?? '';
+   
+	
+	
+   
+    $cc_list = $message->getCc(); // Returns array of Address objects
+    $data['cc_emails'] = $cc_list[0]->mail ?? '';
+	
+	
+  
+    // BCC
+	$bcc_list = $message->getBcc(); // Returns array of Address objects
+    $data['bcc_emails'] = $bcc_list[0]->mail ?? '';
+
+
+    // Handle attachments
+    $attachments_paths = [];
+    $data['isattachments']=0;
+	$uid=uniqid();
+	$attachmentDir = 'attachments';
+	$filePath = $attachmentDir . '/' . $uid;
+    foreach ($message->getAttachments() as $attachment) {
+    $attachments = $message->getAttachments();
+		
+		// Create directory if it doesn't exist
+					
+		foreach ($attachments as $attachment) {
+		
+		if (!file_exists($filePath)) {
+		mkdir($filePath, 0777, true);
+		}	
+				
+		$fileName = $attachment->name;
+		// Save the attachment
+		$attachment->save($filePath);
+		$data['isattachments']=1;
+		$attachments_paths[] = $filePath."/".$fileName;
+		}
+		$data['attachments'] = implode(',', $attachments_paths);//exit;
+ }
+ $cnt++;
+		$this->db->insert(db_prefix() . 'emails', $data);
+		//echo $this->db->last_query();exit;
+ 
+}
+
+    
+$client->disconnect();	   
+	    // Get the inbox folder
+      
+
+	        
+			$data['msg']="Total Added :-".$cnt;
+			$data['cnt']=1;
+			return $data;exit;
+	  
+	  }
+	
+   
+	
+		} catch (Exception $e) {
+		    $data['msg']="Error: " . $e->getMessage();
+			$data['cnt']=0;
+			return $data;exit;
+			}
+		return $data;exit;
+	
+       //echo "ERROR 103";exit;
+        //return $this->db->get(db_prefix().'webmail_setup')->result_array();
+      }
+	  
 
 
     public function lastemailid($email, $folder)
@@ -658,6 +820,27 @@ $client->disconnect();
 	 public function make_isread($mid,$fid)
     {
 	    $data['status']=$fid;
+        $this->db->where('id', $mid);
+		$this->db->update(db_prefix() . 'emails', $data);
+        if ($this->db->affected_rows() > 0) {
+		return 1;
+		}else{
+		return 0;
+		}
+        
+		
+    }
+	
+	 public function refresh_email($mailid,$folder)
+    {
+	    echo $mailid;
+		echo $folder;
+		print_r($_SESSION['webmail']);
+		
+		
+		
+		exit;
+		$data['status']=$fid;
         $this->db->where('id', $mid);
 		$this->db->update(db_prefix() . 'emails', $data);
         if ($this->db->affected_rows() > 0) {
