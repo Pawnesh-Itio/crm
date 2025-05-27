@@ -37,7 +37,7 @@ class Telegram extends AdminController
                 set_alert('warning','Please select a department');
             }
             // Check if the name or username already exists
-            $existingConfig = $this->telegram_model->getTelegramConfigurationByNameOrUsername($data['name'], $data['username']);
+            $existingConfig = $this->telegram_model->getTelegramConfigurationByNameOrUsername($data['telegram_name'], $data['telegram_username']);
             if ($existingConfig) {
                 set_alert('warning', 'Configuration with this name or username already exists.');
                 redirect(admin_url('telegram/configuration'));
