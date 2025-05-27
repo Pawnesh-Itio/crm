@@ -93,7 +93,7 @@
 						}
 					?>
 					<div class="chat-top-bar">
-						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram?bot_id=' . urlencode($selected_bot['id']));?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?php echo $chat_name;?></span>
+						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram?bot_id=' . urlencode($selected_bot_id));?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?php echo $chat_name;?></span>
 					</div>
 					<?php
 					}?>
