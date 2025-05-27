@@ -7,6 +7,22 @@
 			<div class="col-md-3 wa-side-bar-col">
 				<div class="whatsapp-side-bar">
 					<div class="sidebar-header">
+						<!-- Telegram Bot Selection Dropdown -->
+                        <?php if (isset($bots) && is_array($bots) && count($bots) > 0) { ?>
+                        <form id="bot-select-form" method="get" action="<?php echo admin_url('leads/telegram'); ?>">
+                            <div class="form-group">
+                                <label for="bot_id">Telegram Bot</label>
+                                <select class="form-control" id="bot_id" name="bot_id" onchange="document.getElementById('bot-select-form').submit();">
+                                    <?php foreach ($bots as $bot) { ?>
+                                        <option value="<?php echo $bot['id']; ?>" <?php if ($selected_bot_id && $selected_bot_id == $bot['id']) echo 'selected'; ?>>
+                                            <?php echo htmlspecialchars($bot['telegram_name']); ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </form>
+                        <?php } ?>
+                        <!-- End Bot Selection Dropdown -->
 						<ul class="sidebar-head-item">
 							<li>
 							<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="60" height="60" viewBox="0 0 64 64">
@@ -77,7 +93,7 @@
 						}
 					?>
 					<div class="chat-top-bar">
-						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram');?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?php echo $chat_name;?></span>
+						<span class="chat-back-btn"><a href="<?php echo base_url('admin/leads/telegram?bot_id=' . urlencode($selected_bot['id']));?>" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a></span><span class="chat-title"> <?php echo $chat_name;?></span>
 					</div>
 					<?php
 					}?>

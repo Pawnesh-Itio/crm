@@ -1682,13 +1682,18 @@ class Leads extends AdminController
     // Method to display the discussion page with telegram data
     public function telegram($chat_id = NULL)
     {
-        // Fetch all the data from the 'tblleads' table using the model
-        $data['tabs'] = $this->Telegram_model->get_filtered_leads_data();
-        // Fetch the filtered data from the 'telegram' table using the Leads_model
-        $data['leads'] = $this->Telegram_model->get_all_telegram_data($chat_id);
-        // If chat_id is provided, fetch specific discussion data related to chat_id
-        $data['title']    = _l('lead_discussion');
-        // Pass the data to the view
+        $data['bots'] = $this->Telegram_model->get_all_bots(); // expects array of bots
+
+        // Determine selected bot_id (from GET, POST, or default to first bot)
+        $bot_id = $this->input->get('bot_id');
+        if (!$bot_id && !empty($data['bots'])) {
+            $bot_id = $data['bots'][0]['id'];
+        }
+        $data['selected_bot_id'] = $bot_id;
+        // Fetch the chat list filtered by bot_id
+        $data['tabs'] = $this->Telegram_model->get_filtered_leads_data($bot_id);
+        $data['leads'] = $this->Telegram_model->get_all_telegram_data($chat_id, $bot_id);
+        $data['title'] = _l('lead_discussion');
         $this->load->view('admin/leads/telegram', $data);
     }
 

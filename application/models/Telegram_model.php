@@ -11,13 +11,15 @@ class Telegram_model extends CI_Model {
 	}
 	
 	// Method to get data from 'tblleads' with source = 4 or staffid = 1
-	public function get_filtered_leads_data()
+	public function get_filtered_leads_data($bot_id)
 	{
 		// Query with conditions 'source = 4' (4 for telegram) and 'assigned'
 		$this->db->where('source', 4);
 		if (!is_admin()) {
 		$this->db->where('assigned', $_SESSION['staff_logged_in']);	// Use condition
 		}
+		// Add condition to filter by bot_id
+		$this->db->where('telegram_bot_id', $bot_id); // Filter by bot_id
 		$query = $this->db->get('leads'); // Get data from leads
 		return $query->result_array(); // Return the result as an associative array
 	}
@@ -71,4 +73,10 @@ class Telegram_model extends CI_Model {
 		$this->db->where('id', $id);
 		return $this->db->delete(db_prefix() .'telegram_bot');
 	}	
+	public function get_all_bots()
+	{
+		// Get all records from the 'telegram_bot' table
+		$query = $this->db->get(db_prefix() .'telegram_bot');
+		return $query->result_array(); // Return the result as an associative array
+	}
 }
