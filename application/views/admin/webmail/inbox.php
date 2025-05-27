@@ -71,7 +71,8 @@ background: #dc2626 !important;
 			  <div class="col-md-7 mbot10"><div class="dt-buttons btn-group">
 			 <?php if(!empty($_SESSION['webmail']['folder'])){ ?>
 			  <button class="btn btn-default buttons-collection btn-sm btn-default-dt-options"  type="button" aria-haspopup="true"><span><?php echo $_SESSION['webmail']['folder'];?></span></button> <?php if(isset($_SESSION['inbox-total-email'])&&!empty($_SESSION['inbox-total-email'])){?><button class="btn btn-default btn-sm btn-default-dt-options bg-danger" type="button" ><span><?=$_SESSION['inbox-total-email'];?></span></button> <?php } ?>
-			  <?php } ?><button class="btn btn-default btn-sm btn-default-dt-options bg-info hide" type="button" title="Refresh <?php echo $_SESSION['webmail']['folder'];?> Box Online"><span><i class="fa-solid fa-retweet"></i></span></button>
+			  <?php } ?><button class="btn btn-default btn-sm btn-default-dt-options bg-info refreshemail" 
+			  type="button" title="Refresh <?php echo $_SESSION['webmail']['folder'];?> Box Online"><span><i class="fa-solid fa-retweet" id="refresh-loader"></i></span></button>
 			  <span id="mail-loader"></span>
 			  
 			  </div></div>
@@ -130,7 +131,7 @@ if(isset($message['status'])&&$message['status']==1){ $mailcss="isread"; }
 <?php if(isset($message['is_deleted'])&&$message['is_deleted']==0){ ?>
 <i class="fa-solid fa-trash text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="1" title="Delete"></i>
 <?php }else{ ?>
-<i class="fa-solid fa-trash text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="0" title="Un Deleted"></i>
+<i class="fa-solid fa-envelope-circle-check text-warning isdelete" data-mid="<?=$message['id'];?>" data-fid="0" title="Move to inbox"></i>
 <?php } ?>
 <?php if(isset($message['isattachments'])&&$message['isattachments']==1){ ?>
 &nbsp;<i class="fa-solid fa-paperclip" style="color: #000000;"></i>
@@ -393,7 +394,7 @@ $(".ailoader").html("<i class='fa-solid fa-spinner fa-spin-pulse'></i>");
 			$(".ailoader").html('<img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" />');
 			// Usage example: Set cursor after 1 second
             setTimeout(setCursorToEnd, 2000);
-			alert("Please edit the content before send");
+			//alert("Please edit the content before send");
 			
 			}else{
 			alert("Not Generated");
@@ -564,7 +565,26 @@ $('.isdelete').click(function(){
 		 
 });
 
-
+$('.refreshemail').click(function(){ 
+		 $("#refresh-loader").addClass('fa-spin-pulse');
+		 $.post(admin_url + 'webmail/refresh_email', {
+        })
+        .done(function(response) { 
+            response = JSON.parse(response);
+			//alert(response.alert_type);
+			//alert(response.message);
+			
+			if(response.alert_type=="success"){
+			 alert_float(response.alert_type, response.message);
+			 $("#refresh-loader").removeClass('fa-spin-pulse');
+			 location.reload(); // Reloads the current page
+			}else{
+			 alert_float(response.alert_type, response.message);
+			 $("#refresh-loader").removeClass('fa-spin-pulse');
+			}
+            
+        });
+});
 </script>
 </body>
 

@@ -237,5 +237,24 @@ class Webmail extends AdminController
 		}
 		
     }
+	public function refresh_email()
+    {
+		$data=$this->webmail_model->downloadmailbyfolder();
+		if(isset($data['cnt'])&&$data['cnt']==1){
+		echo json_encode([
+                'alert_type' => "success",
+                'message'    => $data['msg'],
+            ]);
+		
+		}else{
+		
+		
+		echo json_encode([
+                'alert_type' => 'danger',
+                'message'    => $data['msg'],
+            ]);
+		}
+		
+    }
 
 }

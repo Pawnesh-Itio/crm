@@ -27,7 +27,6 @@
 								<th><?php echo _l('MinSettlement'); ?></th>
 								<th><?php echo _l('MonthlyFee'); ?></th>
 								<th><?php echo _l('Descriptor'); ?></th>
-								<th><?php echo _l('Reason'); ?></th>
 								<th><?php echo _l('dateadded'); ?></th>
 								
                             </thead>
@@ -38,14 +37,14 @@
 								
                                 <tr style="background:<?php echo $rowclr;?>">
                                     
-                                <td ><?php echo $rowstatus;?></td>
+                                <td><?php echo $rowstatus;?></td>
 								<td><?php echo $status['name']; ?></td>
 								<td><?php echo $status['company']; ?></td>
 								<td><?php echo $status['email']; ?></td>
-								<?php if($status['quotation_status']==1){ ?>
-								<td><?php echo $status['MDR']; ?></td>
+                                <?php if(isset($status['quotation_status'])&&$status['quotation_status']==1){ ?>
+                                <td><?php echo $status['MDR']; ?></td>
 								<?php }else{ ?>
-								<td>Rejected <i class="fa-solid fa-circle-exclamation text-warning" title="<?php echo $status['Reason']; ?>"></i> </td>
+                                <td>Reason&nbsp;<i class="fa-solid fa-circle-exclamation text-warning" title="<?php echo $status['Reason']; ?>"></i></td> 
 								<?php } ?>
                                 <td><?php echo $status['SetupFee']; ?></td>
 								<td><?php echo $status['HoldBack']; ?></td>
@@ -55,8 +54,6 @@
 								<td><?php echo $status['MinSettlement']; ?></td>
 								<td><?php echo $status['MonthlyFee']; ?></td>
 								<td><?php echo $status['Descriptor']; ?></td>
-								
-								
 								<td><?php echo $status['dateadded']; ?></td>
                                 </tr>
                                 <?php } ?>
