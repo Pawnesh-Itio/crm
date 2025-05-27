@@ -79,4 +79,15 @@ class Telegram_model extends CI_Model {
 		$query = $this->db->get(db_prefix() .'telegram_bot');
 		return $query->result_array(); // Return the result as an associative array
 	}
+	public function get_bot_token($bot_id)
+	{
+		// Get the bot token for the given bot ID
+		$this->db->select('telegram_token');
+		$this->db->where('id', $bot_id);
+		$query = $this->db->get(db_prefix() .'telegram_bot');
+		if ($query->num_rows() > 0) {
+			return $query->row()->telegram_token; // Return the token if found
+		}
+		return null; // Return null if no token found
+	}
 }

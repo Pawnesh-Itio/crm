@@ -1691,6 +1691,11 @@ class Leads extends AdminController
         }
         $data['selected_bot_id'] = $bot_id;
         // Fetch the chat list filtered by bot_id
+        $data['telegram_token'] = $this->Telegram_model->get_bot_token($bot_id);
+        if (!$data['telegram_token']) {
+            set_alert('warning', 'Telegram bot token not found for the selected bot.');
+            redirect(admin_url('leads/telegram'));
+        }
         $data['tabs'] = $this->Telegram_model->get_filtered_leads_data($bot_id);
         $data['leads'] = $this->Telegram_model->get_all_telegram_data($chat_id);
         $data['title'] = _l('lead_discussion');

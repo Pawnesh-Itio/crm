@@ -100,9 +100,7 @@
 					<div class="chat-screen"
 						style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
 						<?php
-						$telegram_token = get_option('telegram_token');
 						$response = '<div id="message-container" class="chat-container">';
-	
 						$response .= '</div>';
 						echo $response;
 						if(isset($chat_id)&&$chat_id)
