@@ -58,7 +58,7 @@
 									?>
 									
 									<!-- Create a clickable link for the chat item -->
-									<a class="chat-link" href="<?php echo admin_url('leads/telegram/' . $group['client_id'] . '?bot_id=' . urlencode($selected_bot['id'])); ?>" data-group="<?php echo e($group['client_id']); ?>">
+									<a class="chat-link" href="<?php echo admin_url('leads/telegram/' . $group['client_id'] . '?bot_id=' . urlencode($selected_bot_id)); ?>" data-group="<?php echo e($group['client_id']); ?>">
 										<!-- Create the list item with the appropriate class for styling and activation -->
 										<li class="chat-item settings-discuss-<?php echo e($group['client_id']); ?><?php echo $is_active; ?>">
 											<!-- Add a Telegram icon to represent the chat -->
