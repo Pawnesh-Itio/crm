@@ -155,6 +155,7 @@ function sendMessage() {
 			staff_id: staff_id,
 			telegram_token: telegram_token
 		};
+		console.log("Data to be sent:", data); // Log the data being sent for debugging
 
 		// Perform AJAX request to send the message
 		var xhr = new XMLHttpRequest();
