@@ -1,27 +1,18 @@
 <?php
-/*
-webhook reponse parameters
-message->chat->id;
-message->chat->first_name;
-message->chat->last_name;
-message->chat->username;
-message->chat->type;
-message->date;
-message->text;
-*/
-
-// Include the database configuration file
 require_once "application/config/db.php";
-// Fetch tel token
-// If the message is not '/start', we check for an existing lead in the database
-$sqlStmt = "SELECT name, value FROM `it_crm_options` WHERE name='telegram_token' ";
+// Fetch Token from the database
+$bot_name = $_GET['bot'] ?? '';
+// write the select query to fetch the token from the database connection is already established
+if (empty($bot_name)) {
+	die("Bot name is required.");
+}	
+$sqlStmt = "SELECT id, telegram_token FROM `it_crm_telegram_bot` WHERE telegram_name = '$bot_name' ";
 $res = mysqli_query($conn, $sqlStmt);
-// If the lead already exists, update its description
 if (mysqli_num_rows($res) > 0) {
+	// Fetch the token from the result set
 	$row = mysqli_fetch_assoc($res);
-	if($row['name']=='telegram_token' && !empty($row['value'])){
-	 $token = $row['value'];
-	}
+	$token = $row['telegram_token'];
+	$botId = $row['id'];
 }else{
 	$token = "7750960478:AAHs_kjrNFODTpGA-J3xSzK6vDHxZOXKHSY";
 }
@@ -91,8 +82,8 @@ if (isset($web_data->message->chat->id) && ($web_data->message->chat->id)) {
 		} else {
 			// If no lead exists for this client_id, create a new lead record
 			// 'source' is hardcoded as 4 to indicate this lead came from Telegram
-			$sqlStmt = "INSERT INTO `it_crm_leads` (`name`, `dateadded`, `description`, `client_id`, `email`, `source`, `status`) 
-				VALUES ('$name', NOW(), '$text', '$chat_id', '$username', 4, 2)";
+			$sqlStmt = "INSERT INTO `it_crm_leads` (`name`, `dateadded`, `description`, `client_id`, `email`, `source`, `status`,`telegram_bot_id`) 
+				VALUES ('$name', NOW(), '$text', '$chat_id', '$username', 4, 2, '$botId')";
 
 			if(mysqli_query($conn, $sqlStmt))	//if query executed successfully then execute following section 
 			{

@@ -454,10 +454,10 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    // 
+    // WhatsApp Configuration 
     $CI->app_menu->add_setup_menu_item('whatsapp', [
         'collapse' => true,
-        'name'     => 'whatsapp',
+        'name'     => 'Whatsapp',
         'position' => 10,
         'badge'    => [],
     ]);
@@ -466,6 +466,22 @@ function app_init_admin_sidebar_menu_items()
         'slug'     => 'whatsapp-groups',
         'name'     => 'Whatsapp-Configuration',
         'href'     => admin_url('whatsapp/configuration'),
+        'position' => 5,
+        'badge'    => [],
+    ]);
+    // End WhatsApp Configuration
+    // Telegram Configuration
+    $CI->app_menu->add_setup_menu_item('telegram', [
+        'collapse' => true,
+        'name'     => 'Telegram',
+        'position' => 11,
+        'badge'    => [],
+    ]);
+
+    $CI->app_menu->add_setup_children_item('telegram', [
+        'slug'     => 'telegram-groups',
+        'name'     => 'Telegram-Configuration',
+        'href'     => admin_url('telegram/configuration'),
         'position' => 5,
         'badge'    => [],
     ]);

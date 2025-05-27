@@ -28,4 +28,47 @@ class Telegram_model extends CI_Model {
 		$query = $this->db->query("SELECT * FROM tbltelegram WHERE chat_id = ?", [$chat_id]);
 		return $query->result_array();
 	}
+	// Method to get all Telegram configurations
+	public function getAllTelegramConfigurations()
+	{
+		// Get all records from the 'telegram_bot' table
+		$query = $this->db->get(db_prefix() .'telegram_bot');
+		return $query->result_array(); // Return the result as an associative array
+	}
+	public function getTelegramConfigurationByNameOrUsername($name, $username)
+	{
+		// Prepare the data array
+		$data = [
+			'name' => $name,
+			'username' => $username
+		];
+		$this->db->where('telegram_name', $data['name']);
+		$this->db->or_where('telegram_username', $data['username']);
+		$query = $this->db->get(db_prefix() .'telegram_bot');
+		return $query->row_array(); // Return a single row if exists
+	}
+	public function getTelegramConfigurationById($id)
+	{
+		// Get the record with the given ID from the 'telegram_bot' table
+		$this->db->where('id', $id);
+		$query = $this->db->get(db_prefix() .'telegram_bot');
+		return $query->row_array(); // Return a single row if exists
+	}	
+	public function addTelegramConfiguration($data)
+	{
+		// Insert the data into the 'tbltelegram' table
+		return $this->db->insert(db_prefix() .'telegram_bot', $data);
+	}
+	public function updateTelegramConfiguration($id, $data)
+	{
+		// Update the record with the given ID in the 'tbltelegram' table
+		$this->db->where('id', $id);
+		return $this->db->update(db_prefix() .'telegram_bot', $data);
+	}
+	public function deleteTelegramConfiguration($id)
+	{
+		// Delete the record with the given ID from the 'tbltelegram' table
+		$this->db->where('id', $id);
+		return $this->db->delete(db_prefix() .'telegram_bot');
+	}	
 }
