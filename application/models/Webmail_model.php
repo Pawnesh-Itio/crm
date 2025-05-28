@@ -246,7 +246,7 @@ class Webmail_model extends App_Model
 		}
 		$this->db->limit($_SESSION['mail_limit'],$page);
         return $this->db->get(db_prefix() . 'emails')->result_array(); //return
-		echo $this->db->last_query();exit;
+		//echo $this->db->last_query();exit;
 		///////////////////////////END Fetch Email//////////////
 		
 	  
@@ -326,9 +326,9 @@ class Webmail_model extends App_Model
 		//echo $recipientEmail;exit;
 		// Form Post Data
 		//echo $recipientEmail;
-		echo $subject=$_POST['emailSubject'];
-		echo $body=$_POST['emailBody'];
-		echo $redirect=$_POST['redirect'];
+		$subject=$_POST['emailSubject'];
+		$body=$_POST['emailBody'];
+		$redirect=$_POST['redirect'];
 		//echo $recipientCC;
 		//echo $recipientBCC;
 		//echo $messageid;
