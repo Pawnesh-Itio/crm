@@ -302,8 +302,8 @@ class Webmail_model extends App_Model
 	
 	//print_r($data);
 	
-		$recipientEmail=$_POST['recipientEmail'];
-		$messageid=$_POST['messageid'];
+		$recipientEmail=isset($_POST['recipientEmail']) ? $_POST['recipientEmail'] : "";
+		$messageid=isset($_POST['messageid']) ? $_POST['messageid'] : "";
 		if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientEmail, $matches)){
 		$recipientEmail = $matches[0] ?? 'Email not found';
 		}

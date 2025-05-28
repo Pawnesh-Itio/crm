@@ -132,6 +132,7 @@ if(isset($message['status'])&&$message['status']==1){ $mailcss="isread"; }
 <i class="fa-solid fa-trash text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="1" title="Delete"></i>
 <?php }else{ ?>
 <i class="fa-solid fa-envelope-circle-check text-warning isdelete" data-mid="<?=$message['id'];?>" data-fid="0" title="Move to inbox"></i>
+<i class="fa-solid fa-square-xmark text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="2" title="Delete Permanent"></i>
 <?php } ?>
 <?php if(isset($message['isattachments'])&&$message['isattachments']==1){ ?>
 &nbsp;<i class="fa-solid fa-paperclip" style="color: #000000;"></i>
@@ -541,6 +542,10 @@ $('.isdelete').click(function(){
 		 var fid=$(this).attr('data-fid');
 		 var resultid='.isdelete'+mid;
 		 var tableid='.table'+mid;
+		 if(fid==0){ var msgx="Un Delete";}else if(fid==1){var msgx="Delete";}else{var msgx="Permanent Delete";}
+		 if (!confirm('Are you sure you want to ' + msgx + ' this email?')) {
+		 return false;
+		 }
 		 //alert(resultid);
 		// return;
 		 $.post(admin_url + 'webmail/make_isdelete', {

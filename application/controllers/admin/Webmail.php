@@ -199,7 +199,7 @@ class Webmail extends AdminController
 		//$data['content_description']=$data['ai_content']['error'];
 		echo json_encode([
                 'alert_type' => "success",
-                'message'    => "Deleted",
+                'message'    => "Action Completed",
             ]);
 		
 		}else{
@@ -207,7 +207,7 @@ class Webmail extends AdminController
 		
 		echo json_encode([
                 'alert_type' => 'danger',
-                'message'    => "Not Deleted",
+                'message'    => "Action Failed",
             ]);
 		}
 		
