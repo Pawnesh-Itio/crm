@@ -116,7 +116,7 @@ else
 		$description	= $row['description'];
 		$dateadded		= $row['dateadded'];
 	
-		$response .= '<div class="message incoming-message">' . ($description) . '<span class="send-time">'.date('d-M H:i',strtotime($dateadded)).'</span></div>';
+		$response .= '<div class="message sent-message">' . ($description) . '<span class="send-time">'.date('d-M H:i',strtotime($dateadded)).'</span></div>';
 	
 		$sqlStmt = "SELECT * FROM `tbltelegram` WHERE `lead_id` = '$lead_id' ORDER BY `timestamp` ASC";
 		$chat_res = mysqli_query($conn, $sqlStmt);
