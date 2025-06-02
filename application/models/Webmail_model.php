@@ -84,8 +84,9 @@ class Webmail_model extends App_Model
 		$this->db->where('is_deleted', 1);
 		}else{
 		$this->db->where('is_deleted', 0);
+		$this->db->where('folder', $folder);
 		}
-		$this->db->group_by('id');
+		//$this->db->group_by('id');
         $counter=$this->db->get(db_prefix() . 'emails')->result_array(); //return
 		$_SESSION['inbox-total-email']=$counter[0]['total_email'];
 		//echo $this->db->last_query();
