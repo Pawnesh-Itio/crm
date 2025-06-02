@@ -338,32 +338,118 @@ function render_datatable($headings = [], $class = '', $additional_classes = [''
     }
 
     foreach ($table_attributes as $key => $val) {
-        $_table_attributes .= $key . '=' . '"' . $val . '" ';
+        $_table_attributes .= $key . '="' . $val . '" ';
     }
-   echo "";
-    $table = '<div class="' . $IEfix . '"><table' . $_table_attributes . 'class="dt-table-loading table table-' . $class . '' . $_additional_classes . '">';
-    $table .= '<thead>';
-    $table .= '<tr>';
+
+    echo '<div class="table-wrapper" style="position:relative; width:100%;">';
+
+    // Scroll arrows
+    echo '<div class="scroll-arrow left-arrow" style="display:none; user-select:none;">&#8592;</div>';
+    echo '<div class="scroll-arrow right-arrow" style="display:none; user-select:none;">&#8594;</div>';
+
+    // IE fix wrapper
+    echo '<div class="' . $IEfix . '">';
+
+    // Table with scrollable properties on table itself
+    echo '<table ' . $_table_attributes . ' class="dt-table-loading table table-' . $class . $_additional_classes . '" style="display:block; overflow-x:auto; white-space:nowrap; max-width:100%;">';
+
+    echo '<thead><tr>';
+
     foreach ($headings as $heading) {
         if (!is_array($heading)) {
-            $table .= '<th>' . $heading . '</th>';
+            echo '<th>' . $heading . '</th>';
         } else {
             $th_attrs = '';
             if (isset($heading['th_attrs'])) {
                 foreach ($heading['th_attrs'] as $key => $val) {
-                    $th_attrs .= $key . '=' . '"' . $val . '" ';
+                    $th_attrs .= $key . '="' . $val . '" ';
                 }
             }
-            $th_attrs = ($th_attrs != '' ? ' ' . $th_attrs : $th_attrs);
-            $table .= '<th' . $th_attrs . '>' . $heading['name'] . '</th>';
+            $th_attrs = ($th_attrs != '' ? ' ' . $th_attrs : '');
+            echo '<th' . $th_attrs . '>' . $heading['name'] . '</th>';
         }
     }
-    $table .= '</tr>';
-    $table .= '</thead>';
-    $table .= '<tbody></tbody>';
-    $table .= '</table></div>';
-    echo $table;
+
+    echo '</tr></thead>';
+    echo '<tbody></tbody>';
+    echo '</table>';
+
+    echo '</div>'; // IE fix
+    echo '</div>'; // table-wrapper
+
+    // Add styles and scripts inline for demo purpose (you may want to move to external files)
+    ?>
+    <style>
+        .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 24px;
+            padding: 8px 12px;
+            cursor: pointer;
+            z-index: 100;
+            border-radius: 3px;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+        .scroll-arrow:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .left-arrow {
+            left: 0;
+        }
+        .right-arrow {
+            right: 0;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.table-wrapper').forEach(wrapper => {
+                const table = wrapper.querySelector('table');
+                const leftArrow = wrapper.querySelector('.left-arrow');
+                const rightArrow = wrapper.querySelector('.right-arrow');
+                let scrollInterval;
+
+                    function updateArrows() {
+                        const maxScrollLeft = table.scrollWidth - table.clientWidth;
+
+                        // Show left arrow if table is not at the far left
+                        leftArrow.style.display = table.scrollLeft > 0 ? 'block' : 'none';
+
+                        // Show right arrow if there is content to scroll to the right
+                        rightArrow.style.display = table.scrollLeft < maxScrollLeft ? 'block' : 'none';
+                    }
+
+
+                function startScrolling(direction) {
+                    stopScrolling();
+                    scrollInterval = setInterval(() => {
+                        table.scrollLeft += direction * 10;
+                        updateArrows();
+                    }, 16); // ~60fps
+                }
+
+                function stopScrolling() {
+                    clearInterval(scrollInterval);
+                }
+
+                leftArrow.addEventListener('mouseenter', () => startScrolling(-1));
+                leftArrow.addEventListener('mouseleave', stopScrolling);
+                rightArrow.addEventListener('mouseenter', () => startScrolling(1));
+                rightArrow.addEventListener('mouseleave', stopScrolling);
+
+                table.addEventListener('scroll', updateArrows);
+                window.addEventListener('resize', updateArrows);
+
+               setTimeout(updateArrows, 100);
+            });
+        });
+    </script>
+    <?php
 }
+
 
 /**
  * Translated datatables language based on app languages

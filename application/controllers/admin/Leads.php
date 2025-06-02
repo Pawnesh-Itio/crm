@@ -1714,46 +1714,49 @@ class Leads extends AdminController
         // Pass the data to the view
         $this->load->view('admin/leads/webchat', $data);
     }
-    public function updateAssignedUser(){
+    public function updateAssignedUser() {
         $lead_id = $_POST['lead_id'];
         $assigned_id = $_POST['assigned_id'];
-        $update = $this->leads_model->updateAssignedUser($lead_id, $assigned_id);
-		
-		$update = $this->leads_model->updateAssignedAbsorber($lead_id, $assigned_id);
-	   $redirecturlx='leads';
-	   if(isset($_SESSION['leads_page_type'])&&$_SESSION['leads_page_type']=='deals'){
-	   $redirecturlx='leads/deals';
-	   }
-        if($update){
-            set_alert('success', 'Lead Assigned Successfully ');
-            redirect(admin_url($redirecturlx));
-        }else{
-            set_alert('warning','Lead assigned failed');
-            redirect(admin_url($redirecturlx));
+
+        // Update lead assignment
+        $updatedUser = $this->leads_model->updateAssignedUser($lead_id, $assigned_id);
+        if ($updatedUser) {
+            // Send a JSON success response
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Lead assigned successfully',
+            ]);
+        } else {
+            // Send a JSON error response
+            http_response_code(500); // Optional: set HTTP status code
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Failed to assign lead',
+            ]);
         }
-    }
-	
-	  public function updateAssignedAbsorber(){
-	
+
+        // Always exit after echoing JSON in AJAX responses
+        exit;
+    }	
+    public function updateAssignedAbsorber() {
         $lead_id = $_REQUEST['lead_idx'];
         $assigned_id = $_REQUEST['assigned_id'];
-		//exit;
-		// echo "====>>";exit;
-       $update = $this->leads_model->updateAssignedAbsorber($lead_id, $assigned_id);
-	   
-	   $redirecturlx='leads';
-	   if(isset($_SESSION['leads_page_type'])&&$_SESSION['leads_page_type']=='deals'){
-	   $redirecturlx='leads/deals';
-	   }
-	   
-        if($update){
-            set_alert('success', 'Absorber assigned successfully');
-            redirect(admin_url($redirecturlx));
-        }else{
-            set_alert('warning','Absorber assigned failed');
-            redirect(admin_url($redirecturlx));
+        $update = $this->leads_model->updateAssignedAbsorber($lead_id, $assigned_id);
+        if ($update) {
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Absorber assigned successfully',
+            ]);
+        } else {
+            http_response_code(500); // Optional: Set HTTP status code for better error detection
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Failed to assign absorber',
+            ]);
         }
+        exit;
     }
+
 	public function convert_to_deal()
     {
 	

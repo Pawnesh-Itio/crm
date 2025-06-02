@@ -842,6 +842,65 @@ function getLeadNameById(leadId) {
     });
     return leadName;
 }
+$(document).ready(function() {
+    $('#assignLeadForm').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var submitBtn = form.find('button[type="submit"]');
+        submitBtn.prop('disabled', true);
+        var leadId = $('#lead_id').val();
+        var assignedId = $('#mySelect').val();
+        var formData = form.serialize();
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                $('#leadAssignModel').modal('hide');
+                alert_float('success', 'Lead assigned successfully');
+                if ($.fn.DataTable.isDataTable('.table-leads')) {
+                    $('.table-leads').DataTable().ajax.reload(null, false);
+                }
+            },
+            error: function(xhr) {
+                alert_float('danger', 'Failed to assign lead');
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false);
+            }
+        });
+    });
+    // Add AJAX for Absorber assignment
+    $('#assignAbsorberForm').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var submitBtn = form.find('button[type="submit"]');
+        submitBtn.prop('disabled', true);
+        var leadId = $('#lead_idx').val();
+        var assignedId = $('#myAbsorberSelect').val();
+        var formData = form.serialize();
+        $.ajax({
+            url: form.attr('action'),
+            type: 'GET',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                $('#leadAbsorberModel').modal('hide');
+                alert_float('success', 'Absorber assigned successfully');
+                if ($.fn.DataTable.isDataTable('.table-leads')) {
+                    $('.table-leads').DataTable().ajax.reload(null, false);
+                }
+            },
+            error: function(xhr) {
+                alert_float('danger', 'Failed to assign absorber');
+            },
+            complete: function() {
+                submitBtn.prop('disabled', false);
+            }
+        });
+    });
+});
 </script>
 </body>
 </html>
