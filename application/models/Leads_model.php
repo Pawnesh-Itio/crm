@@ -63,6 +63,17 @@ class Leads_model extends App_Model
 
         return $this->db->get('leads')->row();
     }
+	
+	 public function get_lead_id_by_email($email)
+    {
+	    
+		$this->db->select('id');
+        $this->db->where('email', $email);
+        $lid = $this->db->get(db_prefix() . 'leads')->row()->id;
+		return $lid; 
+		
+    }
+	
     public function get_lead_by_id($id)
     {
         $this->db->where('id', $id);
@@ -211,6 +222,7 @@ class Leads_model extends App_Model
      */
     public function update($data, $id)
     {
+	
         $current_lead_data = $this->get($id);
         $current_status    = $this->get_status($current_lead_data->status);
         if ($current_status) {
@@ -1714,7 +1726,8 @@ class Leads_model extends App_Model
 		$datax['deal_status']=3;
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
-		
+		$log_message=" Converted this lead to UW";
+        $this->log_lead_activity($id, $log_message);
 		// For Email Data
 		$this->db->select('name,company,description,country,address,email,website,country_code,phonenumber,BusinessNature,MonthlyVolume,IncorporationCountry,AverageProductPrice,products_services,descriptor,processing_history,subject,target_countries,website_info,old_history');
 		$this->db->where('id', $id);
@@ -1789,6 +1802,8 @@ class Leads_model extends App_Model
 		$datax['deal_status']=2;
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
+		$log_message=" Rejected and Converted this lead to Document";
+        $this->log_lead_activity($id, $log_message);
 		}
 		
 		
@@ -1808,6 +1823,8 @@ class Leads_model extends App_Model
 		$datax['deal_status']=4;
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
+		$log_message=" Approved and Converted this lead to Final Invoice";
+        $this->log_lead_activity($id, $log_message);
 		}
 		
 		}
@@ -1919,7 +1936,8 @@ foreach ($data as $key => $value) {
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $data);
 		//echo $this->db->last_query();exit;
-		
+		$log_message=" Converted this lead to Document";
+        $this->log_lead_activity($id, $log_message);
 		
 		
        
@@ -1956,6 +1974,7 @@ foreach ($data as $key => $value) {
 		$iscustomer=$data['inserttocustomer'];
 		$deal_id=$data['deal_id'];
 		unset($data['deal_id']);
+		$log_message=" Converted this lead to ".$data['vtype'];
 		unset($data['vtype']);
 		unset($data['inserttocustomer']);
 		
@@ -1963,6 +1982,9 @@ foreach ($data as $key => $value) {
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $data);
 		//echo $this->db->last_query();exit;
+		//For Lead Activity
+        $this->log_lead_activity($id, $log_message);
+ 
 		empty($data);
 		
 		$data=$data_clients;
@@ -2014,9 +2036,9 @@ foreach ($data as $key => $value) {
                         'staff_id'      => get_staff_user_id(),
                     ]);
                 }
-                $this->leads_model->log_lead_activity($data['leadid'], 'not_lead_activity_converted', false, serialize([
+                /*$this->leads_model->log_lead_activity($data['leadid'], 'not_lead_activity_converted', false, serialize([
                     get_staff_full_name(),
-                ]));
+                ]));*/
                 $default_status = $this->leads_model->get_status('', [
                     'isdefault' => 1,
                 ]);
@@ -2168,13 +2190,13 @@ foreach ($data as $key => $value) {
 		
 		
 		}
-		
+		$this->log_lead_activity($id,'Leads to Deal Converted');
 		}
 		
 		
 		
         if ($this->db->affected_rows() > 0) {
-		$this->log_lead_activity($id,'Leads to Deal Converted');
+		
 		return "success";
 		}else{
 		return "failed";
@@ -2273,4 +2295,15 @@ foreach ($data as $key => $value) {
             return false;
         }
     }
+	
+	public function countEmail($email){
+	 $this->db->select('count(`id`) as cnt');
+	 $this->db->where('from_email', $email);
+	 $this->db->where('status', 1);
+	$result = $this->db->get(db_prefix() . 'emails')->row();
+	$qr=$this->db->last_query();//exit;
+	
+	 return $result->cnt;
+   
+   }
 }

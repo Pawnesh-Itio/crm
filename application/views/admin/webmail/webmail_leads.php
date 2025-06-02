@@ -11,16 +11,15 @@
     }
 }
 
-.folder-active {    
-color: #d3e0ed !important;
-background: #dc2626 !important;
-}
+
 #wrapper { margin: 0 0 0 0px !important; }
 #header { display:none !important; }
+
+
 </style>
 
 <div id="wrapper">
-    <div class="content">
+    <div class="content" style="background-image: linear-gradient(-225deg, #FFFEFF 0%, #D7FFFE 100%);">
         <div class="row">
 		<?php if(!empty($_SESSION['mailersdropdowns'])){ ?>
             
@@ -71,39 +70,49 @@ background: #dc2626 !important;
 
 </div>
 <?php } ?>
-<div class="table-responsive">
- <table class="table table-clients number-index-2 dataTable no-footer">
+<div class="tw-p-1 tw-rounded tw-border-danger-100">
+ 
 
 <?php $cnt=101; foreach ($inboxemail as $message) { $cnt++; 
-//echo $message->getMessageId();exit;
-//echo $message->uid;//exit;
-//print_r($message);//exit;
+
 $string = "tw-bg-warning-600 tw-bg-primary-600 tw-bg-danger-600 tw-bg-danger-600 tw-bg-neutral-600 tw-bg-success-600 tw-bg-warning-800 tw-bg-primary-800 tw-bg-danger-800 tw-bg-danger-800 tw-bg-neutral-800 tw-bg-success-800";
 // Step 1: Convert string to array of words
 $words = preg_split('/\s+/', $string); // Split by spaces or multiple spaces
 // Step 2: Select a random word
 $randomWord = $words[array_rand($words)];
 
+
+$mailbg="background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%);";
+if($message['folder']=="INBOX"){
+$mailbg="background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);";
+}
 ?>
-<tr>
-<td style="width:32px;"><div class="tw-rounded-full <?php echo $randomWord;?> tw-text-white tw-inline-flex tw-items-center tw-justify-center tw-h-8 tw-w-8 -tw-mt-1 group-hover:!tw-bg-primary-700"><?=strtoupper(substr($message['from_email'],0,2));?></div></td>
-<td style="width:35px;"><div>
-<?php if(isset($message['isfalg'])&&$message['isfalg']==1){ ?>
-<i class="fa-solid fa-fire-flame-simple tw-text-warning-500 isflag" data-mid="<?=$message['id'];?>" data-fid="0" title="Click for normal"></i>
-<?php }else{ ?>
-<i class="fa-solid fa-fire-flame-simple tw-text-warning-100 isflag isflag<?=$message['id'];?>" data-mid="<?=$message['id'];?>" data-fid="1" title="Click for important"></i>
-<?php } ?>
-<?php if(isset($message['isattachments'])&&$message['isattachments']==1){ ?>
-&nbsp;<i class="fa-solid fa-paperclip" style="color: #000000;"></i>
-<?php } ?>
 
-</div>
-</td>
 
-	<td class="hrefmodal tw-cursor-pointer" data-tid="<?=$message['subject'];?>" data-id="msg<?=$cnt;?>" title="<?=$message['subject'];?>" mailto="<?=htmlspecialchars($message['from_email']);?>" mailtox="<?=htmlspecialchars($message['to_emails']);?>" mailcc="<?=htmlspecialchars($message['cc_emails']);?>" mailbcc="<?=htmlspecialchars($message['bcc_emails']);?>" data-date="<?=$message['date'];?>"><div class="w-36 h-36 bg-red-600 rounded-full"></div> <span> <b><?=$message['subject'];?></b><br><?=htmlspecialchars($message['from_email']);?></span></td>
-	<td class="w-25 text-end" style="min-width: 140px;"><?=$message['date'];?></td>
-</tr>
-<tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>">
+
+<div class="tw-my-2 tw-p-1 tw-bg-warning-100 tw-rounded" >
+<div class="table-responsive" style="<?php echo $mailbg; ?>">
+ <table class="table table-clients number-index-2 dataTable no-footer hrefmodal tw-cursor-pointer" data-tid="<?=$message['subject'];?>" data-id="msg<?=$cnt;?>" title="<?=$message['subject'];?>" mailto="<?=htmlspecialchars($message['from_email']);?>" mailtox="<?=htmlspecialchars($message['to_emails']);?>" mailcc="<?=htmlspecialchars($message['cc_emails']);?>" mailbcc="<?=htmlspecialchars($message['bcc_emails']);?>" messageid="<?=$message['messageid'];?>" data-date="<?=$message['date'];?>">
+ <tr><td rowspan="5" style="width:100px;"><img src="<?php echo base_url('assets/images/'.$message['folder'].'.png')?>"  style="width: 100px;" /></td><td><b>Subject :</b></td><td><b><?=$message['subject'];?></b></td></tr>
+ <tr><td style="width:100px;"><b>Receipient :</b></td><td><b><?=htmlspecialchars($message['to_emails']);?></b></td></tr>
+ <tr><td><b>Sender :</b></td><td><b><?=htmlspecialchars($message['from_email']);?></b></td></tr>
+ <tr><td colspan="2">
+ <?php
+ $html = $message['body']; // Paste your entire HTML content here
+
+// Convert HTML to plain text
+$plainText = strip_tags($html);
+
+// Optional: Decode HTML entities
+$plainText = html_entity_decode($plainText);
+
+// Display or use the plain text
+echo substr(nl2br($plainText),0,500); //
+ ?></td></tr>
+<tr><td colspan="2">
+<button class="btn btn-warning btn-sm mleft10"><i class="fa-solid fa-reply-all tw-mr-1"></i> OPEN</button></td></tr>
+</table>
+ <div style="display:none;" id="msg<?=$cnt;?>">
 
 
 <?php
@@ -123,62 +132,23 @@ $filePath = site_url() . '/' . $attach;
 
 
 
-</td></tr>
+</div>
+
+</div>
+
+</div>
+
+<hr class="hr-text gradient" data-content="<?=date("d F Y H:i:s",strtotime($message['date']));?>">
+
+
+
+
 <?php } ?>
+</div>
 
-  </tbody>
-  </table>
+ 
   </div>
-<div class="dataTables_paginate paging_simple_numbers" id="clients_paginate"><ul class="pagination">
-<?php
-// Paging
-// Configuration
-$totalRecords = $_SESSION['inbox-total-email']; // Total number of records (replace with your DB query result)
-$recordsPerPage = $_SESSION['mail_limit']; // Records per page
-$current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page from URL
-$current_page = max(1, $current_page); // Ensure current page is at least 1
 
-// Calculate total pages and boundaries
-$totalPages = ceil($totalRecords / $recordsPerPage);
-$startPage = max(1, $current_page - 5); // Start page for display
-$endPage = min($totalPages, $startPage + 9); // End page for display
-
-// Ensure proper range of start and end pages
-if ($endPage - $startPage < 9) {
-    $startPage = max(1, $endPage - 9);
-}
-
-// Generate Previous and Next page numbers
-$prevPage = $current_page > 1 ? $current_page - 1 : null;
-$nextPage = $current_page < $totalPages ? $current_page + 1 : null;
-
-// Display the pagination
-//echo '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center ">';
-
-// Previous Button
-if ($prevPage) {
-    echo '<li class="paginate_button previous" id="clients_previous"><a class="page-link " href="?page=' . $prevPage . '">Previous</a></li>';
-}
-
-// Page Links
-for ($i = $startPage; $i <= $endPage; $i++) {
-    if ($i == $current_page) {
-        echo '<li class="paginate_button active 44"><a class="page-link">' . $i . '</a></li>';
-    } else {
-        echo '<li class="paginate_button 11"><a class="page-link"  href="?page=' . $i . '">' . $i . '</a></li>';
-    }
-}
-
-// Next Button
-if ($nextPage) {
-    echo '<li class="paginate_button next" id="clients_next"><a class="page-link" href="?page=' . $nextPage . '">Next</a></li>';
-}
-
-//echo '</ul></nav>';
-
-// Styling for pagination (optional, Bootstrap 5 example)
-?>
-</ul></div>
   
 
 
@@ -197,7 +167,7 @@ if ($nextPage) {
 
 <div class="modal" id="myModal12">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="background-image: linear-gradient(-225deg, #E3FDF5 0%, #FFE6FA 100%);">
       <!-- Modal Header -->
       <div class="modal-header">
 	  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -212,7 +182,7 @@ if ($nextPage) {
 		<div id="replyform p-2 border rounded">
   <p class="d-inline-flex gap-1 text-end">
  
-  <a class="btn btn-warning" id="reply-button"><i class="fa-solid fa-reply"></i> Reply</a>
+  <a class="btn btn-warning tw-my-2" id="reply-button"><i class="fa-solid fa-reply"></i> Reply</a>
 </p>
 <div class="collapse" id="reply-box">
   <div class="card card-body">
@@ -224,26 +194,45 @@ if ($nextPage) {
         <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" 
                value="<?= $this->security->get_csrf_hash(); ?>">
 	<input type="hidden" name="redirect" value="inbox.php">
+	<input type="hidden" name="messageid" id="messageidIT" value="">
+	<input type="hidden" name="messagetype" value="Reply">
       <div class="mb-3">
         <label for="recipientEmail" class="form-label">Recipient Email</label>
         <input type="text" class="form-control" id="recipientEmailIT" name="recipientEmail" value="" placeholder="Enter recipient email" required>
       </div>
+	  <div class="mb-3">
+        <label for="recipientCCIT" class="form-label mtop10">CC</label>
+        <input type="text" class="form-control" id="recipientCCIT" name="recipientCC" value="" placeholder="Enter CC email" >
+      </div>
+	  <div class="mb-3">
+        <label for="recipientBCCEmail" class="form-label mtop10">BCC</label>
+        <input type="text" class="form-control" id="recipientBCCIT" name="recipientBCC" value="" placeholder="Enter BCC email" >
+      </div>
       <div class="mb-3">
-        <label for="emailSubject" class="form-label">Subject</label>
+        <label for="emailSubject" class="form-label mtop10">Subject</label>
         <input type="text" class="form-control" id="emailSubjectIT" name="emailSubject" value="" placeholder="Enter email subject" required>
       </div>
       <div class="mb-3">
-        <label for="emailBody" class="form-label">Email Body</label>
-       <?php /*?> <textarea id="emailBody" name="emailBody" class="form-control" rows="5"></textarea><?php */?>
-	   <?php echo render_textarea('emailBody', '', '', [], [], '', 'tinymce'); ?>
+        <label for="emailBody" class="form-label mtop10">Email Body</label>
+    
+	   <textarea  name="emailBody" id="emailBody" class="form-control editor" required></textarea>
+        <div class="checkbox checkbox-primary">
+<input type="checkbox" id="toggleSignature" name="toggleSignature" value="1">
+<label for="SignatureX">Add Signature</label>
                                
       </div>
-	  
+	  <div class="mb-3">
+	  <div class="tw-text-right">
+	  <a name="send" class="ailoader" onclick="get_content();return false;"><img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" /></a>
+	 
+	  </div>
+
+	  </div>
 	  <div class="mb-3">
         <label for="recipientEmail" class="form-label">Attach Files:</label>
         <input type="file" name="attachments[]"  class="form-control" multiple>
       </div>
-      <button type="submit" name="send" class="btn btn-primary mtop20">Send Email</button>
+      <button type="submit" name="send" class="btn btn-primary mtop20 submitemailxxx">Send Email</button>
     </form>
     <div id="resultMessage" class="mt-4"></div>
   </div>
@@ -260,29 +249,43 @@ if ($nextPage) {
 </div>
 
 <?php init_tail(); ?>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/editor/css/jquery-te.css'); ?>"/>
+
+<script src="<?php echo base_url('assets/editor/js/jquery-te-1.4.0.min.js'); ?>"></script>
+
+<script>
+
+	$('.editor').jqte();
+
+</script>
 <script>
 
   
   $('.hrefmodal').click(function(){ 
 
          //alert(11111);
-         var tid=$(this).attr('data-tid');
+        var tid=$(this).attr('data-tid');
 		 var mailto=$(this).attr('mailto');
 		 var mailtox=$(this).attr('mailtox');
 		 var mailcc=$(this).attr('mailcc');
 		 var mailbcc=$(this).attr('mailbcc');
+		 var messageid=$(this).attr('messageid');
 		 var did=$(this).attr('data-id');
 		 var ddate=$(this).attr('data-date');
 		 const formattedDate = moment(ddate).format('ddd, DD MMM YYYY h:mm:ss A Z');
 		 //alert(tid);alert(mailto);alert(formattedDate);
 		 
 		 $('#myModal12').modal('show');
+		  //$('#myModal12 .modal-dialog').css({"margin-top": "0px"});
 		  $('#myModal12 .modal-dialog').css({"max-width":"80%", "margin-top": "20px"});
 		 //$('#myModal12').modal('show').find('.modal-body').load(urls);
 	     $('#myModal12 .modal-title').html('<span class="h4"><b>' + tid + '</b></span><br>' + '<span class="h6 text-primary"> From : ' + escapeHtml(mailto) +'<br> To : ' + escapeHtml(mailtox) +'<br> CC :' + escapeHtml(mailcc) +' BCC :' + escapeHtml(mailbcc) +'<br>' + formattedDate +'</span>');
 		// $('#emailSubject').val(tid);
 		 $('#emailSubjectIT').val(tid);
 		 $('#recipientEmailIT').val(mailto);
+		 $('#recipientCCIT').val(mailcc);
+		 $('#recipientBCCIT').val(mailbcc);
+		 $('#messageidIT').val(messageid);
 		 
 		 var contents=$('#'+did).html();
 		 $('#messageDisplay').html(contents);
@@ -314,36 +317,90 @@ $(document).ready(function() {
     console.log('ID removed from modal');
   }, 5000); // 5000 ms = 5 seconds
 });
-</script>
-<script> 
- 
-$('.isflag').click(function(){ 
-         //alert(11111);
-         var mid=$(this).attr('data-mid');
-		 var fid=$(this).attr('data-fid');
-		 var resultid='.isflag'+mid;
-		 //alert(resultid);
-		 
-		 $.post(admin_url + 'webmail/make_isflag', {
-            mid: mid,
-			fid: fid
+$('.submitemailxxx').click(function(){ 
+	var recipientEmailIT=$.trim($('#recipientEmailIT').val());
+	var emailSubjectIT=$.trim($('#emailSubjectIT').val());
+	var emailBody=$.trim($('#emailBody').val());
+        
+		
+		 if(recipientEmailIT==''){
+			alert('Please enter to email');
+			$('#recipientEmailIT').focus();
+			return false;
+		}else if(emailSubjectIT==''){
+		    alert('Please enter email subject');
+			$('#emailSubjectIT').focus();
+			return false;
+		}else if(emailBody=='' || emailBody.length < 6 ){
+		    alert('Please check Email body before submit / Min content length 5 character');
+			$('.jqte_editor').focus();
+			return false;
+		}else{
+		$(".submitemailxxx").html("<i class='fa-solid fa-spinner fa-spin-pulse'></i>");
+		}
+
+
+});
+
+function get_content() { 
+
+//let str = $('input[name="aicontent"]').val();
+let str = $('.editor').val();
+let aicontent = $.trim(str);
+
+
+if((aicontent !="") && (aicontent.length >= 5)){
+//alert(emailSubject);
+$(".ailoader").html("<i class='fa-solid fa-spinner fa-spin-pulse'></i>");
+     $.post(admin_url + 'ai_content_generator/generate_email_ai', {
+            content_title: aicontent,
         })
         .done(function(response) { 
             response = JSON.parse(response);
-			//alert(response.alert_type);
-			//alert(response.message);
+			//alert(response);
 			
 			if(response.alert_type=="success"){
-			 alert_float(response.alert_type, response.message);
-			 $(resultid).removeClass('tw-text-warning-100').addClass('tw-text-warning-500');
+			var str = response.message.toString();
+            var formattedStr = str.replace(/\\n/g, "<br>");
+            var formattedStr = formattedStr.replace(/\\/g, "");
+            //alert(formattedStr);
+			$('.editor').jqteVal(formattedStr);
+			$('.editor').val(formattedStr);
+			$(".ailoader").html('<img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" />');
+			// Usage example: Set cursor after 1 second
+            setTimeout(setCursorToEnd, 2000);
+			//alert("Please edit the content before send");
+			
 			}else{
-			 alert_float(response.alert_type, response.message);
-			 $(resultid).removeClass('tw-text-warning-500').addClass('tw-text-warning-100');
+			alert("Not Generated");
+			$(".ailoader").html('<img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" />');
+			
 			}
+			
             
         });
-		 
-});
+}else{
+alert("Enter Correct Email Body with min length 5");
+}
+
+   
+}
+function setCursorToEnd() {
+  var iframe = $('.jqte_editor')[0]; // Get the editable div (jqte_editor)
+  var range = document.createRange();
+  var selection = window.getSelection();
+
+  range.selectNodeContents(iframe);
+  range.collapse(false); // false = to end of the content
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+</script>
+<script>
+  //For Add /  Remove Signature
+  //toggleSignature function define on asset/js/custom.js
+  //need add css editor in jq editor textarea
+  const signature = `<br><br><br><br><?php echo $email_signature;?>`;
 </script>
 
 </body>

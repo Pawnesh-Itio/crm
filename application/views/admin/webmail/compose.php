@@ -7,12 +7,7 @@
         width: unset !important;
     }
 }
-.jqte_tool.jqte_tool_1 .jqte_tool_label {
-    height: 20px !important;
-}
-.jqte {
-    margin: 20px 0 !important;
-	}
+
 </style>
 
 <div id="wrapper">
@@ -54,7 +49,7 @@
                     <h4 class="tw-my-0 tw-font-semibold tw-text-lg tw-text-neutral-700 tw-mr-4">Sent New Email</h4>
              </div>
 <div class="panel_s">
-<div class="panel-body panel-table-full">
+<div class="panel-body panel-table-full mail-bg">
 
 <form action="<?=  admin_url('webmail/reply') ?>" method="post" enctype="multipart/form-data">
 	<!-- CSRF Token -->
@@ -80,9 +75,12 @@
 	  </div>
 	  
       <div class="mb-3">
-        <?php /*?><label for="emailBody" class="form-label mtop10">Email Body</label><?php */?>
-	   <?php //echo render_textarea('emailBody', '', '', [], [], '', 'tinymce'); ?>
+        
 	   <textarea  name="emailBody" id="emailBody" class="form-control editor" required></textarea>
+	   <div class="checkbox checkbox-primary">
+<input type="checkbox" id="toggleSignature" name="toggleSignature" value="1">
+<label for="SignatureX">Add Signature</label>
+</div>
          <div class="mb-3">
 	  <div class="tw-text-right">
 	  <a name="send" class="ailoader" onclick="get_content();return false;"><img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" /></a>
@@ -209,10 +207,16 @@ $(document).ready(function() {
     $('#lead-modal').removeAttr('id');
     console.log('ID removed from modal');
   }, 5000); // 5000 ms = 5 seconds
-});
-  </script>
-  
+})
 
+</script>
+  
+<script>
+  //For Add /  Remove Signature
+  //toggleSignature function define on asset/js/custom.js
+  //need add css editor in jq editor textarea
+  const signature = `<br><br><br><br><?php echo $email_signature;?>`;
+</script>
 
 
 </body>

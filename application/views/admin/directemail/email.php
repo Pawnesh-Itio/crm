@@ -1,5 +1,5 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php init_head(); ?>
+<?php init_head();  ?>
 <style>
 .card{
     padding: 20px;
@@ -50,6 +50,10 @@
                                     <div class="form-group">
                                      
                                         <textarea name="message" id="message" class="form-control editor"  placeholder="Message..."></textarea>
+<div class="checkbox checkbox-primary">
+<input type="checkbox" id="toggleSignature" name="toggleSignature" value="1">
+<label for="SignatureX">Add Signature</label>
+</div>
 										
                                     </div>
                                 </div>
@@ -188,11 +192,19 @@ $('#directEmail').on('submit', function(event){
         }
     })    
 });
-$(document).ready(function() {
+<?php /*?>$(document).ready(function() {
   setTimeout(function() {
     $('#lead-modal').removeAttr('id');
 	$('#_task_modal').removeAttr('id');
     console.log('ID removed from modal');
   }, 5000); // 5000 ms = 5 seconds
-});
+});<?php */?>
+
+
+</script>
+<script>
+  //For Add /  Remove Signature
+  //toggleSignature function define on asset/js/custom.js
+  //need add css editor in jq editor textarea
+  const signature = `<br><br><br><br><?php echo $email_signature;?>`;
 </script>

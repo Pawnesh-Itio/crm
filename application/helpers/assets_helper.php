@@ -72,6 +72,7 @@ function _init_admin_assets()
     );
 
     $CI->app_scripts->add('app-v3', 'assets/builds/app.js');
+	$CI->app_scripts->add('custom', 'assets/js/custom.js');
 
     // CSS
     add_favicon_link_asset();

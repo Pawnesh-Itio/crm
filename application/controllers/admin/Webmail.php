@@ -23,6 +23,7 @@ class Webmail extends AdminController
 		$wheredata=' staffid=' . $staffid;
 		$data['staffid']=get_staff_user_id();
 		$data['departmentid']  = $this->webmail_model->departmentid(get_staff_user_id(), $wheredata);
+		
 		//print_r($data['departmentid']);
 		//
 		if(isset($data['departmentid'][0]['departmentid'])&&$data['departmentid'][0]['departmentid']){
@@ -89,7 +90,7 @@ class Webmail extends AdminController
 	public function inbox()
 	{
 	    $data['title'] = _l('Webmail Setup');
-		
+		$data['email_signature'] = get_staff_signature();
 		//print_r($_SESSION['mailersdropdowns']);
 		if(empty($_SESSION['mailersdropdowns'])){
 		$data['errormessage']="Account not Assigned, Please add your webmail setup or contact web admin";
@@ -106,6 +107,7 @@ class Webmail extends AdminController
 	public function webmail_leads()
 	{
 	    $data['title'] = _l('Webmail Setup');
+		$data['email_signature'] = get_staff_signature();
 		
 		//print_r($_SESSION['mailersdropdowns']);
 		if(empty($_SESSION['mailersdropdowns'])){
@@ -113,7 +115,7 @@ class Webmail extends AdminController
 		$this->load->view('admin/webmail/webmail_leads', $data);
 		}else{
 		
-		$data['inboxemail']=$this->webmail_model->getinboxemail();
+		$data['inboxemail']=$this->webmail_model->getleadsemail();
 		////////////////////////////////////////////
 		$this->load->view('admin/webmail/webmail_leads', $data);
 		}
@@ -137,7 +139,7 @@ class Webmail extends AdminController
 	public function compose()
 	{
 	    $data['title'] = _l('New Email');
-		
+		$data['email_signature'] = get_staff_signature();
 		//print_r($_SESSION['mailersdropdowns']);
 		if(empty($_SESSION['mailersdropdowns'])){
 		$data['errormessage']="Account not Assigned, Please add your webmail setup or contact web admin";

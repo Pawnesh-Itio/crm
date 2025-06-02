@@ -22,10 +22,19 @@ if ($_SESSION['leads_page_type']=='leads' && $lead['status'] == $status['id'] ||
             <?php  } ?>
             <a href="<?php echo admin_url('leads/index/' . e($lead['id'])); ?>"
                 title="#<?php echo e($lead['id']) . ' - ' . e($lead['lead_name']); ?>"
-                onclick="init_lead(<?php echo e($lead['id']); ?>);return false;" class="tw-block tw-min-w-0">
+                onclick="init_lead(<?php echo e($lead['id']); ?>);return false;" class="tw-block tw-min-w-0" style="width: calc(100% - 60px);">
                 <span class="mtop10 mbot10 tw-truncate tw-block"> #<?php echo e($lead['id']) . ' - ' . e($lead['lead_name']); ?>
                 </span>
             </a>
+			<?php
+			$emailicon="";
+            $emailcounter=$this->leads_model->countEmail(e($lead['email']));
+			if($emailcounter > 0){
+			$emailicon="<a href='" . admin_url('webmail/inbox?fd=INBOX&stype=from_email&skey=' . e($lead['email'])) . "' target='_blank' title='Move to mail box'><i class='fa-solid fa-envelope tw-text-danger-800' title='Received ".$emailcounter." New Email'></i><a>";
+			}
+			
+			?>
+			<span class="float-right"><?php echo $emailicon;?></span>
         </div>
         <div class="row">
             <div class="col-md-12">

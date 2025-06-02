@@ -362,6 +362,33 @@ function get_staff_default_language($staffid = '')
     return '';
 }
 
+/**
+ * Get staff default language
+ * @param  mixed $staffid
+ * @return mixed
+ */
+function get_staff_signature($staffid = '')
+{
+    if (!is_numeric($staffid)) {
+        // checking for current user if is admin
+        if (isset($GLOBALS['current_user'])) {
+            return $GLOBALS['current_user']->email_signature;
+        }
+
+        $staffid = get_staff_user_id();
+    }
+    $CI = & get_instance();
+    $CI->db->select('email_signature');
+    $CI->db->from(db_prefix() . 'staff');
+    $CI->db->where('staffid', $staffid);
+    $staff = $CI->db->get()->row();
+    if ($staff) {
+        return $staff->email_signature;
+    }
+
+    return '';
+}
+
 function get_staff_recent_search_history($staff_id = null)
 {
     $recentSearches = get_staff_meta($staff_id ? $staff_id : get_staff_user_id(), 'recent_searches');

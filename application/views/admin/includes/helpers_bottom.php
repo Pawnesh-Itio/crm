@@ -17,7 +17,7 @@
 <div id="_task"></div>
 
 <!-- Lead Data Add/Edit-->
-<div class="modal fade lead-modal" id="lead-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade lead-modal" id="lead-modal" tabindex="-1" role="dialog" data-id="V" aria-labelledby="myLargeModalLabel">
   <div class="modal-dialog <?php echo get_option('lead_modal_class'); ?>">
     <div class="modal-content data">
 

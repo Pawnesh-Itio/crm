@@ -11,7 +11,7 @@ function ensureHttps($url) {
 
 <style>
 #lead-modal .modal-lg{
-width: 90% !important;
+width: 100% !important;
 }
 .box-shadow{
 box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
@@ -26,7 +26,7 @@ font-weight: bolder !important;
 
 </style>
  
-<div class="modal-header">
+<div class="modal-header XXX">
  <?php if(isset($lead->id)&&$lead->id){ ?>
 
 	<button type="button" class="close reminder-open" id="reminderx"  data-target=".reminder-modal-lead-<?php echo $lead->id;?>" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -380,87 +380,22 @@ function toggleCheckedAll(checkbox) {
     $(all).prop('checked', false);
   }
 }
+
+
+$(document).ready(function () {
+  function checkWidth() {
+    if ($(window).width() >= 992) {
+      $('#lead-modal').addClass('lead-modal-width');
+    } else {
+      $('#lead-modal').removeClass('lead-modal-width');
+    }
+  }
+
+  checkWidth(); // Initial check
+  $(window).resize(checkWidth); // Re-check on resize
+});
 </script>
 
-<?php /*?>
-##########Shift on css file#############
-<style>
-.message-text {
-	font-size: 14px; 
-	line-height: 1.2;
-}
-
-.message-container {
-	display: flex;
-	
-	flex-direction: column; 
-	gap: 10px; 
-	height: 300px; 
-	overflow-y: auto; 
-	padding-right: 10px; 
-	width: 100%;
-}
-
-.disp_date {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	background-color:#00cc66; 
-	color:#ffffff;
-	padding: 1px;
-	border-radius: 10px; 
-	margin: 0 auto;
-	position: relative; 
-	width: 200px; 
-}
-
-
-.incoming-msg {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start; 
-	background-color: #e1e1e1; 
-	padding: 10px;
-	
-	border-radius: 10px 20px 20px 0px; 
-	margin-right:auto;
-	margin-left: 0; 
-	max-width: 90%; 
-	width: auto; 
-	position: relative; 
-	min-width: 200px; 
-}
-
-
-.outgoing-msg {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end; 
-	background-color: #d5e8f8; 
-	/*color: white; 
-	padding: 10px;
-	border-radius: 20px 10px 0px 20px; 
-	max-width: 90%; 
-	width: auto; 
-	margin-right: 0; 
-	margin-left:auto;
-	position: relative; 
-	min-width: 200px;	
-}
-
-
-.send-time {
-	font-size: 12px; 
-	color: #00CC66; 
-	text-align: right;
-	margin-top: 5px; 
-	align-self: flex-end; 
-}
-
-.message-container {
-	width: 100%;
-}
-</style><?php */?>
 <?php 
 hooks()->do_action('lead_modal_profile_bottom', (isset($lead) ? $lead->id : '')); 
 ?>

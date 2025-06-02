@@ -10,19 +10,6 @@
         text-align: left !important;
     }
 }
-
-.folder-active {    
-color: #d3e0ed !important;
-background: #dc2626 !important;
-}
-
-.jqte_tool.jqte_tool_1 .jqte_tool_label {
-    height: 20px !important;
-}
-.jqte {
-    margin: 20px 0 !important;
-	}
-.isread span{ color:#000000 !important;}
 </style>
 
 <div id="wrapper">
@@ -99,7 +86,7 @@ background: #dc2626 !important;
 
         
                 <div class="panel_s">
-                    <div class="panel-body panel-table-full">
+                    <div class="panel-body panel-table-full mail-bg">
 
 <?php  if (count($inboxemail) == 0) { ?>
 <div class="alert alert-info text-center">
@@ -132,10 +119,13 @@ if(isset($message['status'])&&$message['status']==1){ $mailcss="isread"; }
 <i class="fa-solid fa-trash text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="1" title="Delete"></i>
 <?php }else{ ?>
 <i class="fa-solid fa-envelope-circle-check text-warning isdelete" data-mid="<?=$message['id'];?>" data-fid="0" title="Move to inbox"></i>
-<i class="fa-solid fa-square-xmark text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="2" title="Delete Permanent"></i>
+<i class="fa-solid fa-square-xmark text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="3" title="Delete Permanent"></i>
 <?php } ?>
-<?php if(isset($message['isattachments'])&&$message['isattachments']==1){ ?>
+<?php if(isset($message['isattachments'])&&$message['isattachments']==1&&$message['folder']!='Spam'){ ?>
 &nbsp;<i class="fa-solid fa-paperclip" style="color: #000000;"></i>
+<?php } ?>
+<?php if(isset($message['folder'])&&$message['folder']=='Spam'&&$message['is_deleted']==0){ ?>
+<i class="fa-solid fa-envelope-circle-check text-warning isdelete" data-mid="<?=$message['id'];?>" data-fid="2" title="Move to inbox"></i>
 <?php } ?>
 
 
@@ -285,10 +275,12 @@ if ($nextPage) {
         <input type="text" class="form-control" id="emailSubjectIT" name="emailSubject" value="" placeholder="Enter email subject" required>
       </div>
       <div class="mb-3">
-       <?php /*?> <textarea id="emailBody" name="emailBody" class="form-control" rows="5"></textarea><?php */?>
-	   <?php /*?><?php echo render_textarea('emailBody', '', '', [], [], '', 'tinymce'); ?><?php */?>
+    
 	   <textarea  name="emailBody" id="emailBody" class="form-control editor" required></textarea>
-                               
+        <div class="checkbox checkbox-primary">
+<input type="checkbox" id="toggleSignature" name="toggleSignature" value="1">
+<label for="SignatureX">Add Signature</label>
+</div>                       
       </div>
 	  <div class="mb-3">
 	  <div class="tw-text-right">
@@ -542,7 +534,7 @@ $('.isdelete').click(function(){
 		 var fid=$(this).attr('data-fid');
 		 var resultid='.isdelete'+mid;
 		 var tableid='.table'+mid;
-		 if(fid==0){ var msgx="Un Delete";}else if(fid==1){var msgx="Delete";}else{var msgx="Permanent Delete";}
+		 if(fid==0){ var msgx="Un Delete";}else if(fid==1){var msgx="Delete";}else if(fid==2){var msgx="Move to inbox";}else{var msgx="Permanent Delete";}
 		 if (!confirm('Are you sure you want to ' + msgx + ' this email?')) {
 		 return false;
 		 }
@@ -590,6 +582,12 @@ $('.refreshemail').click(function(){
             
         });
 });
+</script>
+<script>
+  //For Add /  Remove Signature
+  //toggleSignature function define on asset/js/custom.js
+  //need add css editor in jq editor textarea
+  const signature = `<br><br><br><br><?php echo $email_signature;?>`;
 </script>
 </body>
 
