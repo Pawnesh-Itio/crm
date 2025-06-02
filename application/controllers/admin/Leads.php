@@ -142,6 +142,10 @@ class Leads extends AdminController
                     'leadView' => $id ? $this->_get_lead_data($id) : [],
                 ]);
             } else {
+			
+			
+			
+			
                 $leadOriginal   = $this->db
                 ->select('email, status, source, assigned')
                 ->where('id', $id)
@@ -168,6 +172,7 @@ class Leads extends AdminController
                         if (add_notification($notification_data)) {
                             pusher_trigger_notification([$leadNow->assigned]);
                         }
+						
                     }
                     // Notification on lead source change
                     if($leadOriginal->source != $leadNow->source){
@@ -187,6 +192,7 @@ class Leads extends AdminController
                             'touserid'        => $leadNow->assigned,
                             'link'            => 'leads/index/' . $id
                         ];
+						
                         if (add_notification($notification_data)) {
                             pusher_trigger_notification([$leadNow->assigned]);
                         }

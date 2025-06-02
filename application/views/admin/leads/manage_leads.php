@@ -392,7 +392,7 @@
         
       </div>
       <!-- Modal body -->
-      <div class="modal-body" style="padding:0;">
+      <div class="modal-body">
 	  <div id="loader" class="d-flex justify-content-center align-items-center" style="height: 500px;">
             <div class="spinner-border text-primary" role="status">
 <span class="visually-hidden"><img src="<?php echo base_url('assets/images/mail-loader.gif')?>"  style="display: block;margin: auto;width: 30%;" /></span>

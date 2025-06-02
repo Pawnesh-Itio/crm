@@ -680,6 +680,63 @@ color: #FFFFFF !important;
 font-size: 12px !important;
 }
 
+.jqte_tool.jqte_tool_1 .jqte_tool_label {
+    height: 20px !important;
+}
+.jqte {
+    margin: 20px 0 !important;
+	}
+	
+.folder-active {    
+color: #d3e0ed !important;
+background: #dc2626 !important;
+}
+.isread span{ color:#000000 !important;}
+
+.hr-text {
+  border: 0;
+  line-height: 1em;
+  position: relative;
+  text-align: center;
+  height: 1.5em;
+  font-size: 14px;
+  margin: 30px 15px;
+}
+
+.hr-text::before {
+    content: "";
+    background: linear-gradient(to right, transparent, #b42712, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+}
+
+.hr-text::after {
+    content: attr(data-content);
+    position: relative;
+    padding: 2px 7px;
+    line-height: 1.5em;
+    color: white;
+    background-color: #6a7a0f;
+	border-radius: .25rem;
+}
+.lead-modal-width{
+margin-left: 235px !important;
+}
+.modal-content{
+background-image: linear-gradient(-225deg, #E3FDF5 0%, #FFE6FA 100%)!important;
+}
+.mail-bg{
+    background-image: linear-gradient(-20deg, #e9defa 0%, #fbfcdb 100%) !important;
+}
+@media (min-width: 768px) {
+    #lead-modal .modal-dialog {
+        margin: 5px auto !important;
+    }
+}
+
 @media only screen and (min-width: 769px) and (max-width: 992px) {
 }
 @media only screen and (max-width: 768px) {

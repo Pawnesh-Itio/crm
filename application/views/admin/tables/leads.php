@@ -274,8 +274,13 @@ return App_table::find('leads')
                 $row[] = $consentHTML;
             }
             $row[] = e($aRow['company']);
+            $emailicon="";
+            $emailcounter=$this->ci->leads_model->countEmail(e($aRow['email']));
+			if($emailcounter > 0){
+			$emailicon="<a href='" . admin_url('webmail/inbox?fd=INBOX&stype=from_email&skey=' . $aRow['email']) . "' target='_blank' title='Move to mail box'><i class='fa-solid fa-envelope tw-text-danger-800' title='Received ".$emailcounter." New Email'></i><a>";
+			}
 
-            $row[] = ($aRow['email'] != '' ? '<a href="mailto:' . e($aRow['email']) . '">' . e($aRow['email']) . '</a>' : '');
+            $row[] = ($aRow['email'] != '' ? '<a href="mailto:' . e($aRow['email']) . '">' . e($aRow['email']) . '</a>&nbsp;<span>'.$emailicon.'</span>' : '');
 
            /* $row[] = ($aRow['phonenumber'] != '' ? '<a href="tel:' . e($aRow['phonenumber']) . '">' . e($aRow['phonenumber']) . '</a>' : '');*/
 			$row[] = ($aRow['website'] != '' ? '<a  href="' . maybe_add_http(e($aRow['website'])) . '" target="_blank" title="Move to website" style="word-break: break-all;">' . e($aRow['website']) . '</a>' : '');

@@ -17,155 +17,6 @@ class Webmail_model extends App_Model
     }
 
  
-	   // function for get inbox mail list
-        public function getinboxemail_old()
-        {
-		
-		//print_r($_SESSION['webmail']);exit;
-		
-		$mailer_imap_host=$_SESSION['webmail']['mailer_imap_host'];
-        $mailer_imap_port=$_SESSION['webmail']['mailer_imap_port'];
-        $mailer_username=$_SESSION['webmail']['mailer_username'];
-        $mailer_password=$_SESSION['webmail']['mailer_password'];
-		$encryption=$_SESSION['webmail']['encryption'];
-		
-		
-		if((isset($_GET['fd'])&&$_GET['fd'])){
-		$_SESSION['webmail']['folder']=$_GET['fd'];
-		$_SESSION['inbox-total-email']="";
-		$_SESSION['outbox-total-email']="";
-		redirect(admin_url('webmail/inbox'));
-		}elseif($_SESSION['webmail']['folder']==""){
-		$_SESSION['webmail']['folder']="INBOX";
-		redirect(admin_url('webmail/inbox'));
-		}
-		$folder=$_SESSION['webmail']['folder'];
-		
-		//exit;
-		
-		
-		try {
-		 
-		 $cm = new ClientManager();
-
-    // Define the IMAP connection settings
-    $client = $cm->make([
-        'host'          => $mailer_imap_host,
-        'port'          => $mailer_imap_port,
-        'encryption'    => $encryption,
-        'validate_cert' => true,
-        'username'      => $mailer_username,
-        'password'      => $mailer_password,
-        'protocol'      => 'imap', 
-		//'authentication' => "oauth"            // Protocol (imap/pop3)
-    ]);
-	
-	
-	if ($client->connect()) {
-       //echo "Connected to IMAP server successfully!";
-	 $folderList = []; // Initialize an empty array  
-	 $subfolderList = []; // Initialize an empty array 
-	   // Get a list of mail folders
-    $folderslist = $client->getFolders();
-	//print_r($folderslist);exit;
-	//$_SESSION['folderlist'] = !empty($_SESSION['folderlist']) ? $_SESSION['folderlist'] : "";
-	//if(empty($_SESSION['folderlist'])){
-	
-	$subfolders="";
-		foreach ($folderslist as $flist) {
-		//print_r($folderslist);exit;
-		 $folderList[]=$flist->name;
-		 $subfolders = $flist->getChildren();
-		 if($subfolders<>"[]"){
-		 // Decode JSON string into an associative array
-			$data = json_decode($subfolders, true);
-			//print_r($data);
-			
-			if ($data) {
-				foreach ($data as $item) {
-					//echo $item['name'] . "\n";
-					$subfolderList[$flist->name][]=$item['name'];
-				}
-			} else {
-				echo "Invalid JSON data.";
-			}
-		 //echo $subfolders;
-		 }
-		}
-		$_SESSION['folderlist']=$folderList;
-		$_SESSION['subfolderlist']=$subfolderList;
-	//}
-      //print_r($_SESSION['folderlist']);exit;
-    
-	   
-	    // Get the inbox folder
-      $inbox = $client->getFolder($folder);
-	  
-	  //for Delete
-	  if(isset($_GET['stype'])&&!empty($_GET['stype'])&&isset($_GET['skey'])&&!empty($_GET['skey'])){
-	  
-	  }
-      	  
-	  if ($inbox === null) {
-      die("The 'Sent' folder could not be found.");
-      }
-     
-	   
-	  $limit=20;
-	  if(isset($_GET["page"])){ $pn = $_GET["page"]; }else{ $pn=1;};
-		
-		if(isset($_GET['stype'])&&!empty($_GET['stype'])&&isset($_GET['skey'])&&!empty($_GET['skey'])){
-		$stype=trim($_GET['stype']);
-		$skey=trim($_GET['skey']);
-		
-		  $messages = $inbox->query()->where($stype , $skey)->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch with search data
-		}else{
-		
-		if($_SESSION['messageorder']==1){
-		$since = (new DateTime())->modify('-2 days')->format('d.m.Y');
-		$messages = $inbox->query()->since($since)->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page');  // Fetch Last 2 days
-		}else{
-		$messages = $inbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page')->filter(function($messages) {
-    return $messages->getUid() > 370;
-});  // Fetch all messages
-		}
-		//echo $searchmain;exit;
-		 
-		}
-		
-		//print_r($messages);exit;
-		$client->disconnect();
-	  
-	 
-	 
-	  
-	  
-	  // Sort messages by descending date
-		$sortedMessages = $messages->sortByDesc(function ($message) {
-			return $message->getDate();
-		});
-
-    
-			//$paginator = $sortedMessages->paginate($per_page = $limit, $page = $pn, $page_name = 'sent.php');
-			// Get the total number of messages
-			$_SESSION['inbox-total-email']=200;//$total_records = $messages->total();
-			// Display the fetched emails
-			$cnt=101;
-			return $sortedMessages;
-	  
-	  }
-	
-   
-	
-		} catch (Exception $e) {
-		//echo "ERROR 102";exit;
-			echo "Error: " . $e->getMessage();exit;
-			}
-		exit;
-	
-       //echo "ERROR 103";exit;
-        //return $this->db->get(db_prefix().'webmail_setup')->result_array();
-      }
 	  
 	// function for get inbox mail list
      public function getinboxemail()
@@ -207,16 +58,26 @@ class Webmail_model extends App_Model
 		$search=0;
 		if(isset($_GET['stype'])&&!empty($_GET['stype'])&&isset($_GET['skey'])&&!empty($_GET['skey'])){
 		$stype=trim($_GET['stype']);
-		if($stype=="TEXT"){$stype="body";}
-		$skey=trim($_GET['skey']);
+		if($stype=="TEXT"){
+		$stype="body";
 		$search=1;
+		}elseif($stype=="All"){
+		$search=2;
+		}
+		$skey=trim($_GET['skey']);
+		
 		}
 		///////////////////////////END Search Query//////////////
 		
 		
 		///////////////////////////Count Total Email BY Folder//////////////
-		$this->db->select('COUNT(*) AS total_email');
-		if($search==1){$this->db->or_like($stype, $skey);}
+		$this->db->select('COUNT(`id`) AS `total_email`');
+		if($search==1){
+		$this->db->or_like($stype, $skey);
+		}elseif($search==2){
+		$this->db->where('(`from_email` LIKE "%' . $skey . '%" OR `to_emails` LIKE "%' . $skey . '%" OR `body` LIKE "%' . $skey . '%")');
+		
+		}
         $this->db->where('email', $mailer_email);
 		
 		if($folder=="Deleted"){
@@ -224,6 +85,7 @@ class Webmail_model extends App_Model
 		}else{
 		$this->db->where('is_deleted', 0);
 		}
+		$this->db->group_by('id');
         $counter=$this->db->get(db_prefix() . 'emails')->result_array(); //return
 		$_SESSION['inbox-total-email']=$counter[0]['total_email'];
 		//echo $this->db->last_query();
@@ -233,7 +95,11 @@ class Webmail_model extends App_Model
 		
 		///////////////////////////Fetch Email//////////////
 		$this->db->select('*,');
-		if($search==1){$this->db->or_like($stype, $skey);}
+		if($search==1){$this->db->or_like($stype, $skey);
+		}elseif($search==2){
+		$this->db->where('(from_email LIKE "%' . $skey . '%" OR to_emails LIKE "%' . $skey . '%" OR body LIKE "%' . $skey . '%")');
+		
+		}
         $this->db->where('email', $mailer_email);
 		
         $this->db->order_by('uniqid', 'desc');
@@ -258,7 +124,31 @@ class Webmail_model extends App_Model
 		
       }
 	  
-	 
+	 // function for get inbox mail list
+     public function getleadsemail()
+     {
+	
+	    if(isset($_GET['skey'])&&trim($_GET['skey'])<>""){
+		$skey=trim($_GET['skey']);
+		$qrs='(`from_email` LIKE "%' . $skey . '%" OR `to_emails` LIKE "%' . $skey . '%")';
+		
+		///////////////////////////Count Total Email BY Folder//////////////
+		$this->db->select('*');
+		$this->db->where($qrs);
+		$this->db->where('is_deleted', 0);
+		$this->db->order_by('date', 'DESC');
+        $mails=$this->db->get(db_prefix() . 'emails')->result_array(); //return
+		$_SESSION['inbox-total-email']=count($mails);
+		$this->db->last_query();
+		return $mails;
+		exit;
+		///////////////////////////END Count Total Email BY Folder//////////////
+	    }else{
+		return 0;
+		}
+	  
+		
+      }
 	
 	   
 	
@@ -397,6 +287,12 @@ class Webmail_model extends App_Model
 
 
     $mail->send();
+	$lid=$this->leads_model->get_lead_id_by_email($recipientEmail);
+	if(isset($lid)&&$lid > 0){
+	//For Lead Activity
+    $this->leads_model->log_lead_activity($lid, 'Sent Email to '.$recipientEmail.' with subject - '.$subject);
+	
+	}
     //echo "Email sent successfully!";
 	log_activity('Email Reply With Subject Line -  [ Subject: ' . $subject . ']');
     return true;
@@ -805,7 +701,11 @@ $client->disconnect();
 	
 	 public function make_isdelete($mid,$fid)
     {
+	    if($fid==2){
+		$data['folder']='INBOX';
+		}else{
 	    $data['is_deleted']=$fid;
+		}
         $this->db->where('id', $mid);
 		$this->db->update(db_prefix() . 'emails', $data);
         if ($this->db->affected_rows() > 0) {
@@ -831,26 +731,7 @@ $client->disconnect();
 		
     }
 	
-	 public function refresh_email($mailid,$folder)
-    {
-	    echo $mailid;
-		echo $folder;
-		print_r($_SESSION['webmail']);
-		
-		
-		
-		exit;
-		$data['status']=$fid;
-        $this->db->where('id', $mid);
-		$this->db->update(db_prefix() . 'emails', $data);
-        if ($this->db->affected_rows() > 0) {
-		return 1;
-		}else{
-		return 0;
-		}
-        
-		
-    }
+	
     
     
 }

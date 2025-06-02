@@ -13,6 +13,7 @@ class Direct_email extends AdminController
     public function index()
     {
         $data['title']          = 'Direct E-mail';
+		$data['email_signature'] = get_staff_signature();
         $this->load->view('admin/directemail/email', $data);
     }
     public function sendMail(){
