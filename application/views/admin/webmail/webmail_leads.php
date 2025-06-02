@@ -98,16 +98,20 @@ $mailbg="background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);";
  <tr><td><b>Sender :</b></td><td><b><?=htmlspecialchars($message['from_email']);?></b></td></tr>
  <tr><td colspan="2">
  <?php
- $html = $message['body']; // Paste your entire HTML content here
+echo '<iframe srcdoc="' . htmlspecialchars($message['body']) . '" style="width: 100%; height="800" width="800" sandbox="allow-same-origin allow-scripts allow-forms" scrolling="no" style="overflow: hidden"></iframe>';
+?>
+ <?php
+ //$html = $message['body']; // Paste your entire HTML content here
+
 
 // Convert HTML to plain text
-$plainText = strip_tags($html);
+//$plainText = strip_tags($html);
 
 // Optional: Decode HTML entities
-$plainText = html_entity_decode($plainText);
+//$plainText = html_entity_decode($plainText);
 
 // Display or use the plain text
-echo substr(nl2br($plainText),0,500); //
+//echo substr(nl2br($plainText),0,500); //
  ?></td></tr>
 <tr><td colspan="2">
 <button class="btn btn-warning btn-sm mleft10"><i class="fa-solid fa-reply-all tw-mr-1"></i> OPEN</button></td></tr>

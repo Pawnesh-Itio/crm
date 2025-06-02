@@ -43,7 +43,7 @@
 				
 				foreach ($_SESSION['folderlist'] as $item => $val) { ?>
                     <li role="presentation" class="menu-item-leads ">
-                        <a href="inbox?fd=<?php echo $val['folder'];?>" class="mail-loader <?php if($_SESSION['webmail']['folder']==$val['folder']){ echo 'folder-active';} ?>"><?php echo $val['folder'];?></a>
+                        <a href="inbox?fd=<?php echo $val['folder'];?>" class="mail-loader <?php if($_SESSION['webmail']['folder']==$val['folder']){ echo 'folder-active';} ?>"><?php echo ucwords(strtolower($val['folder']));?></a>
                     </li>
 					<?php } ?>  
 					<li role="presentation" class="menu-item-leads ">
@@ -111,9 +111,9 @@ if(isset($message['status'])&&$message['status']==1){ $mailcss="isread"; }
 <td style="width:35px;"><div class="tw-rounded-full <?php echo $randomWord;?> tw-text-white tw-inline-flex tw-items-center tw-justify-center tw-h-8 tw-w-8 -tw-mt-1 group-hover:!tw-bg-primary-700"><?=strtoupper(substr($message['from_email'],0,2));?></div></td>
 <td style="width:50px;"><div>
 <?php if(isset($message['isfalg'])&&$message['isfalg']==1){ ?>
-<i class="fa-solid fa-fire-flame-simple tw-text-warning-500 isflag" data-mid="<?=$message['id'];?>" data-fid="0" title="Click for normal"></i>
+<i class="fa-solid fa-fire-flame-simple tw-text-info-800 isflag" data-mid="<?=$message['id'];?>" data-fid="0" title="Click for normal"></i>
 <?php }else{ ?>
-<i class="fa-solid fa-fire-flame-simple tw-text-warning-100 isflag isflag<?=$message['id'];?>" data-mid="<?=$message['id'];?>" data-fid="1" title="Click for important"></i>
+<i class="fa-solid fa-fire-flame-simple tw-text-info-300 isflag isflag<?=$message['id'];?>" data-mid="<?=$message['id'];?>" data-fid="1" title="Click for important"></i>
 <?php } ?>
 <?php if(isset($message['is_deleted'])&&$message['is_deleted']==0){ ?>
 <i class="fa-solid fa-trash text-danger isdelete" data-mid="<?=$message['id'];?>" data-fid="1" title="Delete"></i>
@@ -518,10 +518,10 @@ $('.isflag').click(function(){
 			
 			if(response.alert_type=="success"){
 			 alert_float(response.alert_type, response.message);
-			 $(resultid).removeClass('tw-text-warning-100').addClass('tw-text-warning-500');
+			 $(resultid).removeClass('tw-text-info-300').addClass('tw-text-info-800');
 			}else{
 			 alert_float(response.alert_type, response.message);
-			 $(resultid).removeClass('tw-text-warning-500').addClass('tw-text-warning-100');
+			 $(resultid).removeClass('tw-text-info-800').addClass('tw-text-info-300');
 			}
             
         });
