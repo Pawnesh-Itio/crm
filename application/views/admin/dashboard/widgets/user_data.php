@@ -6,7 +6,7 @@
             <div class="horizontal-scrollable-tabs panel-full-width-tabs">
                 <div class="scroller scroller-left arrow-left"><i class="fa fa-angle-left"></i></div>
                 <div class="scroller scroller-right arrow-right"><i class="fa fa-angle-right"></i></div>
-                <div class="horizontal-tabs">
+                <div class="horizontal-tabs" id="global">
                     <ul class="nav nav-tabs nav-tabs-horizontal" role="tablist">
                         <li role="presentation" class="active">
                             <a href="#home_tab_tasks" aria-controls="home_tab_tasks" role="tab" data-toggle="tab">
@@ -72,7 +72,7 @@
             <div class="tab-content tw-mt-5">
                 <div role="tabpanel" class="tab-pane active" id="home_tab_tasks">
                     <a href="<?php echo admin_url('tasks/list_tasks'); ?>"
-                        class="mbot20 inline-block full-width"><?php echo _l('home_widget_view_all'); ?></a>
+                        class="mbot20 inline-block full-width"><?php echo _l('home_widget_view_all'); ?>!!</a>
                     <div class="clearfix"></div>
                     <div class="_hidden_inputs _filters _tasks_filters">
                         <?php echo form_hidden('my_tasks', true); ?>

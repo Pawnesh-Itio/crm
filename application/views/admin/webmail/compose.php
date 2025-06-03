@@ -62,7 +62,7 @@
       </div>
 	  <div class="mb-3">
         <label for="recipientEmail" class="form-label mtop10">CC</label>
-        <input type="text" class="form-control" id="recipientCCIT" name="recipientCC" value="" placeholder="Enter CC email" >
+        <input type="text" class="form-control" id="recipientCCIT" name="recipientCC" value="" placeholder="Enter CC email -  Add multiple with comma seperated " >
       </div>
 	  <div class="mb-3">
         <label for="recipientBCCEmail" class="form-label mtop10">BCC</label>

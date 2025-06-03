@@ -57,6 +57,7 @@ class Webmail_model extends App_Model
         ///////////////////////////Search Query//////////////
 		$search=0;
 		if(isset($_GET['stype'])&&!empty($_GET['stype'])&&isset($_GET['skey'])&&!empty($_GET['skey'])){
+		$search=1;
 		$stype=trim($_GET['stype']);
 		if($stype=="TEXT"){
 		$stype="body";
@@ -89,14 +90,17 @@ class Webmail_model extends App_Model
 		//$this->db->group_by('id');
         $counter=$this->db->get(db_prefix() . 'emails')->result_array(); //return
 		$_SESSION['inbox-total-email']=$counter[0]['total_email'];
-		//echo $this->db->last_query();
+		//echo $this->db->last_query();exit;
 		//print_r($counter);exit;
 		///////////////////////////END Count Total Email BY Folder//////////////
 		 
 		
 		///////////////////////////Fetch Email//////////////
+		
+		
 		$this->db->select('*,');
-		if($search==1){$this->db->or_like($stype, $skey);
+		if($search==1){
+		$this->db->or_like($stype, $skey);
 		}elseif($search==2){
 		$this->db->where('(from_email LIKE "%' . $skey . '%" OR to_emails LIKE "%' . $skey . '%" OR body LIKE "%' . $skey . '%")');
 		
@@ -112,8 +116,9 @@ class Webmail_model extends App_Model
 		$this->db->where('folder', $folder);
 		}
 		$this->db->limit($_SESSION['mail_limit'],$page);
-        return $this->db->get(db_prefix() . 'emails')->result_array(); //return
-		//echo $this->db->last_query();exit;
+        $mails=$this->db->get(db_prefix() . 'emails')->result_array(); //return
+		//echo $this->db->last_query();//exit;
+		 return  $mails;exit;
 		///////////////////////////END Fetch Email//////////////
 		
 	  
@@ -198,31 +203,16 @@ class Webmail_model extends App_Model
 		if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientEmail, $matches)){
 		$recipientEmail = $matches[0] ?? 'Email not found';
 		}
-		if(isset($_POST['recipientCC']) && $_POST['recipientCC'])
-		{
-			$recipientCC=$_POST['recipientCC'];
-			if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientCC, $matches)){
-			$recipientCC = $matches[0] ?? 'Email not found';
-			}
-		}
 		
-		if(isset($_POST['recipientBCC']) && $_POST['recipientBCC'])
-		{
-			$recipientBCC=$_POST['recipientBCC'];
-			if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $recipientBCC, $matches)){
-			$recipientBCC = $matches[0] ?? 'Email not found';
-			}
-		}
+		$recipientCC=isset($_POST['recipientCC']) ? $_POST['recipientCC'] : "";
+		$recipientBCC=isset($_POST['recipientBCC']) ? $_POST['recipientBCC'] : "";
 		
-		//echo $recipientEmail;exit;
 		// Form Post Data
 		//echo $recipientEmail;
 		$subject=$_POST['emailSubject'];
 		$body=$_POST['emailBody'];
 		$redirect=$_POST['redirect'];
-		//echo $recipientCC;
-		//echo $recipientBCC;
-		//echo $messageid;
+		
 		
 		//exit;
 		// SMTP Details from session
@@ -254,11 +244,30 @@ class Webmail_model extends App_Model
 	$mail->setFrom($senderEmail, $senderName);
 	$mail->addAddress($recipientEmail);
 	if (isset($recipientCC) && $recipientCC != "") {
-		$mail->addCC($recipientCC);
+	
+	      // Add CC addresses from comma-separated string
+        $ccEmails = explode(',', trim($recipientCC));
+        foreach ($ccEmails as $ccEmail) {
+            $ccEmail = trim($ccEmail);
+            if (filter_var($ccEmail, FILTER_VALIDATE_EMAIL)) {
+                $mail->addCC($ccEmail);
+            }
+        }
+		
 	}
 	
 	if (isset($recipientBCC) && $recipientBCC != "") {
-		$mail->addBCC($recipientBCC);
+	
+	       // Add CC addresses from comma-separated string
+        $bccEmails = explode(',', trim($recipientBCC));
+        foreach ($bccEmails as $bccEmail) {
+            $bccEmail = trim($bccEmail);
+            if (filter_var($bccEmail, FILTER_VALIDATE_EMAIL)) {
+                $mail->addBCC($bccEmail);
+            }
+        }
+		
+		
 	}
 	
 	if (isset($messageid) && $messageid != "") {
@@ -400,7 +409,7 @@ foreach ($folders as $folder) {
 	  //echo "Folder - ".$folder." Last Email ID = ".$last_email_id;
 	  $pg=floor($last_email_id / 100) +1;
 	  $messages = $mailbox->query()
-    ->all()->limit($limit = 100, $page = $pg)
+    ->all()->limit($limit = 50, $page = $pg)
     ->get() // fetch messages
     ->filter(function($message) use ($last_email_id) {
         return $message->getUid() > $last_email_id;
