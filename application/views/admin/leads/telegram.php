@@ -98,20 +98,50 @@
 					<?php
 					}?>
 					<div class="chat-screen"
-						style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>')">
+						style="background: url('<?php echo base_url('assets/images/chatbackground3.jpg')?>');height:596px">
 						<?php
 						$response = '<div id="message-container" class="chat-container">';
 						$response .= '</div>';
-						echo $response;
+						echo $response; 
 						if(isset($chat_id)&&$chat_id)
 						{
 						?>
 						<div class="button">
 							<div class="message-input">
-								<input type="text" class="form-control input-box" id="message" placeholder="Type a message...">	
-								<button type="submit" class="btn wa-btn" id="send-button" onclick="sendMessage()">
-									<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-								</button>	
+								<div class="row">
+									<div class="col-sm-10">
+										<div class="input-group">
+											<span class="input-group-btn">
+												<div class="btn-group dropup">
+													<button class="btn wa-drop-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														<i class="fa fa-paperclip" aria-hidden="true"></i>
+													</button>
+													<ul class="dropdown-menu">
+														<li><a href="#" id="textMessageOption">Text Message</a></li>
+														<li><a href="#" id="mediaMessageOption">Photo/Image</a></li>
+														<li><a href="#" id="documentMessageOption">Documents</a></li>
+													</ul>
+												</div>
+											</span>
+											<!-- Container for the fields -->
+											    <!-- Hidden Fields -->
+												<input type="hidden" id="formType" value="1">
+												<!-- Default Text Message Field (shown by default) -->
+												<input type="text" class="form-control message-field message-input" id="textMessageField" placeholder="Type a message..." style="display: block;">
+												<!-- Media Message Field (hidden by default) -->
+												<input type="file" id="mediaMessageFileField" style="display:none">
+												<input type="text" id="mediaMessageCaptionField" class="form-control message-field message-input"placeholder="Image Caption" style="display:none">
+												<!-- Document Message Field (hidden by default) -->
+												<!-- <input type="file" id="documentMessageFileField" style="display:none"> -->
+										</div>
+									</div>
+
+									<div class="col-sm-2">
+										<button type="submit" class="btn wa-btn" id="send-button" onclick="sendMessage()">
+											<svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+										</button>	
+									</div>
+								</div>
 							</div>
 						</div>
 						<?php
@@ -141,46 +171,62 @@
 	}
 // Function to send the message via AJAX
 function sendMessage() {
-	var message = document.getElementById("message").value;
-	var chat_id = window.location.pathname.split("/").pop(); // Get the last part of the URL as chat_id
-	var staff_id = '<?php echo $_SESSION['staff_user_id'];?>' //1; // You can change this to dynamically fetch the staff_id, based on your system
-	var telegram_token = '<?php echo $telegram_token;?>' // Get telegram token
+	document.getElementById('send-button').disabled = true;
+    const formType = document.getElementById('formType').value;
+    const chat_id = window.location.pathname.split("/").pop();
+    const staff_id = '<?php echo $_SESSION['staff_user_id'];?>';
+    const telegram_token = '<?php echo $telegram_token;?>';
 
-	// Check if the message is not empty
-	if (message) {
-		// Prepare data to be sent to PHP file
-		var data = {
-			chat_id: chat_id,
-			message: message,
-			staff_id: staff_id,
-			telegram_token: telegram_token
-		};
-		console.log("Data to be sent:", data); // Log the data being sent for debugging
+    const formData = new FormData();
+    formData.append('chat_id', chat_id);
+    formData.append('staff_id', staff_id);
+    formData.append('telegram_token', telegram_token);
 
-		// Perform AJAX request to send the message
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", "/crm/show-telegram-discuss.php", true); // The PHP file is called show-telegram-discuss.php
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    if (formType === '1') {
+        const message = document.getElementById("textMessageField").value;
+        if (!message.trim()) {
+            alert("Please type a message before sending.");
+            return;
+        }
+        formData.append('telegram_message', message);
+    } else if (formType === '2') {
+        const fileInput = document.getElementById('mediaMessageFileField');
+        const caption = document.getElementById('mediaMessageCaptionField').value;
+        if (!fileInput.files.length) {
+            alert("Please select an image to send.");
+            return;
+        }
+        formData.append('media', fileInput.files[0]);
+        formData.append('caption', caption);
+    } else if (formType === '3') {
+        const fileInput = document.getElementById('documentMessageFileField');
+        if (!fileInput.files.length) {
+            alert("Please select a document to send.");
+            return;
+        }
+        formData.append('document', fileInput.files[0]);
+    }
 
-		// When the request is completed
-		xhr.onload = function() {
-			if (xhr.status === 200) {
-				// If message was sent successfully, clear the input and scroll to bottom
-				$('#message-container').html(xhr.responseText);
-			//	console.log("Message sent successfully:", xhr.responseText);
-				document.getElementById("message").value = "";	// Clear the input box
-				scrollToBottom();	// Scroll to the bottom
-			} else {
-				// Handle any error
-				alert("Error sending message.");
-			}
-		};
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/crm/show-telegram-discuss.php", true);
 
-		// Sending data to the PHP file (using URL-encoded form data)
-		xhr.send("chat_id=" + encodeURIComponent(data.chat_id) + "&telegram_message=" + encodeURIComponent(data.message) + "&staff_id=" + encodeURIComponent(data.staff_id) + "&telegram_token=" + encodeURIComponent(data.telegram_token));
-	} else {
-		alert("Please type a message before sending.");
-	}
+    xhr.onload = function() {
+		document.getElementById('send-button').disabled = false;
+		clearInterval(intervalId); // Just in case
+		intervalId = setInterval(fetchData, 30000);
+        if (xhr.status === 200) {
+            document.getElementById("message-container").innerHTML = xhr.responseText;
+            document.getElementById("textMessageField").value = "";
+            document.getElementById('mediaMessageFileField').value = "";
+            document.getElementById('mediaMessageCaptionField').value = "";
+            document.getElementById('documentMessageFileField').value = "";
+            scrollToBottom();
+        } else {
+            alert("Error sending message.");
+        }
+    };
+
+    xhr.send(formData);
 }
 
 // Function to scroll to the bottom of the message container
@@ -190,7 +236,7 @@ function scrollToBottom() {
 }
 
 // Event listener for the 'Enter' key to send the message
-document.getElementById("message").addEventListener("keypress", function(event) {
+document.getElementById("textMessageField").addEventListener("keypress", function(event) {
 	if (event.key === "Enter") {
 		event.preventDefault();	// Prevent default form submission
 		sendMessage();			// Call the sendMessage function
@@ -230,10 +276,90 @@ if(isset($chat_id)&&$chat_id)
 	fetchData();
 
 	// Set an interval to run the fetchData function every 30 seconds (30000 milliseconds)
-	setInterval(fetchData, 30000);
+	let intervalId = setInterval(fetchData, 30000);
 <?php
 }
 ?>
+// Change Message Field Visibility Based on Selection
+document.getElementById('textMessageOption').addEventListener('click', function() {
+    changeMessageField('textMessageField');
+    $('#formType').val(1);
+});
+
+document.getElementById('mediaMessageOption').addEventListener('click', function() {
+    $('#formType').val(2);
+    changeMessageField('mediaMessageCaptionField');
+    document.getElementById('mediaMessageFileField').click();
+});
+document.getElementById('documentMessageOption').addEventListener('click', function() {
+    $('#formType').val(3);
+    changeMessageField('documentMessageOption');
+});
+
+
+// Function to switch the visible field
+function changeMessageField(fieldId) {
+    // Hide all fields
+    const fields = document.querySelectorAll('.message-field');
+    fields.forEach(function(field) {
+        field.style.display = 'none';
+    });
+
+    // Show the selected field
+    document.getElementById(fieldId).style.display = 'block';
+}
+// Media Upload function
+document.getElementById('mediaMessageFileField').addEventListener('change', function(event) {
+	// Stop the periodic fetch
+    clearInterval(intervalId);
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'sent-message';
+
+        // Create image container
+        const imageWrapper = document.createElement('div');
+        imageWrapper.style.position = 'relative';
+        imageWrapper.style.display = 'inline-block';
+        imageWrapper.style.maxWidth = '300px';
+        imageWrapper.style.margin = '10px 0';
+
+        // Create image preview
+        const preview = document.createElement('img');
+        preview.src = e.target.result;
+        preview.style.width = '100%';
+        preview.style.display = 'block';
+
+        // Create overlay text
+        const overlay = document.createElement('div');
+        overlay.textContent = 'Image is ready to Send click Send button';
+        overlay.style.position = 'absolute';
+        overlay.style.top = '50%';
+        overlay.style.left = '50%';
+        overlay.style.transform = 'translate(-50%, -50%)';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+        overlay.style.color = 'white';
+        overlay.style.padding = '10px 20px';
+        overlay.style.borderRadius = '5px';
+        overlay.style.fontWeight = 'bold';
+        overlay.style.pointerEvents = 'none';
+
+        imageWrapper.appendChild(preview);
+        imageWrapper.appendChild(overlay);
+        wrapper.appendChild(imageWrapper);
+
+        const container = document.getElementById('message-container');
+        container.appendChild(wrapper);
+
+        scrollToBottom();
+    };
+    reader.readAsDataURL(file);
+});
+
+
 </script>
 <?php //hooks()->do_action('settings_group_end', $tab); ?>
 </body>
