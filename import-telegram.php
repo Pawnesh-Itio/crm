@@ -77,7 +77,7 @@ if (isset($web_data->message->chat->id) && ($web_data->message->chat->id)) {
 			$photoArrayDecoded = json_decode($input, true);
 			// Check if 'message' and 'photo' exist
 			if (isset($photoArrayDecoded['message']['photo']) && is_array($photoArrayDecoded['message']['photo']) && count($photoArrayDecoded['message']['photo']) > 0) {
-				$photos = $data['message']['photo'];
+				$photos = $photoArrayDecoded['message']['photo'];
 				// Get the photo with the largest file_size
 				usort($photos, function($a, $b) {
 					return $b['file_size'] <=> $a['file_size'];
