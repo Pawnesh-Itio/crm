@@ -147,6 +147,15 @@ echo '<iframe srcdoc="' . htmlspecialchars($message['body']) . '" style="width: 
 
 $attachments = explode(',', $message['attachments']);
 
+/////////////////////////
+// Remove duplicates
+$uniqueArray = array_unique($attachments);
+
+// Convert back to a string
+$attachments = implode(",", $uniqueArray);
+
+////////////////////////
+$attachments = explode(',', $attachments);
 foreach($attachments as $attach){
 $filePath = site_url() . '/' . $attach;
 ?>

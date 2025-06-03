@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?> 
 <?php init_head(); ?>
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div id="wrapper">
     <div class="screen-options-area"></div>
     <div class="screen-options-btn">
@@ -14,9 +15,9 @@
     </div>
     <div class="content">
         <div class="row">
-            <?php $this->load->view('admin/includes/alerts'); ?>
+            <?php //$this->load->view('admin/includes/alerts'); ?>
 
-                <?php hooks()->do_action('before_start_render_dashboard_content'); ?>
+                <?php //hooks()->do_action('before_start_render_dashboard_content'); ?>
 
             <div class="clearfix"></div>
 
@@ -33,18 +34,18 @@
                 <?php render_dashboard_widgets('middle-right-6'); ?>
             </div>
 
-            <div class="col-md-12" data-container="left-12">
+            <?php /*?><div class="col-md-12" data-container="left-12">
                 <?php render_dashboard_widgets('left-12'); ?>
-            </div>
+            </div><?php */?>
 
             <?php hooks()->do_action('after_dashboard_half_container'); ?>
 
-            <div class="col-md-8" data-container="left-8">
+            <?php /*?><div class="col-md-8" data-container="left-8">
                 <?php render_dashboard_widgets('left-8'); ?>
             </div>
             <div class="col-md-4" data-container="right-4">
                 <?php render_dashboard_widgets('right-4'); ?>
-            </div>
+            </div><?php */?>
             <div class="col-md-12" data-container="bottom-left-12">
                 <?php render_dashboard_widgets('bottom-left-12'); ?>
             </div>
@@ -64,7 +65,19 @@ app.calendarIDs = '<?php echo json_encode($google_ids_calendars); ?>';
 </script>
 <?php init_tail(); ?>
 <?php $this->load->view('admin/utilities/calendar_template'); ?>
-<?php $this->load->view('admin/dashboard/dashboard_js'); ?>
-</body>
+<?php //$this->load->view('admin/dashboard/google_js'); ?>
 
+
+</body>
+<script>
+$('#leads').addClass('table-striped tw-bg-info-100');
+$('#leads tr:first').addClass('tw-bg-info-300');
+</script>
+<script>
+document.getElementById('yearSelect').addEventListener('change', function () {
+    const selectedYear = this.value;
+    // Redirect to the same page with new year parameter
+    window.location.href = '?year=' + selectedYear;
+});
+</script>
 </html>
