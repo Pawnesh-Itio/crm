@@ -1,203 +1,337 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <div class="widget relative" id="widget-<?php echo create_widget_id(); ?>" data-name="<?php echo _l('quick_stats'); ?>">
     <div class="widget-dragger"></div>
     <div class="row">
+	
         <?php
-         $initial_column = 'col-lg-3';
-         if (!is_staff_member() && ((staff_cant('view', 'invoices') && staff_cant('view_own', 'invoices') && (get_option('allow_staff_view_invoices_assigned') == 0
-           || (get_option('allow_staff_view_invoices_assigned') == 1 && !staff_has_assigned_invoices()))))) {
-             $initial_column = 'col-lg-6';
-         } elseif (!is_staff_member() || (staff_cant('view', 'invoices') && staff_cant('view_own', 'invoices') && (get_option('allow_staff_view_invoices_assigned') == 1 && !staff_has_assigned_invoices()) || (get_option('allow_staff_view_invoices_assigned') == 0 && (staff_cant('view', 'invoices') && staff_cant('view_own', 'invoices'))))) {
-             $initial_column = 'col-lg-4';
-         }
-      ?>
-        <?php if (staff_can('view',  'invoices') || staff_can('view_own',  'invoices') || (get_option('allow_staff_view_invoices_assigned') == '1' && staff_has_assigned_invoices())) { ?>
-        <div class="quick-stats-invoices col-xs-12 col-md-6 col-sm-6 <?php echo e($initial_column); ?> tw-mb-2 sm:tw-mb-0">
+         $initial_column = 'col-lg-4';
+         
+         ?>
+        <?php if (is_staff_member()) { ?>
+		<div class="quick-stats-invoices col-xs-12 col-md-6 col-sm-6 <?php echo e($initial_column); ?> tw-mb-2 sm:tw-mb-0">
             <div class="top_stats_wrapper">
-                <?php
-                  $total_invoices                          = total_rows(db_prefix() . 'invoices', 'status NOT IN (5,6)' . (staff_cant('view', 'invoices') ? ' AND ' . get_invoices_where_sql_for_staff(get_staff_user_id()) : ''));
-                  $total_invoices_awaiting_payment         = total_rows(db_prefix() . 'invoices', 'status NOT IN (2,5,6)' . (staff_cant('view', 'invoices') ? ' AND ' . get_invoices_where_sql_for_staff(get_staff_user_id()) : ''));
-                  $percent_total_invoices_awaiting_payment = $total_invoices > 0 ? (($total_invoices_awaiting_payment * 100) / $total_invoices) : 0;
-                  $percent_total_invoices_awaiting_payment = number_format($percent_total_invoices_awaiting_payment > 0 && $percent_total_invoices_awaiting_payment < 1 ? ceil($percent_total_invoices_awaiting_payment) : $percent_total_invoices_awaiting_payment, 2)
+			
+			<?php
+                  if (!is_admin()) {$this->db->where('assigned', get_staff_user_id());}
+                    
+                    $this->db->select("COUNT(CASE WHEN status = 2 AND is_deal = 0  THEN 1 END) AS unassign_lead, COUNT(CASE WHEN status = 3 AND is_deal = 0 THEN 1 END) AS assign_lead, COUNT(CASE WHEN status = 4 AND is_deal = 0 THEN 3 END) AS junk_lead, COUNT(CASE WHEN status = 1 AND is_deal = 0  THEN 1 END) AS hot_lead");
+                    
+					
+                    $row = $this->db->get(db_prefix() . 'leads')->row();
+			
+					//echo $this->db->last_query();echo $row->new_lead;exit;
                   ?>
-                <div class="tw-text-neutral-800 mtop5 tw-flex tw-items-center tw-justify-between">
-                    <div class="tw-font-medium tw-inline-flex text-neutral-600 tw-items-center tw-truncate">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="tw-w-6 tw-h-6 tw-mr-3 rtl:tw-ml-3 tw-text-neutral-600">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
-                        </svg>
-                        <span class="tw-truncate">
-                            <?php echo _l('invoices_awaiting_payment'); ?>
-                        </span>
+               
+				<div class="tw-text-neutral-800 mtop5 tw-flex tw-items-center tw-justify-between">
+                    <div class="tw-font-medium tw-inline-flex text-neutral-600 tw-items-center tw-truncate tw-my-2">
+                        <i class="fa fa-tty menu-icon fa-2x"></i>
+                        <span class="tw-truncate tw-text-xl">&nbsp;&nbsp;Leads Status</span>
                     </div>
                     <span class="tw-font-semibold tw-text-neutral-600 tw-shrink-0">
-                    <?php echo e($total_invoices_awaiting_payment); ?> / <?php echo e($total_invoices); ?>
+<?php echo $row->hot_lead;?> / <?php echo ($row->unassign_lead + $row->assign_lead + $row->junk_lead + $row->hot_lead);?>
                     </span>
                 </div>
-                <div class="chart">
-                    <canvas id="invoiceCanvasChart" width="auto" height="auto"
-                        data-count="<?= $total_invoices_awaiting_payment ?>" 
-                        data-total="<?= $total_invoices ?>"
-                        data-labels='["Awaiting Payment", "Paid"]'
-                        >
-                    </canvas> 
-                </div>
-                <div class="progress tw-mb-0 tw-mt-4 progress-bar-mini">
-                    <div class="progress-bar progress-bar-danger no-percent-text not-dynamic" role="progressbar"
-                        aria-valuenow="<?php echo e($percent_total_invoices_awaiting_payment); ?>" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 0%"
-                        data-percent="<?php echo e($percent_total_invoices_awaiting_payment); ?>">
-                    </div>
-                </div>
+				
+				 <script type="text/javascript">
+
+      // Load Charts and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Draw the pie chart for Sarah's pizza when Charts is loaded.
+      google.charts.setOnLoadCallback(drawLeadsChart);
+
+     
+
+      // Callback that draws the pie chart for Sarah's pizza.
+      function drawLeadsChart() {
+
+        // Create the data table for Sarah's pizza.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Hot', <?php echo $row->hot_lead;?>],
+          ['Assign', <?php echo $row->assign_lead;?>],
+		  ['UnAssign', <?php echo $row->unassign_lead;?>],
+          ['Junk', <?php echo $row->junk_lead;?>]
+          
+        ]);
+
+        // Set options for Sarah's pie chart.
+        var options = {title:'Leads stats by Status',
+		               width:300,
+					   height:300,
+					   legend:'bottom',
+					   colors: ['#008000', '#FEBE10','#00BFFF','#FF0000']
+					   };
+                       
+                       
+
+        // Instantiate and draw the chart for Sarah's pizza.
+        var chart = new google.visualization.PieChart(document.getElementById('Leads_chart_div'));
+        chart.draw(data, options);
+      }
+
+
+    </script>
+                <div id="Leads_chart_div" style="border: 1px solid #ccc"></div>
+                
             </div>
         </div>
         <?php } ?>
+		
+		
+		<?php if (is_staff_member()) { ?>
+		<div class="quick-stats-invoices col-xs-12 col-md-6 col-sm-6 <?php echo e($initial_column); ?> tw-mb-2 sm:tw-mb-0">
+            <div class="top_stats_wrapper">
+			
+			<?php
+                  if (!is_admin()) {$this->db->where('assigned', get_staff_user_id());}
+                    
+                    $this->db->select("COUNT(CASE WHEN is_deal = 1 AND deal_status=1  THEN 1 END) AS new_lead, COUNT(CASE WHEN is_deal = 1 AND deal_status=2 THEN 1 END) AS doc_lead, COUNT(CASE WHEN is_deal = 1 AND deal_status=2 THEN 3 END) AS uw_lead, COUNT(CASE WHEN is_deal = 1 AND deal_status= 4  THEN 1 END) AS invoice_lead");
+                    
+					
+                    $row = $this->db->get(db_prefix() . 'leads')->row();
+			
+					//echo $this->db->last_query();echo $row->new_lead;exit;
+                  ?>
+               
+				<div class="tw-text-neutral-800 mtop5 tw-flex tw-items-center tw-justify-between">
+                    <div class="tw-font-medium tw-inline-flex text-neutral-600 tw-items-center tw-truncate tw-my-2">
+                        <i class="fa-solid fa-handshake menu-icon fa-2x"></i>
+                        <span class="tw-truncate tw-text-xl">&nbsp;&nbsp;Deal Status</span>
+                    </div>
+                    <span class="tw-font-semibold tw-text-neutral-600 tw-shrink-0">
+<?php echo $row->invoice_lead;?> / <?php echo ($row->new_lead + $row->doc_lead + $row->uw_lead + $row->invoice_lead);?>
+                    </span>
+                </div>
+				
+				 <script type="text/javascript">
+
+      // Load Charts and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Draw the pie chart for Sarah's pizza when Charts is loaded.
+      google.charts.setOnLoadCallback(drawDealChart);
+
+     
+
+      // Callback that draws the pie chart for Sarah's pizza.
+      function drawDealChart() {
+
+        // Create the data table for Sarah's pizza.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Hot', <?php echo $row->new_lead;?>],
+          ['Doc', <?php echo $row->doc_lead;?>],
+          ['UW', <?php echo $row->uw_lead;?>],
+          ['Invoice', <?php echo $row->invoice_lead;?>]
+          
+        ]);
+
+        // Set options for Sarah's pie chart.
+        var options = {title:'Deal stats by Status',
+		               width:300,
+					   height:300,
+					   legend:'bottom',
+					   colors: ['#00BFFF','#FFD700', '#FEBE10','#008000']
+					   };
+                       
+                       
+
+        // Instantiate and draw the chart for Sarah's pizza.
+        var chart = new google.visualization.PieChart(document.getElementById('Deal_chart_div'));
+        chart.draw(data, options);
+      }
+
+
+    </script>
+                <div id="Deal_chart_div" style="border: 1px solid #ccc"></div>
+                
+            </div>
+        </div>
+        <?php } ?>
+		
+		
         <?php if (is_staff_member()) { ?>
         <div class="quick-stats-leads col-xs-12 col-md-6 col-sm-6 <?php echo e($initial_column); ?> tw-mb-2 sm:tw-mb-0">
             <div class="top_stats_wrapper">
                 <?php
-                  $where = '';
-                  if (!is_admin()) {
-                      $where .= '(addedfrom = ' . get_staff_user_id() . ' OR assigned = ' . get_staff_user_id() . ')';
-                  }
-                    // Junk leads are excluded from total
-                    $total_leads = total_rows(db_prefix() . 'leads', $where == '' ? 'status!=4' : $where . ' AND status!=4');
+                  
+                    if (!is_admin()) {$this->db->where('addedfrom', get_staff_user_id());}
+                    
+                    $this->db->select("COUNT(CASE WHEN status = 1 and approver_status=1  THEN 1 END) AS new_count, COUNT(CASE WHEN status = 2 and approver_status=1 THEN 1 END) AS process_count, COUNT(CASE WHEN status = 2 and approver_status=2 THEN 1 END) AS success_count");
+                    
 					
-                    if ($where == '') {
-                        $where = "is_deal=1";  //date_converted IS NOT NULL
-                    } else {
-                        $where .= " AND is_deal=1"; //AND date_converted IS NOT NULL"
-                    }
-
-                  $total_leads_converted         = total_rows(db_prefix() . 'leads', $where);
-				  //echo $this->db->last_query();exit;
-                  $percent_total_leads_converted = ($total_leads > 0 ? number_format(($total_leads_converted * 100) / $total_leads, 2) : 0);
+                    $row = $this->db->get(db_prefix() . 'invoices')->row();
+			
+					//echo $this->db->last_query();echo $row->new_count;exit;
+                   
                   ?>
                 <div class="tw-text-neutral-800 mtop5 tw-flex tw-items-center tw-justify-between">
-                    <div class="tw-font-medium tw-inline-flex text-neutral-600 tw-items-center tw-truncate">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="tw-w-6 tw-h-6 tw-mr-3 rtl:tw-ml-3 tw-text-neutral-600">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-                        </svg>
-                        <span class="tw-truncate">
-                            <?php echo _l('leads_converted_to_client'); ?>
-                        </span>
+                    <div class="tw-font-medium tw-inline-flex text-neutral-600 tw-items-center tw-truncate  tw-my-2">
+                        <i class="fa-solid fa-receipt menu-icon fa-2x"></i>
+                        <span class="tw-truncate tw-text-xl">&nbsp;&nbsp;Invoice Status</span>
                     </div>
                     <span class="tw-font-semibold tw-text-neutral-600 tw-shrink-0">
-                    <?php echo e($total_leads_converted); ?> / <?php echo e($total_leads); ?>
+<span title="Success"><?php echo $row->success_count;?></span> / <span title="Total"><?php echo ($row->success_count + $row->new_count + $row->process_count);?></span>
                     </span>
                 </div>
-                <div class="chart">
-                    <canvas id="leadCanvasChart" width="auto" height="auto"
-                        data-count="<?= $total_leads_converted ?>" 
-                        data-total="<?= $total_leads ?>"
-                        data-labels='["Converted Leads", "Leads"]'
-                        >
-                    </canvas> 
-                </div>
+				<script type="text/javascript">
 
-                <div class="progress tw-mb-0 tw-mt-4 progress-bar-mini">
-                    <div class="progress-bar progress-bar-success no-percent-text not-dynamic" role="progressbar"
-                        aria-valuenow="<?php echo e($percent_total_leads_converted); ?>" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 0%"
-                        data-percent="<?php echo e($percent_total_leads_converted); ?>">
-                    </div>
-                </div>
+
+        // Draw the pie chart for the Anthony's pizza when Charts is loaded.
+      google.charts.setOnLoadCallback(drawInvoiceChart);
+      // Callback that draws the pie chart for Anthony's pizza.
+      function drawInvoiceChart() {
+
+        // Create the data table for Anthony's pizza.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['New', <?php echo $row->new_count;?>],
+          ['Process', <?php echo $row->process_count;?>],
+          ['Completed', <?php echo $row->success_count;?>]
+        ]);
+
+        // Set options for Anthony's pie chart.
+        var options = {
+		               title:'Invoice Stats By Status',
+					   legend:'bottom',
+					   width:300, 
+					   height:300,
+					   colors: ['#00BFFF','#FFD700', '#008000']
+					   };
+                       
+                      
+
+        // Instantiate and draw the chart for Invoice
+        var chart = new google.visualization.PieChart(document.getElementById('Invoice_chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+				 <div id="Invoice_chart_div" style="border: 1px solid #ccc"></div>
             </div>
         </div>
         <?php } ?>
-        <div class="quick-stats-projects col-xs-12 col-md-6 col-sm-6 <?php echo e($initial_column); ?> tw-mb-2 sm:tw-mb-0">
+		
+		<?php if (is_staff_member()) { ?>
+        <div class="quick-stats-leads col-xs-12 col-md-6 col-sm-6 col-lg-12 tw-mb-2 sm:tw-mb-0 mtop10">
             <div class="top_stats_wrapper">
-                <?php
-                  $_where         = '';
-                  $project_status = get_project_status_by_id(2);
-                  if (staff_cant('view', 'projects')) {
-                      $_where = 'id IN (SELECT project_id FROM ' . db_prefix() . 'project_members WHERE staff_id=' . get_staff_user_id() . ')';
-                  }
-                  $total_projects               = total_rows(db_prefix() . 'projects', $_where);
-                  $where                        = ($_where == '' ? '' : $_where . ' AND ') . 'status = 2';
-                  $total_projects_in_progress   = total_rows(db_prefix() . 'projects', $where);
-                  $percent_in_progress_projects = ($total_projects > 0 ? number_format(($total_projects_in_progress * 100) / $total_projects, 2) : 0);
-                  ?>
+<?php
+if (!is_admin()) {$this->db->where('addedfrom', get_staff_user_id());}
+$year = $_GET['year'] ?? date('Y');
+?>
                 <div class="tw-text-neutral-800 mtop5 tw-flex tw-items-center tw-justify-between">
-                    <div class="tw-font-medium tw-inline-flex tw-items-center text-neutral-500 tw-truncate">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="tw-w-6 tw-h-6 tw-mr-3 rtl:tw-ml-3 tw-text-neutral-600">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
-                        </svg>
-                        <span class="tw-truncate">
-                            <?php echo e(_l('projects') . ' ' . $project_status['name']); ?>
-                        </span>
+                    <div class="tw-font-medium tw-inline-flex text-neutral-600 tw-items-center tw-truncate  tw-my-2">
+                        <i class="fa-solid fa-chart-simple menu-icon fa-2x"></i>
+                        <span class="tw-truncate tw-text-xl">&nbsp;&nbsp;Overall Performance</span>
                     </div>
                     <span class="tw-font-semibold tw-text-neutral-600 tw-shrink-0">
-                        <?php echo e($total_projects_in_progress); ?> /
-                        <?php echo e($total_projects); ?>
+<label><select name="leads_length" id="yearSelect" aria-controls="leads" class="form-control input-sm">
+<?php
+for ($i = 2020; $i <= 2030; $i++) {
+?>
+<option value="<?php echo $i;?>" <?php if($i==$year){ ?> selected="selected" <?php } ?> ><?php echo $i;?></option>
+<?php
+}
+?>
+</select></label>
                     </span>
                 </div>
-                <div class="chart">
-                     <canvas id="projectCanvasChart" width="auto" height="auto"
-                        data-count="<?= $total_projects_in_progress ?>" 
-                        data-total="<?= $total_projects ?>"
-                        data-labels='["In Progress", "Projects"]'
-                        >
-                    </canvas> 
-                </div>
+<?php
 
-                <div class="progress tw-mb-0 tw-mt-5 progress-bar-mini">
-                    <div class="progress-bar no-percent-text not-dynamic"
-                        style="background:<?php echo e($project_status['color']); ?>" role="progressbar"
-                        aria-valuenow="<?php echo e($percent_in_progress_projects); ?>" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 0%"
-                        data-percent="<?php echo e($percent_in_progress_projects); ?>">
-                    </div>
-                </div>
+
+// Numeric month values with leading zeros
+$months = [
+    '01' => 'Jan', '02' => 'Feb', '03' => 'Mar', '04' => 'Apr',
+    '05' => 'May', '06' => 'Jun', '07' => 'Jul', '08' => 'Aug',
+    '09' => 'Sep', '10' => 'Oct', '11' => 'Nov', '12' => 'Dec'
+];
+
+?>
+
+<script type="text/javascript">
+
+ google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Month', 'Leads', 'Deals', 'Invoice'],
+<?php foreach ($months as $num => $name) {
+
+$monthyear=$name." - ". $year;
+$monthyearnum=$year."-".$num; 
+ 
+	
+	//Count Total Added Leads Except Junk
+	$_where=' `dateadded` LIKE "%' . $monthyearnum . '%" AND `status` <> 4 ';//exit;
+	$leads = total_rows(db_prefix() . 'leads', $_where);
+	
+		
+	//Count Total Added Deals Except Junk
+	$_where=' `dateadded` LIKE "%' . $monthyearnum . '%" AND `is_deal` = 1 ';//exit;
+	$deals = total_rows(db_prefix() . 'leads', $_where);
+	
+	
+	//Count Total Added Invoice
+	$_where=' `datecreated` LIKE "%' . $monthyearnum . '%" ';//exit;
+	$invoice = total_rows(db_prefix() . 'invoices', $_where);
+	//echo $this->db->last_query();exit;
+	
+	
+?>		  
+ ['<?php echo $monthyear;?>', <?php echo $leads;?>, <?php echo $deals;?>, <?php echo $invoice;?>],
+ <?php } ?>         
+		  
+        ]);
+
+        var options = {
+          chart: {
+            title: '',
+            subtitle: 'Leads, Deals, and Invoice: <?php echo $year;?>',
+          },
+          bars: 'vertical',
+          vAxis: {format: 'decimal'},
+          height: 400,
+          colors: ['#00BFFF','#FFD700', '#008000']
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('chart_div'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+
+        var btns = document.getElementById('btn-group');
+
+        btns.onclick = function (e) {
+
+          if (e.target.tagName === 'BUTTON') {
+            options.vAxis.format = e.target.id === 'none' ? '' : e.target.id;
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+          }
+        }
+      }
+
+    </script>
+				    <div id="chart_div"></div>
+    <br/>
+    <div id="btn-group">
+      <button class="button button-blue" id="none">No Format</button>
+      <button class="button button-blue" id="scientific">Scientific Notation</button>
+      <button class="button button-blue" id="decimal">Decimal</button>
+      <button class="button button-blue" id="short">Short</button>
+    </div>
             </div>
         </div>
-        <div class="quick-stats-tasks col-xs-12 col-md-6 col-sm-6 <?php echo e($initial_column); ?>">
-            <div class="top_stats_wrapper">
-                <?php
-                  $_where = '';
-                  if (staff_cant('view', 'tasks')) {
-                      $_where = db_prefix() . 'tasks.id IN (SELECT taskid FROM ' . db_prefix() . 'task_assigned WHERE staffid = ' . get_staff_user_id() . ')';
-                  }
-                  $total_tasks                = total_rows(db_prefix() . 'tasks', $_where);
-                  $where                      = ($_where == '' ? '' : $_where . ' AND ') . 'status != ' . Tasks_model::STATUS_COMPLETE;
-                  $total_not_finished_tasks   = total_rows(db_prefix() . 'tasks', $where);
-                  $percent_not_finished_tasks = ($total_tasks > 0 ? number_format(($total_not_finished_tasks * 100) / $total_tasks, 2) : 0);
-                  ?>
-                <div class="tw-text-neutral-800 mtop5 tw-flex tw-items-center tw-justify-between">
-                    <div class="tw-font-medium tw-inline-flex text-neutral-600 tw-items-center tw-truncate">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="tw-w-6 tw-h-6 tw-mr-3 rtl:tw-ml-3 tw-text-neutral-600">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" />
-                        </svg>
-                        <span class="tw-truncate">
-                            <?php echo _l('tasks_not_finished'); ?>
-                        </span>
-                    </div>
-                    <span class="tw-font-semibold tw-text-neutral-600 tw-shrink-0">
-                        <?php echo e($total_not_finished_tasks); ?> / <?php echo e($total_tasks); ?>
-                    </span>
-                </div>
-                <div class="chart">
-                     <canvas id="taskCanvasChart" width="auto" height="auto"
-                        data-count="<?= $total_not_finished_tasks ?>" 
-                        data-total="<?= $total_tasks ?>"
-                        data-labels='["Not Finished", "Tasks"]'
-                        >
-                    </canvas> 
-                </div>
-                <div class="progress tw-mb-0 tw-mt-4 progress-bar-mini">
-                    <div class="progress-bar progress-bar-default no-percent-text not-dynamic" role="progressbar"
-                        aria-valuenow="<?php echo e($percent_not_finished_tasks); ?>" aria-valuemin="0" aria-valuemax="100"
-                        style="width: 0%" data-percent="<?php echo e($percent_not_finished_tasks); ?>">
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php } ?>
+		
+		
+        
+        
     </div>
 </div>
