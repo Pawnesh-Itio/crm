@@ -128,6 +128,16 @@ echo '<iframe srcdoc="' . htmlspecialchars($message['body']) . '" style="width: 
 
 $attachments = explode(',', $message['attachments']);
 
+/////////////////////////
+// Remove duplicates
+$uniqueArray = array_unique($attachments);
+
+// Convert back to a string
+$attachments = implode(",", $uniqueArray);
+
+////////////////////////
+$attachments = explode(',', $attachments);
+
 foreach($attachments as $attach){
 $filePath = site_url() . '/' . $attach;
 ?>
@@ -267,8 +277,8 @@ $filePath = site_url() . '/' . $attach;
   
   $('.hrefmodal').click(function(){ 
 
-         //alert(11111);
-        var tid=$(this).attr('data-tid');
+         //alert(222);
+         var tid=$(this).attr('data-tid');
 		 var mailto=$(this).attr('mailto');
 		 var mailtox=$(this).attr('mailtox');
 		 var mailcc=$(this).attr('mailcc');
@@ -278,7 +288,6 @@ $filePath = site_url() . '/' . $attach;
 		 var ddate=$(this).attr('data-date');
 		 const formattedDate = moment(ddate).format('ddd, DD MMM YYYY h:mm:ss A Z');
 		 //alert(tid);alert(mailto);alert(formattedDate);
-		 
 		 $('#myModal12').modal('show');
 		  //$('#myModal12 .modal-dialog').css({"margin-top": "0px"});
 		  $('#myModal12 .modal-dialog').css({"max-width":"80%", "margin-top": "20px"});
