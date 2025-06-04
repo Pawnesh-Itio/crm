@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Tue, 3 Jun 2025 10:27:21 +0530
+
+Original-Recipient: rfc822; rupesh@sharewealthcapital.com
+Final-Recipient: rfc822; rupesh@sharewealthcapital.com
+Status: 550
+Action: failed
+Last-Attempt-Date: 3 Jun 2025 04:58:08 GMT
+Diagnostic-Code: Mailbox is full / Blocks limit exceeded / Inode limit exceeded
+Remote-MTA: dns; mail.sharewealthcapital.com

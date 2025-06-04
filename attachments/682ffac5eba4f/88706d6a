@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Thu, 22 May 2025 21:21:08 +0530
+
+Original-Recipient: rfc822; sunny_doganowski@yahoo.com
+Final-Recipient: rfc822; sunny_doganowski@yahoo.com
+Status: 552
+Action: failed
+Last-Attempt-Date: 22 May 2025 15:51:14 GMT
+Diagnostic-Code: 1 Requested mail action aborted, mailbox not found
+Remote-MTA: dns; mta7.am0.yahoodns.net

@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Tue, 27 May 2025 08:01:48 +0530
+
+Original-Recipient: rfc822; henriettagiltner@yandex.ru
+Final-Recipient: rfc822; henriettagiltner@yandex.ru
+Status: 550
+Action: failed
+Last-Attempt-Date: 27 May 2025 02:31:57 GMT
+Diagnostic-Code: 5.7.1 No such user! 1748313116-sVJBPcEE48c0-XnFRCDzM
+Remote-MTA: dns; mx.yandex.ru

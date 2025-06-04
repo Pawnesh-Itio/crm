@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Fri, 23 May 2025 07:34:30 +0530
+
+Original-Recipient: rfc822; izettahanson@facebook.com
+Final-Recipient: rfc822; izettahanson@facebook.com
+Status: 550
+Action: failed
+Last-Attempt-Date: 23 May 2025 02:04:37 GMT
+Diagnostic-Code: 5.1.1 RCP-P1 Domain facebook.com no longer available https://www.facebook.com/postmaster/response_codes?ip=103.117.158.11#RCP-P1
+Remote-MTA: dns; smtpin.vvv.facebook.com
