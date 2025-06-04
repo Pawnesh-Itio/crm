@@ -381,7 +381,7 @@ function render_datatable($headings = [], $class = '', $additional_classes = [''
     ?>
     <style>
         .scroll-arrow {
-            position: absolute;
+            position: fixed;
             top: 50%;
             transform: translateY(-50%);
             background: rgba(0, 0, 0, 0.3);
@@ -398,10 +398,10 @@ function render_datatable($headings = [], $class = '', $additional_classes = [''
             background: rgba(0, 0, 0, 0.6);
         }
         .left-arrow {
-            left: 0;
+            left: 300px;
         }
         .right-arrow {
-            right: 0;
+            right: 50px;
         }
     </style>
     <script>
@@ -443,7 +443,7 @@ function render_datatable($headings = [], $class = '', $additional_classes = [''
                 table.addEventListener('scroll', updateArrows);
                 window.addEventListener('resize', updateArrows);
 
-               setTimeout(updateArrows, 100);
+               setTimeout(updateArrows, 500);
             });
         });
     </script>
