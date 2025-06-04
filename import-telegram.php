@@ -74,10 +74,32 @@ if (isset($web_data->message->chat->id) && ($web_data->message->chat->id)) {
 		if (mysqli_num_rows($res) > 0) {
 			$row = mysqli_fetch_assoc($res);
 			$lead_id = $row['id'];
-	
+			$photoArrayDecoded = json_decode($input, true);
+			// Check if 'message' and 'photo' exist
+			if (isset($photoArrayDecoded['message']['photo']) && is_array($photoArrayDecoded['message']['photo']) && count($photoArrayDecoded['message']['photo']) > 0) {
+				$photos = $photoArrayDecoded['message']['photo'];
+				// Get the photo with the largest file_size
+				usort($photos, function($a, $b) {
+					return $b['file_size'] <=> $a['file_size'];
+				});
+				$largestPhoto = $photos[0];
+				$largestPhotofileId = $largestPhoto['file_id'];
+				// find Image URL
+				$getFileUrl = "https://api.telegram.org/bot$token/getFile?file_id=$largestPhotofileId";
+				$fileResponse = file_get_contents($getFileUrl);
+				$fileResult = json_decode($fileResponse, true);
+				if ($fileResult['ok']) {
+					$filePath = $fileResult['result']['file_path'];
+					$imageUrl = "https://api.telegram.org/file/bot$token/$filePath";
+				}else{
+					$imageUrl = '';
+				}
+			}else{
+				$imageUrl = '';
+			}
 			// Append the new text into tbltelegram (conversion) in the database
-			$sqlStmt = "INSERT INTO `tbltelegram` (`lead_id`, `chat_id`, `message`, `msg_type`, `timestamp`, `staff_id`,`json_detail`) 
-				VALUES ('$lead_id', '$chat_id', '$text', '2', NOW(), 0,'$input')";
+			$sqlStmt = "INSERT INTO `tbltelegram` (`lead_id`, `chat_id`, `message`, `msg_type`, `timestamp`, `staff_id`,`json_detail`, `file_path`) 
+				VALUES ('$lead_id', '$chat_id', '$text', '2', NOW(), 0,'$input', '$imageUrl')";
 			$res = mysqli_query($conn, $sqlStmt);
 		} else {
 			// If no lead exists for this client_id, create a new lead record
