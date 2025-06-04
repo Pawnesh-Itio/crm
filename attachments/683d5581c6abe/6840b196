@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Sat, 31 May 2025 14:21:17 +0530
+
+Original-Recipient: rfc822; willianpollock@hotmail.it
+Final-Recipient: rfc822; willianpollock@hotmail.it
+Status: 550
+Action: failed
+Last-Attempt-Date: 31 May 2025 08:51:23 GMT
+Diagnostic-Code: 5.5.0 Requested action not taken: mailbox unavailable (S2017062302). [DB1PEPF000509F9.eurprd02.prod.outlook.com 2025-05-31T08:51:22.724Z 08DD9FD5A635F25D]
+Remote-MTA: dns; eur.olc.protection.outlook.com

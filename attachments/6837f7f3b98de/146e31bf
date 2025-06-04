@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Wed, 28 May 2025 12:05:49 +0530
+
+Original-Recipient: rfc822; onboarding@paycly.com
+Final-Recipient: rfc822; onboarding@paycly.com
+Status: -1
+Action: failed
+Last-Attempt-Date: 28 May 2025 07:21:04 GMT
+Diagnostic-Code: Malformed answer from server
+Remote-MTA: dns; mx1.maileroo.com

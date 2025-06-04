@@ -1,0 +1,13 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Mon, 26 May 2025 19:35:23 +0530
+
+Original-Recipient: rfc822; maddison_game@gmail.com
+Final-Recipient: rfc822; maddison_game@gmail.com
+Status: 550
+Action: failed
+Last-Attempt-Date: 26 May 2025 14:05:29 GMT
+Diagnostic-Code: 5.1.1 The email account that you tried to reach does not exist. Please try
+			5.1.1 double-checking the recipient's email address for typos or
+			5.1.1 unnecessary spaces. For more information, go to
+			5.1.1  https://support.google.com/mail/?p=NoSuchUser 98e67ed59e1d1-310d23d1226si12826608a91.92 - gsmtp
+Remote-MTA: dns; gmail-smtp-in.l.google.com

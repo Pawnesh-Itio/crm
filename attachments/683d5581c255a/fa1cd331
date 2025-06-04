@@ -1,0 +1,9 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Sat, 31 May 2025 13:01:53 +0530
+
+Original-Recipient: rfc822; alok@itio.in
+Final-Recipient: rfc822; alok@itio.in
+Status: 550
+Action: failed
+Last-Attempt-Date: 31 May 2025 07:31:58 GMT
+Diagnostic-Code: 5.0.0 Invalid Recipients.

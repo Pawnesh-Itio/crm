@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Fri, 30 May 2025 13:25:28 +0530
+
+Original-Recipient: rfc822; santoshss@testemail.com
+Final-Recipient: rfc822; santoshss@testemail.com
+Status: 421
+Action: failed
+Last-Attempt-Date: 30 May 2025 08:41:17 GMT
+Diagnostic-Code: Host not reachable.
+Remote-MTA: dns; 13.248.169.48

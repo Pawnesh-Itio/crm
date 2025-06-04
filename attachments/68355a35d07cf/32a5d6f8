@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Sat, 24 May 2025 20:02:28 +0530
+
+Original-Recipient: rfc822; rosaline.defoor@alice.it
+Final-Recipient: rfc822; rosaline.defoor@alice.it
+Status: 550
+Action: failed
+Last-Attempt-Date: 24 May 2025 14:32:56 GMT
+Diagnostic-Code: RCPT TO:<rosaline.defoor@alice.it> User unknown
+Remote-MTA: dns; mx.tim.it

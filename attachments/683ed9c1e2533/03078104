@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Thu, 29 May 2025 14:58:51 +0530
+
+Original-Recipient: rfc822; business@repaid.uk
+Final-Recipient: rfc822; business@repaid.uk
+Status: 421
+Action: failed
+Last-Attempt-Date: 2 Jun 2025 09:19:26 GMT
+Diagnostic-Code: Host not reachable.
+Remote-MTA: dns; 172.67.137.109

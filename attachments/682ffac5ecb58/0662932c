@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Fri, 23 May 2025 02:31:52 +0530
+
+Original-Recipient: rfc822; ignaciochipper@live.co.uk
+Final-Recipient: rfc822; ignaciochipper@live.co.uk
+Status: 550
+Action: failed
+Last-Attempt-Date: 22 May 2025 21:01:57 GMT
+Diagnostic-Code: 5.5.0 Requested action not taken: mailbox unavailable (S2017062302). [AM4PEPF00027A5F.eurprd04.prod.outlook.com 2025-05-22T21:01:57.297Z 08DD96874C84B4F3]
+Remote-MTA: dns; eur.olc.protection.outlook.com
