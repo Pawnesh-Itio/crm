@@ -49,10 +49,12 @@ class Dashboard extends AdminController
         $data['bodyclass']             = 'dashboard invoices-total-manual';
         $this->load->model('announcements_model');
         $data['staff_announcements']             = $this->announcements_model->get();
-        $data['total_undismissed_announcements'] = $this->announcements_model->get_total_undismissed_announcements();
-
-        $this->load->model('projects_model');
-        $data['projects_activity'] = $this->projects_model->get_activity('', hooks()->apply_filters('projects_activity_dashboard_limit', 20));
+        //$data['total_undismissed_announcements'] = $this->announcements_model->get_total_undismissed_announcements();
+        $data['deal_task']     = $this->leads_model->get_deal_task();
+		$data['notes']         = $this->misc_model->get_notes_home();
+		//print_r($data['notes']);exit;
+        //$this->load->model('projects_model');
+        //$data['projects_activity'] = $this->projects_model->get_activity('', hooks()->apply_filters('projects_activity_dashboard_limit', 20));
         add_calendar_assets();
         $this->load->model('utilities_model');
         $this->load->model('estimates_model');
