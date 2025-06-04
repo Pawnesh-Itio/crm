@@ -282,6 +282,19 @@ class Misc_model extends App_Model
 
         return hooks()->apply_filters('get_notes', $notes, ['rel_id' => $rel_id, 'rel_type' => $rel_type]);
     }
+	
+	 public function get_notes_home()
+    {
+	
+	   if (!is_admin()) {
+	   //$note->addedfrom != get_staff_user_id() && 
+	   }
+        $this->db->join(db_prefix() . 'staff', db_prefix() . 'staff.staffid=' . db_prefix() . 'notes.addedfrom');
+        $this->db->order_by('dateadded', 'desc');
+        $notes = $this->db->get(db_prefix() . 'notes')->result_array();
+        $this->db->last_query();exit;
+        
+    }
 
     public function add_note($data, $rel_type, $rel_id)
     {

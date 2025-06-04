@@ -21,6 +21,7 @@ class Webmail_model extends App_Model
 	// function for get inbox mail list
      public function getinboxemail()
      {
+	 
 	 //$_SESSION['webmail']="";
 	 $mailer_email=$_SESSION['webmail']['mailer_email'];
 	 
@@ -388,15 +389,7 @@ foreach ($folders as $folder) {
 	  $last_email_id=$this->webmail_model->lastemailid($mailer_username, $folder);
 	  $last_email_id=$last_email_id[0]['uniqid']?? 0;//exit;
 	 
-	   
-	  if($last_email_id==0){
-	  //echo "Folder - ".$folder." Last Email ID = ".$last_email_id." LIMIT = ".$limit;exit;
-/*	  $limit=2000;
-	  if(isset($_GET["page"])){ $pn = $_GET["page"]; }else{ $pn=1;};
-	  
-	  $messages = $mailbox->query()->all()->setFetchOrder("desc")->paginate($per_page = $limit, $page = $pn, $page_name = 'imap_page')->filter(function($messages) use ($last_email_id) {
-    return $messages->getUid() > $last_email_id;
-});*/
+//// Fetch Emails
       $pg=floor($last_email_id / 50) +1;
 	  $messages = $mailbox->query()
     ->all()->limit($limit = 50, $page = $pg)
@@ -405,16 +398,6 @@ foreach ($folders as $folder) {
         return $message->getUid() > $last_email_id;
     });
 
-      }else{
-	  //echo "Folder - ".$folder." Last Email ID = ".$last_email_id;
-	  $pg=floor($last_email_id / 100) +1;
-	  $messages = $mailbox->query()
-    ->all()->limit($limit = 50, $page = $pg)
-    ->get() // fetch messages
-    ->filter(function($message) use ($last_email_id) {
-        return $message->getUid() > $last_email_id;
-    });
-	  }
 
 
 //print_r($messages);exit;
@@ -484,7 +467,7 @@ foreach ($messages as $message) {
  
 }
 //exit;	  
-  
+ //echo $folder." -> ". $cnt;
 	  
 }
     
