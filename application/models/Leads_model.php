@@ -70,8 +70,7 @@ class Leads_model extends App_Model
 	    
 		$this->db->select('id');
         $this->db->where('email', $email);
-        $vid = $this->db->get(db_prefix() . 'leads')->row()->id;
-		$lid = $vid ? $vid : '';
+        $lid = $this->db->get(db_prefix() . 'leads')->row()->id  ?? '';
 		return $lid; 
 		
     }
