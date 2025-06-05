@@ -10,8 +10,11 @@
     <?php if (isset($lead)) { ?>
     <!-- Conversation Dropdown By TechWizard -->
     <div class="btn-group pull-right mleft5">
-        <?php /*?><a href="<?php echo admin_url('webmail/compose?id='.$lead->email); ?>" class="btn btn-default lead-top-btn">E-mail</a><?php */?>
+         <?php if (isset($lead->email)&&$lead->email) { ?>
 		<a data-toggle="modal" data-href="<?php echo admin_url('webmail/webmail_leads?stype=TEXT&skey='.$lead->email); ?>"  data-name="<?= $lead->name ?>" data-email= "<?= $lead->email ?>" onclick="getWebEmail(this)" class="btn btn-info lead-top-btn">E-mail</a>
+		 <?php }else{ ?>
+		 <a href="javascript:void(0);" onclick="alert('Email Not Added with this Leads');" class="btn btn-info lead-top-btn">E-mail</a>
+		  <?php } ?>
     </div>
     <div class="btn-group pull-right mleft5">
         <a class="btn btn-info dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
