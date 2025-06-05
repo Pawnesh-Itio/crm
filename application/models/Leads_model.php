@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 use app\services\AbstractKanban;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -69,7 +70,8 @@ class Leads_model extends App_Model
 	    
 		$this->db->select('id');
         $this->db->where('email', $email);
-        $lid = $this->db->get(db_prefix() . 'leads')->row()->id;
+        $vid = $this->db->get(db_prefix() . 'leads')->row()->id;
+		$lid = $vid ? $vid : '';
 		return $lid; 
 		
     }
@@ -1643,6 +1645,8 @@ class Leads_model extends App_Model
 		
 		if (isset($data['vtype'])&&$data['vtype']=="doc") {
 		
+		
+		
 		$lead_id=$data['deal_id'];
 		
 		unset($data['deal_id']);
@@ -1727,6 +1731,7 @@ class Leads_model extends App_Model
 		
 		if ($this->db->affected_rows() > 0) {
 		$datax['deal_status']=3;
+		$datax['last_status_change']= date('Y-m-d H:i:s');
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
 		$log_message=" Converted this lead to UW";
@@ -1776,7 +1781,11 @@ class Leads_model extends App_Model
 		
 		}
 		
+		
+		
 		}elseif (isset($data['vtype'])&&$data['vtype']=="uw") {
+		
+		
 		$lead_id=$data['deal_id'];
 		unset($data['deal_id']);
 		unset($data['vtype']);
@@ -1803,6 +1812,7 @@ class Leads_model extends App_Model
 		
 		if ($this->db->affected_rows() > 0) {
 		$datax['deal_status']=2;
+		$datax['last_status_change']= date('Y-m-d H:i:s');
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
 		$log_message=" Rejected and Converted this lead to Document";
@@ -1824,6 +1834,7 @@ class Leads_model extends App_Model
 		
 		if ($this->db->affected_rows() > 0) {
 		$datax['deal_status']=4;
+		$datax['last_status_change']= date('Y-m-d H:i:s');
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
 		$log_message=" Approved and Converted this lead to Final Invoice";
@@ -1885,7 +1896,10 @@ foreach ($data as $key => $value) {
 		
 		//////////////////////////////////////////////
 		
+		
+		
 		}elseif (isset($data['vtype'])&&$data['vtype']=="hot") {
+		
 		//echo "For hot";
 		//print_r($data);exit;
 		
@@ -1934,7 +1948,7 @@ foreach ($data as $key => $value) {
     }
     // Convert associative array to JSON
     $data['old_history'] = json_encode($ohistory);
-	
+	$data['last_status_change']= date('Y-m-d H:i:s');
 		
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $data);
@@ -1944,6 +1958,7 @@ foreach ($data as $key => $value) {
 		
 		
        
+		
 		
 		
 		}else{
@@ -1982,6 +1997,7 @@ foreach ($data as $key => $value) {
 		unset($data['inserttocustomer']);
 		
 		$data['is_deal']=1; // for convert to deal
+		$data['last_status_change']= date('Y-m-d H:i:s');
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $data);
 		//echo $this->db->last_query();exit;
