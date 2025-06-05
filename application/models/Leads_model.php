@@ -224,6 +224,9 @@ class Leads_model extends App_Model
     public function update($data, $id)
     {
 	
+	
+	
+	
         $current_lead_data = $this->get($id);
         $current_status    = $this->get_status($current_lead_data->status);
         if ($current_status) {
@@ -318,7 +321,7 @@ class Leads_model extends App_Model
   }
   unset($data['custom_field_name']);
   unset($data['custom_field_value']);
-  
+  $data['last_status_change']=date('Y-m-d H:i:s');
 
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'leads', $data);
@@ -2324,4 +2327,25 @@ foreach ($data as $key => $value) {
 	 return $result->cnt;
    
    }
+   
+   function lead_reminder($last_status_change){
+
+$currentdate=date("Y-m-d H:i:s");
+$date1 = new DateTime($last_status_change);
+$date2 = new DateTime($currentdate);
+
+$timestamp1 = $date1->getTimestamp();
+$timestamp2 = $date2->getTimestamp();
+
+$diffInSeconds = abs($timestamp2 - $timestamp1); // absolute difference
+$diffInHours = round($diffInSeconds / 3600);
+ if($diffInHours > 24){
+ return '<i class="fa-solid fa-clock text-danger fa-spin" title="Not Update from last '. $diffInHours.' hours"></i>';
+ }else{
+ return '<i class="fa-solid fa-clock text-warning" title="In Progress"></i>';
+ }
+
+
+
+}
 }

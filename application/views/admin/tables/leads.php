@@ -9,27 +9,6 @@ $statuses = $this->ci->leads_model->get_status();
 $tagses = $this->ci->leads_model->get_tags_list();
 $dealstatuses = $this->ci->leads_model->get_deal_status();
 
-function lead_reminder($last_status_change){
-
-$currentdate=date("Y-m-d H:i:s");
-$date1 = new DateTime($last_status_change);
-$date2 = new DateTime($currentdate);
-
-$timestamp1 = $date1->getTimestamp();
-$timestamp2 = $date2->getTimestamp();
-
-$diffInSeconds = abs($timestamp2 - $timestamp1); // absolute difference
-$diffInHours = round($diffInSeconds / 3600);
- if($diffInHours > 24){
- return '<i class="fa-solid fa-clock text-danger fa-spin" title="Not Update from last '. $diffInHours.' hours"></i>';
- }else{
- return '<i class="fa-solid fa-clock text-warning" title="In Progress"></i>';
- }
-
-
-
-}
-
 
 $rules = [
     App_table_filter::new('name', 'TextRule')->label(_l('leads_dt_name')),
@@ -258,7 +237,7 @@ return App_table::find('leads')
 		    $reminderx="";
 		    if(isset($aRow['last_status_change'])&&$aRow['last_status_change']){
 			    if($aRow['deal_status'] != 4){
-				$reminderx=lead_reminder($aRow['last_status_change']);
+				$reminderx=$this->ci->leads_model->lead_reminder($aRow['last_status_change']);
 				}else{
 				$reminderx="<i class='fa-solid fa-circle-check text-success' title='Final'></i>";
 				}
