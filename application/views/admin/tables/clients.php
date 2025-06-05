@@ -212,7 +212,7 @@ return App_table::find('clients')
 			}
 
             $row[] = e(_dt($aRow['datecreated']));
-            $row[] = '<a class="btn btn-default" id="underwritingBtn" onclick="underWriting(\'' . e(($aRow['userid'])) . '\')">Under Writing</a>';
+            // $row[] = '<a class="btn btn-default" id="underwritingBtn" onclick="underWriting(\'' . e(($aRow['userid'])) . '\')">Under Writing</a>';
             $row[] = '<a class="btn btn-default dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           ' . _l('chatBtn') . '
                           <span class="caret"></span>

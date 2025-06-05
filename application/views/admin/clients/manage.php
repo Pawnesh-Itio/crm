@@ -196,10 +196,10 @@
                          'name'     => _l('date_created'),
                          'th_attrs' => ['class' => 'toggleable', 'id' => 'th-date-created'],
                         ],
-                        [
-                         'name'     => 'Under Writing',
-                         'th_attrs' => ['class' => 'toggleable', 'id' => 'th-underwriting'],
-                        ],
+                        // [
+                        //  'name'     => 'Under Writing',
+                        //  'th_attrs' => ['class' => 'toggleable', 'id' => 'th-underwriting'],
+                        // ],
                         [
                         'name'     => _l('chatBtn'),
                         'th_attrs' => ['class' => 'toggleable', 'id' => 'th-date-created'],
