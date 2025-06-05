@@ -1881,15 +1881,15 @@ class Leads extends AdminController
         if(empty($website)){
             $errors[] = 'Please enter a website for the merged lead.';
         }
-        if(empty($country)){
-            $errors[] = 'Please enter a country for the merged lead.';
-        }
+        // if(empty($country)){
+        //     $errors[] = 'Please enter a country for the merged lead.';
+        // }
         if(empty($address)){
             $errors[] = 'Please enter an address for the merged lead.';
         }
-        if(empty($company)){
-            $errors[] = 'Please enter a company for the merged lead.';
-        }
+        // if(empty($company)){
+        //     $errors[] = 'Please enter a company for the merged lead.';
+        // }
         if(empty($status)){
             $errors[] = 'Please select a status for the merged lead.';
         }
@@ -1956,9 +1956,8 @@ class Leads extends AdminController
             'phonenumber' => $primaryPhone,
             'assigned'=>$assigned,
             'website' => $primaryWebsite,
-            'country' => $country,
+            // 'country' => $country,
             'address' => $address,
-            'company' => $company,
             'status' => $status,
             'source' => $source,
             'dateadded' => $current_datetime,
@@ -1967,6 +1966,12 @@ class Leads extends AdminController
             'merged_lead_ids' => $lead_ids,
             'is_merged' => 1
         );
+        if(!empty($country)){
+            $data['country'] = $country;
+        }
+        if(!empty($company)){
+            $data['company'] = $company;
+        }           
         $lead_id = $this->leads_model->insert_merged_lead($data);
         if($this->input->is_ajax_request()) {
             if($lead_id){
