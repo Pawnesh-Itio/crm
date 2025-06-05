@@ -470,7 +470,7 @@ $('.isread').click(function(){
 	     $('#myModal12 .modal-title').html('<span class="h4"><b>' + tid + '</b></span><br>' + '<span class="h6 text-primary"> From : ' + escapeHtml(mailto) +'<br> To : ' + escapeHtml(mailtox) +'<br> CC :' + escapeHtml(mailcc) +' BCC :' + escapeHtml(mailbcc) +'<br>' + formattedDate +'</span>');
 		// $('#emailSubject').val(tid);
 		 $('#emailSubjectIT').val(tid);
-		 $('#recipientEmailIT').val(mailtox);
+		 $('#recipientEmailIT').val(mailto);
 		 $('#recipientCCIT').val(mailcc);
 		 $('#recipientBCCIT').val(mailbcc);
 		 $('#messageidIT').val(messageid);
