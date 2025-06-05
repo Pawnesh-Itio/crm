@@ -27,6 +27,21 @@ if ($_SESSION['leads_page_type']=='leads' && $lead['status'] == $status['id'] ||
                 </span>
             </a>
 			<?php
+			
+			/// For Reminder
+		    $reminderx="";
+		    if(isset($lead['last_status_change'])&&$lead['last_status_change']){
+			    if($lead['deal_status'] != 4){
+				$reminderx=$this->leads_model->lead_reminder($lead['last_status_change']);
+				}else{
+				$reminderx="<i class='fa-solid fa-circle-check text-success' title='Final'></i>";
+				}
+		    }else{
+			$reminderx="<i class='fa-solid fa-circle-info text-danger fa-fade' title='New Leads'></i>";
+			}
+			echo $reminderx;
+			?>
+			<?php
 			$emailicon="";
             $emailcounter=$this->leads_model->countEmail(e($lead['email']));
 			if($emailcounter > 0){
@@ -127,4 +142,4 @@ if ($_SESSION['leads_page_type']=='leads' && $lead['status'] == $status['id'] ||
         </div>
     </div>
 </li>
-<?php }
+<?php } ?>
