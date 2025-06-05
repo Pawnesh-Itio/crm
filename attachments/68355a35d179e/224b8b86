@@ -1,0 +1,11 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Sun, 25 May 2025 05:44:19 +0530
+
+Original-Recipient: rfc822; dorris.isom@web.de
+Final-Recipient: rfc822; dorris.isom@web.de
+Status: 550
+Action: failed
+Last-Attempt-Date: 25 May 2025 00:14:27 GMT
+Diagnostic-Code: Requested action not taken: mailbox unavailable
+			For explanation visit https://postmaster.web.de/en/case?c=r1601&i=ip&v=103.117.158.11&r=1MsZJh-1vBmga0FAZ-014W1W
+Remote-MTA: dns; mx-ha02.web.de

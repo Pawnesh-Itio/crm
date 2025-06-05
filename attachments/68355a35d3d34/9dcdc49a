@@ -1,0 +1,11 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Mon, 26 May 2025 08:06:18 +0530
+
+Original-Recipient: rfc822; mattholland@web.de
+Final-Recipient: rfc822; mattholland@web.de
+Status: 550
+Action: failed
+Last-Attempt-Date: 26 May 2025 02:36:25 GMT
+Diagnostic-Code: Requested action not taken: mailbox unavailable
+			For explanation visit https://postmaster.web.de/en/case?c=r1601&i=ip&v=103.117.158.11&r=1Mr6WY-1ufoLf1WHW-00gaWV
+Remote-MTA: dns; mx-ha03.web.de

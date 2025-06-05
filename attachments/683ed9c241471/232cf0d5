@@ -1,0 +1,13 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Tue, 3 Jun 2025 16:01:15 +0530
+
+Original-Recipient: rfc822; newtonbreinl@gmail.com
+Final-Recipient: rfc822; newtonbreinl@gmail.com
+Status: 550
+Action: failed
+Last-Attempt-Date: 3 Jun 2025 10:31:21 GMT
+Diagnostic-Code: 5.1.1 The email account that you tried to reach does not exist. Please try
+			5.1.1 double-checking the recipient's email address for typos or
+			5.1.1 unnecessary spaces. For more information, go to
+			5.1.1  https://support.google.com/mail/?p=NoSuchUser d2e1a72fcca58-747afe00c9fsi15347984b3a.41 - gsmtp
+Remote-MTA: dns; gmail-smtp-in.l.google.com

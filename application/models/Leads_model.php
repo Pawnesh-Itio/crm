@@ -1527,9 +1527,12 @@ class Leads_model extends App_Model
     
    }
    
-   public function get_deal_task($id)
-    {
+   public function get_deal_task($id = '')
+    {   
+	    if(isset($id)&&$id){
         $this->db->where('rel_id', $id);
+		}
+		
         $this->db->order_by('date', 'asc');
         return $this->db->get(db_prefix() . 'deal_task')->result_array();
     }

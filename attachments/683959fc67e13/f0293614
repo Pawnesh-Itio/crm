@@ -1,0 +1,13 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Thu, 29 May 2025 14:49:54 +0530
+
+Original-Recipient: rfc822; connectravi1242@gmail.com
+Final-Recipient: rfc822; connectravi1242@gmail.com
+Status: 550
+Action: failed
+Last-Attempt-Date: 29 May 2025 09:20:02 GMT
+Diagnostic-Code: 5.1.1 The email account that you tried to reach does not exist. Please try
+			5.1.1 double-checking the recipient's email address for typos or
+			5.1.1 unnecessary spaces. For more information, go to
+			5.1.1  https://support.google.com/mail/?p=NoSuchUser d2e1a72fcca58-747afe99821si1595721b3a.175 - gsmtp
+Remote-MTA: dns; gmail-smtp-in.l.google.com

@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Fri, 23 May 2025 11:36:03 +0530
+
+Original-Recipient: rfc822; vikashg@ibigit.io
+Final-Recipient: rfc822; vikashg@ibigit.io
+Status: 512
+Action: failed
+Last-Attempt-Date: 23 May 2025 06:06:11 GMT
+Diagnostic-Code: 5.4.4 DNS error:NXDOMAIN. Domain not found :ibigit.io
+Remote-MTA: dns; ibigit.io

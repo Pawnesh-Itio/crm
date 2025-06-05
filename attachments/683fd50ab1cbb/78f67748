@@ -1,0 +1,10 @@
+Reporting-MTA: dns; mx.zohomail.in
+Arrival-Date: Wed, 4 Jun 2025 00:06:11 +0530
+
+Original-Recipient: rfc822; linneaveilleux@aol.com
+Final-Recipient: rfc822; linneaveilleux@aol.com
+Status: 552
+Action: failed
+Last-Attempt-Date: 3 Jun 2025 18:36:18 GMT
+Diagnostic-Code: 1 Requested mail action aborted, mailbox not found
+Remote-MTA: dns; mx-aol.mail.gm0.yahoodns.net
