@@ -30,6 +30,8 @@ class Webmail_model extends App_Model
 		$_SESSION['webmail']['folder']=$_GET['fd'];
 		$_SESSION['inbox-total-email']="";
 		$_SESSION['outbox-total-email']="";
+		$_SESSION['stype']="";
+		$_SESSION['skey']="";
 		redirect(admin_url('webmail/inbox'));
 		}elseif($_SESSION['webmail']['folder']==""){
 		$_SESSION['webmail']['folder']="INBOX";
@@ -58,36 +60,35 @@ class Webmail_model extends App_Model
         ///////////////////////////Search Query//////////////
 		$search=0;
 		if(isset($_GET['stype'])&&!empty($_GET['stype'])&&isset($_GET['skey'])&&!empty($_GET['skey'])){
+		$_SESSION['stype']=trim($_GET['stype']);
+		$_SESSION['skey']=trim($_GET['skey']);
 		$search=1;
-		$stype=trim($_GET['stype']);
-		if($stype=="TEXT"){
-		$stype="body";
+		$_SESSION['webmail']['folder']="Search";
+		$_SESSION['inbox-total-email']="";
+		$_SESSION['outbox-total-email']="";
+		}elseif(isset($_SESSION['stype'])&&!empty($_SESSION['stype'])&&isset($_SESSION['skey'])&&!empty($_SESSION['skey'])){
 		$search=1;
-		}elseif($stype=="All"){
-		$search=2;
-		}
-		$skey=trim($_GET['skey']);
-		
 		}
 		///////////////////////////END Search Query//////////////
 		
 		
 		///////////////////////////Count Total Email BY Folder//////////////
 		$this->db->select('COUNT(`id`) AS `total_email`');
-		if($search==1){
-		$this->db->or_like($stype, $skey);
-		}elseif($search==2){
-		$this->db->where('(`from_email` LIKE "%' . $skey . '%" OR `to_emails` LIKE "%' . $skey . '%" OR `body` LIKE "%' . $skey . '%")');
 		
-		}
-        $this->db->where('email', $mailer_email);
+		
+        
 		
 		if($folder=="Deleted"){
 		$this->db->where('is_deleted', 1);
+		}elseif($search==1){
+		
+		$this->db->or_like($_SESSION['stype'], $_SESSION['skey']);
+		$this->db->where('is_deleted', 0);
 		}else{
 		$this->db->where('is_deleted', 0);
 		$this->db->where('folder', $folder);
 		}
+		$this->db->where('email', $mailer_email);
 		//$this->db->group_by('id');
         $counter=$this->db->get(db_prefix() . 'emails')->result_array(); //return
 		$_SESSION['inbox-total-email']=$counter[0]['total_email'];
@@ -100,22 +101,23 @@ class Webmail_model extends App_Model
 		
 		
 		$this->db->select('*,');
-		if($search==1){
-		$this->db->or_like($stype, $skey);
-		}elseif($search==2){
-		$this->db->where('(from_email LIKE "%' . $skey . '%" OR to_emails LIKE "%' . $skey . '%" OR body LIKE "%' . $skey . '%")');
 		
-		}
-        $this->db->where('email', $mailer_email);
+		
+        
 		
         $this->db->order_by('uniqid', 'desc');
-		$this->db->group_by('uniqid');
+		//$this->db->group_by('uniqid');
 		if($folder=="Deleted"){
 		$this->db->where('is_deleted', 1);
+		}elseif($search==1){
+		$this->db->or_like($_SESSION['stype'], $_SESSION['skey']);
+		$this->db->where('is_deleted', 0);
+		
 		}else{
 		$this->db->where('is_deleted', 0);
 		$this->db->where('folder', $folder);
 		}
+		$this->db->where('email', $mailer_email);
 		$this->db->limit($_SESSION['mail_limit'],$page);
         $mails=$this->db->get(db_prefix() . 'emails')->result_array(); //return
 		//echo $this->db->last_query();//exit;
