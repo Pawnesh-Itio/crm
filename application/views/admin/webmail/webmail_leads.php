@@ -1,6 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
-<?php //print_r($_SESSION['subfolderlist']);exit;?>
+<?php if(!isset($_GET['skey']) or empty(trim($_GET['skey']))){echo "Error in data please check email id";exit;}
+?>
 <style>
 @media (min-width: 768px) {
     .modal-dialog {
