@@ -2340,7 +2340,7 @@ $timestamp2 = $date2->getTimestamp();
 $diffInSeconds = abs($timestamp2 - $timestamp1); // absolute difference
 $diffInHours = round($diffInSeconds / 3600);
  if($diffInHours > 24){
- return '<i class="fa-solid fa-clock text-danger fa-spin" title="Not Update from last '. $diffInHours.' hours"></i>';
+ return '<i class="fa-solid fa-clock text-danger fa-fade" title="Not Update from last '. $diffInHours.' hours"></i>';
  }else{
  return '<i class="fa-solid fa-clock text-warning" title="In Progress"></i>';
  }
