@@ -71,7 +71,8 @@ font-weight: bolder !important;
 	<?php if(isset($lead->deal_status)&&$lead->deal_status==3&&$lead->uw_status==0&&get_staff_rolex()!=4){ ?>
 	<a href="#" class="btn btn-info" ><i class="fa-solid fa-edit"></i> Pending by UW Approver</a>
 	<?php }elseif(isset($lead->uw_status)&&$lead->uw_status==0&&get_staff_rolex()==4){ ?>
-	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" title="Send Quotation / Reject" ><i class="fa-solid fa-handshake"></i> <?php echo $this->leads_model->get_deal_status_data($lead->deal_status);?></a>
+	<a href="#" class="btn btn-success" data-toggle="modal" data-target="#dealModal" data-backdrop="static" 
+   data-keyboard="false" title="Send Quotation / Reject" ><i class="fa-solid fa-handshake"></i> <?php echo $this->leads_model->get_deal_status_data($lead->deal_status);?></a>
 	<?php }else{  
 	$inv_url="javascript:void(0)";
 	if($lead->deal_status==4){ 
@@ -395,11 +396,7 @@ $(document).ready(function () {
   $(window).resize(checkWidth); // Re-check on resize
 });
 
-//for disable modal parent page
-$('#dealModal').modal({
-  backdrop: 'static', // disables clicking outside the modal
-  keyboard: false     // disables ESC key
-});
+
 </script>
 
 <?php 
