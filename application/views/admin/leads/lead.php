@@ -394,6 +394,12 @@ $(document).ready(function () {
   checkWidth(); // Initial check
   $(window).resize(checkWidth); // Re-check on resize
 });
+
+//for disable modal parent page
+$('#dealModal').modal({
+  backdrop: 'static', // disables clicking outside the modal
+  keyboard: false     // disables ESC key
+});
 </script>
 
 <?php 
