@@ -868,7 +868,7 @@ class Leads_model extends App_Model
 		$this->db->where(db_prefix() . 'leads.assigned', $_SESSION['staff_logged_in']);	// Use condition
 		}
 			
-		$this->db->select('' . db_prefix() . 'deal_quotation.*,leads.name,leads.company,leads.email');
+		$this->db->select('' . db_prefix() . 'deal_quotation.*,leads.name,leads.company,leads.email,leads.assigned,leads.last_status_change');
         $this->db->join(db_prefix() . 'leads', '' . db_prefix() . 'leads.id=' . db_prefix() . 'deal_quotation.deal_id');
 		$this->db->order_by(db_prefix() . 'deal_quotation.id', 'DESC');
         $result     = $this->db->get(db_prefix() . 'deal_quotation')->result_array();

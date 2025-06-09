@@ -1918,8 +1918,8 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
 
 
 
-  <div class="col-md-12">
- <?php echo render_textarea('Descriptor', 'Descriptor', '',['required' => 'true']); ?>
+  <div class="col-md-4">
+ <?php echo render_input('Descriptor', 'Descriptor', 'Generic / Shared, with the provision to opt for a dedicated descriptor in the future.', '',['required' => 'true']); ?>
  </div>
 </div>
 
@@ -1945,7 +1945,6 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
                
             </div>
             <div class="modal-footer" style="background-color: rgb(186 230 253 / 1) !important;">
-                
                 <button onclick="convert_to_dealxxx(); return false;" class="btn btn-primary"><?php echo $dstatus; ?></button>
             </div>
 		<?php echo form_close(); ?>
