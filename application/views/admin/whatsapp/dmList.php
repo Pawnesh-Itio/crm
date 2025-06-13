@@ -114,7 +114,7 @@
                                                                     <!-- Template Message Field (hidden by default) -->
                                                                     <select class="form-select wa-form-select message-field" id="templateMessageField" style="display: none;" aria-label="Default select example">
                                                                         <option selected> Open this select menu</option>
-                                                                        <option value="hello_world">Hello Template</option>
+                                                                        <option value="pcl">PCL Hello</option>
                                                                     </select>
                                                                     <!-- Link Message Field (hidden by default) -->
                                                                     <input type="text" class="form-control message-field message-input" id="linkMessageField" style="display: none;" placeholder="Enter Link...">
