@@ -10,8 +10,11 @@
     <?php if (isset($lead)) { ?>
     <!-- Conversation Dropdown By TechWizard -->
     <div class="btn-group pull-right mleft5">
-        <?php /*?><a href="<?php echo admin_url('webmail/compose?id='.$lead->email); ?>" class="btn btn-default lead-top-btn">E-mail</a><?php */?>
+         <?php if (isset($lead->email)&&$lead->email) { ?>
 		<a data-toggle="modal" data-href="<?php echo admin_url('webmail/webmail_leads?stype=TEXT&skey='.$lead->email); ?>"  data-name="<?= $lead->name ?>" data-email= "<?= $lead->email ?>" onclick="getWebEmail(this)" class="btn btn-info lead-top-btn">E-mail</a>
+		 <?php }else{ ?>
+		 <a href="javascript:void(0);" onclick="alert('Email Not Added with this Leads');" class="btn btn-info lead-top-btn">E-mail</a>
+		  <?php } ?>
     </div>
     <div class="btn-group pull-right mleft5">
         <a class="btn btn-info dropdown-toggle lead-top-btn" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -1915,8 +1918,8 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
 
 
 
-  <div class="col-md-12">
- <?php echo render_textarea('Descriptor', 'Descriptor', '',['required' => 'true']); ?>
+  <div class="col-md-4">
+ <?php echo render_input('Descriptor', 'Descriptor', 'Generic / Shared, with the provision to opt for a dedicated descriptor in the future.', '',['required' => 'true']); ?>
  </div>
 </div>
 
@@ -1942,7 +1945,6 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
                
             </div>
             <div class="modal-footer" style="background-color: rgb(186 230 253 / 1) !important;">
-                
                 <button onclick="convert_to_dealxxx(); return false;" class="btn btn-primary"><?php echo $dstatus; ?></button>
             </div>
 		<?php echo form_close(); ?>
@@ -1964,7 +1966,6 @@ $(function() {
     });
 });
  
-
 
 </script>
 

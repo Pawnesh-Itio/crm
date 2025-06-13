@@ -66,17 +66,18 @@
 			  <div class="col-md-5 mbot10">
 			  <div class="dt-buttons btn-group55 tw-text-right">
 			  <div class="w-full tw-inline-flex sm:max-w-xs">
-			  <select name="stype" class="form-control input-sm input-group-addon" style="width:auto;border-top-left-radius: .375rem;border-bottom-left-radius: .375rem;" required>
-			  <option value="">Select type</option>
-			  <option value="from_email">FROM Email</option>
-			  <option value="from_name">FROM Name</option>
-			  <option value="to_emails">TO</option>
-			  <option value="cc_emails">CC</option>
-			  <option value="bcc_emails">BCC</option>
-			  <option value="subject">SUBJECT</option>
-			  <option value="body">Mail Body</option>
-			  </select>
-              <input type="text" class="form-control input-sm" name="skey" placeholder="Enter Search Keywords" required>
+<select name="stype" class="form-control input-sm input-group-addon" id="search_code" style="width:auto;border-top-left-radius: .375rem;border-bottom-left-radius: .375rem;" required>
+<option value="">Select type</option>
+<option value="from_email" <?php if(isset($_SESSION['stype'])&&$_SESSION['stype']=="from_email"){ ?> selected="selected"<?php }?>>From Email</option>
+<option value="from_name" <?php if(isset($_SESSION['stype'])&&$_SESSION['stype']=="from_name"){ ?> selected="selected"<?php }?>>From Name</option>
+<option value="to_emails" <?php if(isset($_SESSION['stype'])&&$_SESSION['stype']=="to_emails"){ ?> selected="selected"<?php }?>>To Email</option>
+<option value="cc_emails" <?php if(isset($_SESSION['stype'])&&$_SESSION['stype']=="cc_emails"){ ?> selected="selected"<?php }?>>CC Email</option>
+<option value="bcc_emails" <?php if(isset($_SESSION['stype'])&&$_SESSION['stype']=="bcc_emails"){ ?> selected="selected"<?php }?>>BCC Email</option>
+<option value="subject" <?php if(isset($_SESSION['stype'])&&$_SESSION['stype']=="subject"){ ?> selected="selected"<?php }?>>Subject</option>
+<option value="body" <?php if(isset($_SESSION['stype'])&&$_SESSION['stype']=="body"){ ?> selected="selected"<?php }?>>Mail Body</option>
+</select>
+
+              <input type="text" class="form-control input-sm" name="skey" placeholder="Enter Search Keywords" value="<?php if(isset($_SESSION['skey'])&&$_SESSION['skey']){echo trim($_SESSION['skey']); } ?>" required>
               <button type="submit" class="input-group-addon" style="padding-right: 25px;"><span class="fa fa-search"></span></button>
                 </div>
 				</div>
@@ -132,8 +133,8 @@ if(isset($message['status'])&&$message['status']==1){ $mailcss="isread"; }
 </div>
 </td>
 
-	<td class="hrefmodal tw-cursor-pointer <?php echo $mailcss;?> isread<?=$message['id'];?>" data-mid="<?=$message['id'];?>" data-fid="0" data-tid="<?=$message['subject'];?>" data-id="msg<?=$cnt;?>" title="<?=$message['subject'];?>" mailto="<?=htmlspecialchars($message['from_email']);?>" mailtox="<?=htmlspecialchars($message['to_emails']);?>" mailcc="<?=htmlspecialchars($message['cc_emails']);?>" mailbcc="<?=htmlspecialchars($message['bcc_emails']);?>" messageid="<?=$message['messageid'];?>" data-date="<?=$message['date'];?>"><div class="w-36 h-36 bg-red-600 rounded-full"></div> <span> <b><?=$message['subject'];?></b><br><?=htmlspecialchars($message['from_email']);?></span></td>
-	<td class="w-25 text-end" style="min-width: 140px;"><span><?=$message['date'];?></span></td>
+	<td class="hrefmodal tw-cursor-pointer <?php echo $mailcss;?> isread<?=$message['id'];?>" data-mid="<?=$message['id'];?>" data-fid="0" data-tid="<?=$message['subject'];?>" data-id="msg<?=$cnt;?>" title="<?=$message['subject'];?>" mailto="<?=htmlspecialchars($message['from_email']);?>" mailtox="<?=htmlspecialchars($message['to_emails']);?>" mailcc="<?=htmlspecialchars($message['cc_emails']);?>" mailbcc="<?=htmlspecialchars($message['bcc_emails']);?>" messageid="<?=$message['messageid'];?>" data-date="<?=$message['date'];?>" data-folder="<?=$message['folder'];?>"><div class="w-36 h-36 bg-red-600 rounded-full"></div> <span> <b><?=$message['subject'];?></b><br>From : <?=htmlspecialchars($message['from_email']);?> To : <?=htmlspecialchars($message['to_emails']);?></span></td>
+	<td class="w-25 text-end" style="min-width: 130px;"><span><?=$message['date'];?></span><?php if(!empty($_SESSION['webmail']['folder'])&&$_SESSION['webmail']['folder']=="Search"){ echo "<br><span  class='text-info'> ".$message['folder']."</span>"; } ?></td>
 </tr>
 <tr><td colspan="2" style="display:none;" id="msg<?=$cnt;?>">
 
@@ -470,7 +471,12 @@ $('.isread').click(function(){
 	     $('#myModal12 .modal-title').html('<span class="h4"><b>' + tid + '</b></span><br>' + '<span class="h6 text-primary"> From : ' + escapeHtml(mailto) +'<br> To : ' + escapeHtml(mailtox) +'<br> CC :' + escapeHtml(mailcc) +' BCC :' + escapeHtml(mailbcc) +'<br>' + formattedDate +'</span>');
 		// $('#emailSubject').val(tid);
 		 $('#emailSubjectIT').val(tid);
+		 
+		 if($(this).attr('data-folder')=="Sent"){
+		 $('#recipientEmailIT').val(mailtox);
+		 }else{
 		 $('#recipientEmailIT').val(mailto);
+		 }
 		 $('#recipientCCIT').val(mailcc);
 		 $('#recipientBCCIT').val(mailbcc);
 		 $('#messageidIT').val(messageid);

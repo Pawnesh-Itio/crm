@@ -1,6 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
-<?php //print_r($_SESSION['subfolderlist']);exit;?>
+<?php if(!isset($_GET['skey']) or empty(trim($_GET['skey']))){echo "Error in data please check email id";exit;}
+?>
 <style>
 @media (min-width: 768px) {
     .modal-dialog {
@@ -295,7 +296,7 @@ $filePath = site_url() . '/' . $attach;
 	     $('#myModal12 .modal-title').html('<span class="h4"><b>' + tid + '</b></span><br>' + '<span class="h6 text-primary"> From : ' + escapeHtml(mailto) +'<br> To : ' + escapeHtml(mailtox) +'<br> CC :' + escapeHtml(mailcc) +' BCC :' + escapeHtml(mailbcc) +'<br>' + formattedDate +'</span>');
 		// $('#emailSubject').val(tid);
 		 $('#emailSubjectIT').val(tid);
-		 $('#recipientEmailIT').val(mailto);
+		 $('#recipientEmailIT').val(mailtox);
 		 $('#recipientCCIT').val(mailcc);
 		 $('#recipientBCCIT').val(mailbcc);
 		 $('#messageidIT').val(messageid);

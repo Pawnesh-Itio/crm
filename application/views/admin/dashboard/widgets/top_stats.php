@@ -125,7 +125,7 @@
         data.addColumn('string', 'Topping');
         data.addColumn('number', 'Slices');
         data.addRows([
-          ['Hot', <?php echo $row->new_lead;?>],
+          ['New Deal', <?php echo $row->new_lead;?>],
           ['Doc', <?php echo $row->doc_lead;?>],
           ['UW', <?php echo $row->uw_lead;?>],
           ['Invoice', <?php echo $row->invoice_lead;?>]

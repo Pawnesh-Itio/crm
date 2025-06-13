@@ -10,8 +10,6 @@ $tagses = $this->ci->leads_model->get_tags_list();
 $dealstatuses = $this->ci->leads_model->get_deal_status();
 
 
-
-
 $rules = [
     App_table_filter::new('name', 'TextRule')->label(_l('leads_dt_name')),
     App_table_filter::new('phonenumber', 'TextRule')->label(_l('leads_dt_phonenumber')),
@@ -120,6 +118,7 @@ return App_table::find('leads')
             db_prefix() . 'leads.phonenumber as phonenumber',
 			db_prefix() . 'leads.website as website',
 			db_prefix() . 'leads.BusinessNature as BusinessNature',
+			db_prefix() . 'leads.last_status_change as last_status_change',
             'lead_value',
             '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'leads.id and rel_type="lead" ORDER by tag_order ASC LIMIT 1) as tags',
             'firstname as assigned_firstname',
@@ -233,13 +232,26 @@ return App_table::find('leads')
 		$i=1;
 		//print_r($result);//exit;
         foreach ($rResult as $aRow) {
+		
+		    /// For Reminder
+		    $reminderx="";
+		    if(isset($aRow['last_status_change'])&&$aRow['last_status_change']){
+			    if($aRow['deal_status'] != 4){
+				$reminderx=$this->ci->leads_model->lead_reminder($aRow['last_status_change']);
+				}else{
+				$reminderx="<i class='fa-solid fa-circle-check text-success' title='Final'></i>";
+				}
+		    }else{
+			$reminderx="<i class='fa-solid fa-circle-info text-danger fa-fade' title='New Leads'></i>";
+			}
+		
             $row = [];
 
             $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
 
             $hrefAttr = 'href="' . admin_url('leads/index/' . $aRow['id']) . '" onclick="init_lead(' . $aRow['id'] . ');return false;"';
-            //$row[]    = '<a ' . $hrefAttr . '>' . $aRow['id'] . '</a>';
-			$row[]    = '<a ' . $hrefAttr . '>' . $i++ . '</a>';
+            
+			$row[]    = $reminderx .'&nbsp;&nbsp;<a ' . $hrefAttr . '>' . $i++ .'</a>';
 
             $nameRow = '<a ' . $hrefAttr . '>' . e($aRow['name']) . '</a>';
 

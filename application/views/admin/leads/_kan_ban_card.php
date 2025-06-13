@@ -27,10 +27,26 @@ if ($_SESSION['leads_page_type']=='leads' && $lead['status'] == $status['id'] ||
                 </span>
             </a>
 			<?php
+			
+			/// For Reminder
+		    $reminderx="";
+		    if(isset($lead['last_status_change'])&&$lead['last_status_change']){
+			    if($lead['deal_status'] != 4){
+				$reminderx=$this->leads_model->lead_reminder($lead['last_status_change']);
+				}else{
+				$reminderx="<i class='fa-solid fa-circle-check text-success' title='Final'></i>";
+				}
+		    }else{
+			$reminderx="<i class='fa-solid fa-circle-info text-danger fa-fade' title='New Leads'></i>";
+			}
+			
+			?>
+			<a href="javascript:void(0);" ><?php echo $reminderx;;?></a>
+			<?php
 			$emailicon="";
             $emailcounter=$this->leads_model->countEmail(e($lead['email']));
 			if($emailcounter > 0){
-			$emailicon="<a href='" . admin_url('webmail/inbox?fd=INBOX&stype=from_email&skey=' . e($lead['email'])) . "' target='_blank' title='Move to mail box'><i class='fa-solid fa-envelope tw-text-danger-800' title='Received ".$emailcounter." New Email'></i><a>";
+			$emailicon="<a href='" . admin_url('webmail/inbox?fd=INBOX&stype=from_email&skey=' . e($lead['email'])) . "' target='_blank' title='Move to mail box'><i class='fa-solid fa-envelope tw-text-danger-800 tw-mx-1' title='Received ".$emailcounter." New Email'></i><a>";
 			}
 			
 			?>
@@ -127,4 +143,4 @@ if ($_SESSION['leads_page_type']=='leads' && $lead['status'] == $status['id'] ||
         </div>
     </div>
 </li>
-<?php }
+<?php } ?>
