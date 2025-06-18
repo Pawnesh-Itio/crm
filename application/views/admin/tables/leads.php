@@ -256,7 +256,7 @@ return App_table::find('leads')
             $nameRow = '<a ' . $hrefAttr . '>' . e($aRow['name']) . '</a>';
 
             $nameRow .= '<div class="row-options">';
-            $nameRow .= '<a ' . $hrefAttr . '>' . _l('view') . '</a>';
+            $nameRow .= '<a ' . $hrefAttr . '><i class="fa-solid fa-eye" title="Make to Junk"></i></a>';
 
             $locked = false;
 
@@ -265,11 +265,12 @@ return App_table::find('leads')
             }
 
             if (!$locked) {
-                $nameRow .= ' | <a href="' . admin_url('leads/index/' . $aRow['id'] . '?edit=true') . '" onclick="init_lead(' . $aRow['id'] . ', true);return false;">' . _l('edit') . '</a>';
+                $nameRow .= ' | <a href="' . admin_url('leads/index/' . $aRow['id'] . '?edit=true') . '" onclick="init_lead(' . $aRow['id'] . ', true);return false;"><i class="fa-solid fa-pen-to-square"  title="Edit"></i></a>';
             }
 
             if ($aRow['addedfrom'] == get_staff_user_id() || $has_permission_delete) {
-                $nameRow .= ' | <a href="' . admin_url('leads/delete/' . $aRow['id']) . '" class="_delete text-danger">' . _l('delete') . '</a>';
+                $nameRow .= ' | <a href="' . admin_url('leads/delete/' . $aRow['id']) . '" class="_delete text-danger"><i class="fa-solid fa-trash"  title="Delete"></i></a>';
+				 $nameRow .= ' | <a href="' . admin_url('leads/junk/' . $aRow['id']) . '" class="_delete text-danger" ><i class="fa-solid fa-trash-can-arrow-up"  title="Mark as Junk" ></i></i></a>';
             }
             $nameRow .= '</div>';
 

@@ -373,6 +373,37 @@ class Leads extends AdminController
 
         redirect($ref);
     }
+	
+	
+	/*  lead mark as junk from database */
+    public function junk($id)
+    {
+        if (!$id) {
+            redirect(admin_url('leads'));
+        }
+
+        if (staff_cant('delete', 'leads')) {
+            access_denied('Delete Lead');
+        }
+
+        $response = $this->leads_model->junk($id);
+        if (is_array($response) && isset($response['referenced'])) {
+            set_alert('warning', _l('is_referenced', _l('lead_lowercase')));
+        } elseif ($response === true) {
+            set_alert('success', _l('junked successfully', _l('lead')));
+        } else {
+            set_alert('warning', _l('problem in Junk', _l('lead_lowercase')));
+        }
+
+        $ref = $_SERVER['HTTP_REFERER'];
+
+        // if user access leads/inded/ID to prevent redirecting on the same url because will throw 404
+        if (!$ref || strpos($ref, 'index/' . $id) !== false) {
+            redirect(admin_url('leads'));
+        }
+
+        redirect($ref);
+    }
 
     public function mark_as_lost($id)
     {
