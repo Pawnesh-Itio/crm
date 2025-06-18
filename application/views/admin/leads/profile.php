@@ -1921,6 +1921,9 @@ $data['dealsstatus']   = $this->db->get(db_prefix() . 'deals_status')->result_ar
   <div class="col-md-4">
  <?php echo render_input('Descriptor', 'Descriptor', 'Generic / Shared, with the provision to opt for a dedicated descriptor in the future.', '',['required' => 'true']); ?>
  </div>
+ <div class="col-md-12">
+ <?php echo render_textarea('Remark', 'Remark', ''); ?>
+ </div>
 </div>
 
 <div id="rejectDiv" style="display:none;">

@@ -4,23 +4,23 @@
         <div class="_buttons">
             <?php $this->load->view('admin/invoices/invoices_top_stats'); ?>
             <?php if (staff_can('create',  'invoices')) { ?>
-                <a href="<?php echo admin_url('invoices/invoice'); ?>"
+                <?php /*?><a href="<?php echo admin_url('invoices/invoice'); ?>"
                     class="btn btn-primary pull-left new new-invoice-list mright5">
                     <i class="fa-regular fa-plus tw-mr-1"></i>
                     <?php echo _l('create_new_invoice'); ?>
-                </a>
+                </a><?php */?>
             <?php } ?>
             <?php if (!isset($project) && !isset($customer) && staff_can('create', 'payments')) { ?>
-                <button id="add-batch-payment" onclick="add_batch_payment()" class="btn btn-primary pull-left">
+                <?php /*?><button id="add-batch-payment" onclick="add_batch_payment()" class="btn btn-primary pull-left">
                     <i class="fa-solid fa-file-invoice tw-mr-1"></i>
                     <?php echo _l('batch_payments'); ?>
-                </button>
+                </button><?php */?>
             <?php } ?>
             <?php if (!isset($project)) { ?>
-                <a href="<?php echo admin_url('invoices/recurring'); ?>" class="btn btn-default pull-left mleft5">
+               <?php /*?> <a href="<?php echo admin_url('invoices/recurring'); ?>" class="btn btn-default pull-left mleft5">
                     <i class="fa-solid fa-repeat tw-mr-1"></i>
                     <?php echo _l('invoices_list_recurring'); ?>
-                </a>
+                </a><?php */?>
             <?php } ?>
             <div class="display-block pull-right tw-space-x-0 sm:tw-space-x-1.5">
                 <a href="#" class="btn btn-default btn-with-tooltip toggle-small-view hidden-xs"
