@@ -1,11 +1,20 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
-<?php if(!isset($_GET['iid'])&&empty($_GET['iid'])){ 
+
+<?php 
+
+if(!isset($_GET['iid'])&&empty($_GET['iid'])&&empty($invoice->leadid)){ 
 echo "<h5 class='text-danger'>wrong url - not authorized to create invoice<h5>";
 echo "<h5 class='text-danger'>Generate invoice only from deal section<h5>";
 exit;
 }
 
+if(isset($_GET['iid'])&&$_GET['iid']){
+$leadid=$_GET['iid'];
+}else{
+$leadid=$invoice->leadid;
+}
+//echo $leadid;
 ?>
 <div class="<?php if (!isset($invoice) || (isset($invoice) && count($invoices_to_merge) == 0 && (isset($invoice) && !isset($invoice_from_project) && count($expenses_to_bill) == 0 || $invoice->status == Invoices_model::STATUS_CANCELLED))) {
     echo ' hide';
@@ -46,8 +55,8 @@ exit;
                                     data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>" required>
        
 <?php 
-if(isset($_GET['iid'])&&$_GET['iid']){
-$iid = $_GET['iid'];
+if(isset($leadid)&&$leadid){
+$iid = $leadid;
 $leadsrs=$this->leads_model->get_deal_name_companyname($iid);
 if(isset($leadsrs[0]['name'])&&$leadsrs[0]['name']){
 echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$leadsrs[0]['company']. '</option>';
@@ -58,7 +67,7 @@ echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$lead
                     </div>
                 </div>
 				
-				<?php $contactid=$this->invoices_model->get_contact_id_from_leadid($_GET['iid']);?>
+				<?php $contactid=$this->invoices_model->get_contact_id_from_leadid($leadid);?>
 				<div class="f_client_id">
                     <div class="form-group select-placeholder">
                         <label for="clientid" class="control-label"><?php echo _l('invoice_select_customer'); ?></label>
@@ -210,8 +219,8 @@ echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$lead
                }
 
                $_is_draft            = (isset($invoice) && $invoice->status == Invoices_model::STATUS_DRAFT) ? true : false;
-			   if(isset($_GET['iid'])&&$_GET['iid']){
-			   $_invoice_number      = str_pad($__number, get_option('number_padding_prefixes'), '0', STR_PAD_LEFT)."-".$_GET['iid'];
+			   if(isset($leadid)&&$leadid){
+			   $_invoice_number      = str_pad($__number, get_option('number_padding_prefixes'), '0', STR_PAD_LEFT)."-".$leadid;
 			   }else{
                $_invoice_number      = str_pad($__number, get_option('number_padding_prefixes'), '0', STR_PAD_LEFT);
 			   }
@@ -238,11 +247,13 @@ echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$lead
                     echo $prefix;
                   ?>
                         </span>
+						<?php if(!isset($invoice->id)&&empty($invoice->id)){ ?>
                         <input type="text" name="number" class="form-control"
                             value="<?php echo ($_is_draft) ? 'DRAFT' : $_invoice_number; ?>"
                             data-isedit="<?php echo e($isedit); ?>"
                             data-original-number="<?php echo e($data_original_number); ?>"
                             <?php echo ($_is_draft) ? 'disabled' : '' ?>>
+						<?php } ?>
                         <?php if ($format == 3) { ?>
                         <span class="input-group-addon">
                             <span id="prefix_year" class="format-n-yy"><?php echo e($yy); ?></span>
@@ -316,7 +327,7 @@ echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$lead
                         <select class="selectpicker"
                             data-toggle="<?php echo $this->input->get('allowed_payment_modes'); ?>"
                             name="allowed_payment_modes[]" data-actions-box="true" multiple="true" data-width="100%"
-                            data-title="<?php echo _l('dropdown_non_selected_tex'); ?>">
+                            data-title="<?php echo _l('dropdown_non_selected_tex'); ?>" required>
                             <?php foreach ($payment_modes as $mode) {
                    $selected = '';
                    if (isset($invoice)) {

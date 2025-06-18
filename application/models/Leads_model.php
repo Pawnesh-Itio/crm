@@ -450,6 +450,29 @@ class Leads_model extends App_Model
 
         return false;
     }
+	
+	 public function junk($id)
+    {
+        $affectedRows = 0;
+		
+		$this->db->where('id', $id);
+        $this->db->update(db_prefix() . 'leads', [
+            'status'             => 4,
+            'last_status_change' => date('Y-m-d H:i:s'),
+        ]);
+		
+        if ($this->db->affected_rows() > 0) {
+            $this->log_lead_activity($id, 'not_lead_activity_marked_junk');
+
+            log_activity('Lead Marked as Junk [ID: ' . $id . ']');
+
+            hooks()->do_action('lead_marked_as_junk', $id);
+             return true;
+        }
+        
+
+        return false;
+    }
 
     /**
      * Mark lead as lost
