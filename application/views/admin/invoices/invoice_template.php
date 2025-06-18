@@ -236,7 +236,9 @@ echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$lead
                             data-placement="top"></i>
                     </label>
                     <div class="input-group">
-                        <span class="input-group-addon">
+                        
+						<?php if(!isset($invoice->id)&&empty($invoice->id)){ ?>
+						<span class="input-group-addon">
                             <?php if (isset($invoice)) { ?>
                             <a href="#" onclick="return false;" data-toggle="popover"
                                 data-container='._transaction_form' data-html="true"
@@ -247,7 +249,6 @@ echo '<option value="' . $iid . '" selected>' . $leadsrs[0]['name'] .' - '.$lead
                     echo $prefix;
                   ?>
                         </span>
-						<?php if(!isset($invoice->id)&&empty($invoice->id)){ ?>
                         <input type="text" name="number" class="form-control"
                             value="<?php echo ($_is_draft) ? 'DRAFT' : $_invoice_number; ?>"
                             data-isedit="<?php echo e($isedit); ?>"

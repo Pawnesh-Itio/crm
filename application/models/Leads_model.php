@@ -1827,6 +1827,7 @@ class Leads_model extends App_Model
 		unset($data['MinSettlement']);
 		unset($data['MonthlyFee']);
 		unset($data['Descriptor']);
+		unset($data['Remark']);
 		
 		
 		$data['deal_id']=$lead_id;
@@ -1848,7 +1849,8 @@ class Leads_model extends App_Model
 		}else{
 		
 		unset($data['vtype']);
-		unset($data['Reason']);
+		$data['Reason']=$data['Remark'];
+		unset($data['Remark']);
 		$data['CardType']=json_encode($data['CardType']);
 		$data['deal_id']=$lead_id;
 		
@@ -1907,7 +1909,8 @@ class Leads_model extends App_Model
     'SettlementFee' => 'Settlement Fee',
     'MinSettlement' => 'Minimum Settlement',
     'MonthlyFee' => 'Monthly Fee (USD)',
-    'website' => 'Website URL'
+    'website' => 'Website URL',
+	'Reason' => 'Remark'
 ];
 $datax = [];
 foreach ($data as $key => $value) {

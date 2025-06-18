@@ -11,10 +11,11 @@
         <div class="tw-mb-2 sm:tw-mb-4"> <?php /*?><a href="#" onclick="new_status(); return false;" class="btn btn-primary"> <i class="fa-regular fa-plus tw-mr-1"></i> <?php echo _l('New Deal Status'); ?> </a><?php */?> </div>
         <div class="panel_s">
           <div class="panel-body panel-table-full">
-            <?php if (count($statuses) > 0) { ?>
+            <?php if (count($uwstatus) > 0) { ?>
 			
-            <table class="table dt-table" data-order-col="1" data-order-type="asc">
+            <table class="table dt-table" data-order-col="0" data-order-type="desc">
                             <thead>
+							    <th><?php echo _l('ID'); ?></th>
                                 <th><?php echo _l('Status'); ?></th>
 								<th><?php echo _l('Name'); ?></th>
 								<th><?php echo _l('Company'); ?></th>
@@ -34,13 +35,17 @@
 								
                             </thead>
                             <tbody>
-<?php foreach ($statuses as $status) {?> 
+<?php foreach ($uwstatus as $status) {?> 
 <?php $rowclr="#f8d6dd"; $rowstatus="Rejected"; if($status['quotation_status']==1){ $rowstatus="Approved"; $rowclr="#d5f2d8";}?>
 								
 								
                                 <tr style="background:<?php echo $rowclr;?>">
-                                    
-                                <td><?php echo $rowstatus;?></td>
+                                 <td><?php echo $status['id']; ?></td>   
+                                <td><?php echo $rowstatus;?> 
+					<?php if(isset($status['Reason'])&&$status['Reason']){ ?>
+					<i class="fa-solid fa-circle-exclamation text-warning" title="<?php echo $status['Reason']; ?>"></i>
+					<?php } ?>
+								</td>
 								<td><?php echo $status['name']; ?></td>
 								<td><?php echo $status['company']; ?></td>
 								<td><?php echo $status['email']; ?></td>
@@ -48,7 +53,7 @@
                                 <?php if(isset($status['quotation_status'])&&$status['quotation_status']==1){ ?>
                                 <td><?php echo $status['MDR']; ?></td>
 								<?php }else{ ?>
-                                <td>Reason&nbsp;<i class="fa-solid fa-circle-exclamation text-warning" title="<?php echo $status['Reason']; ?>"></i></td> 
+                                <td>&nbsp;</td> 
 								<?php } ?>
                                 <td><?php echo $status['SetupFee']; ?></td>
 								<td><?php echo $status['HoldBack']; ?></td>

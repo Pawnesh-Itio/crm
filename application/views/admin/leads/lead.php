@@ -278,6 +278,7 @@ $('input[name="quotation_status"]').on('change', function() {
 		$('#MinSettlement').attr('required', true);
 		$('#MonthlyFee').attr('required', true);
 		$('#Descriptor').attr('required', true);
+		$('#Remark').attr('required', true);
       } else {
 	  
         $('#rejectDiv').slideDown(); // Or use .hide()
@@ -292,6 +293,7 @@ $('input[name="quotation_status"]').on('change', function() {
 		$('#MinSettlement').removeAttr('required');
 		$('#MonthlyFee').removeAttr('required');
 		$('#Descriptor').removeAttr('required');
+		$('#Remark').removeAttr('required');
       }
     });
 	  

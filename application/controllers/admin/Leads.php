@@ -1229,7 +1229,7 @@ class Leads extends AdminController
         if (!is_admin()) {
             //access_denied('UW Status');
         }
-        $data['statuses'] = $this->leads_model->get_uw_status();
+        $data['uwstatus'] = $this->leads_model->get_uw_status();
         $data['title']    = 'UW Status';
         $this->load->view('admin/leads/uw_status', $data);
     }
