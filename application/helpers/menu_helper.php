@@ -453,7 +453,7 @@ function app_init_admin_sidebar_menu_items()
             'badge'    => [],
         ]);
     }
-
+ if (is_admin()) {
     // WhatsApp Configuration 
     $CI->app_menu->add_setup_menu_item('whatsapp', [
         'collapse' => true,
@@ -475,6 +475,7 @@ function app_init_admin_sidebar_menu_items()
         'collapse' => true,
         'name'     => 'Telegram',
         'position' => 11,
+		'icon'     => 'fa-brands fa-telegram',
         'badge'    => [],
     ]);
 
@@ -487,7 +488,7 @@ function app_init_admin_sidebar_menu_items()
     ]);
     // 
 
-    if (is_admin()) {
+   
         $CI->app_menu->add_setup_menu_item('customers', [
             'collapse' => true,
             'name'     => _l('clients'),
@@ -604,40 +605,7 @@ function app_init_admin_sidebar_menu_items()
             'badge'    => [],
         ]);
 
-        $CI->app_menu->add_setup_menu_item('finance', [
-            'collapse' => true,
-            'name'     => _l('acs_finance'),
-            'position' => 25,
-            'badge'    => [],
-        ]);
-        $CI->app_menu->add_setup_children_item('finance', [
-            'slug'     => 'taxes',
-            'name'     => _l('acs_sales_taxes_submenu'),
-            'href'     => admin_url('taxes'),
-            'position' => 5,
-            'badge'    => [],
-        ]);
-        $CI->app_menu->add_setup_children_item('finance', [
-            'slug'     => 'currencies',
-            'name'     => _l('acs_sales_currencies_submenu'),
-            'href'     => admin_url('currencies '),
-            'position' => 10,
-            'badge'    => [],
-        ]);
-        $CI->app_menu->add_setup_children_item('finance', [
-            'slug'     => 'payment-modes',
-            'name'     => _l('acs_sales_payment_modes_submenu'),
-            'href'     => admin_url('paymentmodes'),
-            'position' => 15,
-            'badge'    => [],
-        ]);
-        $CI->app_menu->add_setup_children_item('finance', [
-            'slug'     => 'expenses-categories',
-            'name'     => _l('acs_expense_categories'),
-            'href'     => admin_url('expenses/categories'),
-            'position' => 20,
-            'badge'    => [],
-        ]);
+        
 
         $CI->app_menu->add_setup_menu_item('contracts', [
             'collapse' => true,
@@ -735,4 +703,40 @@ function app_init_admin_sidebar_menu_items()
         'position' => 10,
         'badge'    => [],
     ]);
+	 if (staff_can('view',  'finance')) {
+        $CI->app_menu->add_setup_menu_item('finance', [
+            'collapse' => true,
+            'name'     => _l('acs_finance '),
+            'position' => 25,
+            'badge'    => [],
+        ]);
+        $CI->app_menu->add_setup_children_item('finance', [
+            'slug'     => 'taxes',
+            'name'     => _l('acs_sales_taxes_submenu'),
+            'href'     => admin_url('taxes'),
+            'position' => 5,
+            'badge'    => [],
+        ]);
+        $CI->app_menu->add_setup_children_item('finance', [
+            'slug'     => 'currencies',
+            'name'     => _l('acs_sales_currencies_submenu'),
+            'href'     => admin_url('currencies '),
+            'position' => 10,
+            'badge'    => [],
+        ]);
+        $CI->app_menu->add_setup_children_item('finance', [
+            'slug'     => 'payment-modes',
+            'name'     => _l('acs_sales_payment_modes_submenu'),
+            'href'     => admin_url('paymentmodes'),
+            'position' => 15,
+            'badge'    => [],
+        ]);
+        $CI->app_menu->add_setup_children_item('finance', [
+            'slug'     => 'expenses-categories',
+            'name'     => _l('acs_expense_categories'),
+            'href'     => admin_url('expenses/categories'),
+            'position' => 20,
+            'badge'    => [],
+        ]);
+    }
 }
