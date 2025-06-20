@@ -152,6 +152,10 @@ function get_available_staff_permissions($data = [])
             'name'         => _l('estimate_request'),
             'capabilities' => $allPermissionsArray,
         ],
+		'finance' => [
+            'name'         => _l('Finance'),
+            'capabilities' => $allPermissionsArray,
+        ],
     ];
 
     $addLeadsPermission = true;
