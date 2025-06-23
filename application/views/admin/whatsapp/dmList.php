@@ -78,6 +78,7 @@
 
                                             </div>
                                         </div>
+                                        <div id="replyPreview" style="display:none;"></div>
                                         <!-- sendMessage button -->
                                         <div class="button wa-send-message">
                                             <form id="messageForm" >

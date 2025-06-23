@@ -105,7 +105,7 @@
  <!-- End addNewPhone Model -->
 <?php init_tail(); ?>
 <script>
-const url = "https://wa-business-api.onrender.com";
+const url = "<?= Whatsapp_Api_Url ?>";
 $(document).ready(function() {
 
     const source = "crm";

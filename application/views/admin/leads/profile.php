@@ -25,7 +25,7 @@
             <!-- TechWizard Whatsapp Link -->
             <?php if(!empty($lead->phonenumber)){ ?>
                 <li>
-                    <a data-toggle="modal" data-target="#myModal" data-name="<?= $lead->name ?>" data-number= "<?= $lead->phonenumber ?>" onclick="getMessages(this)">
+                    <a data-toggle="modal" data-target="#myModal" data-name="<?= $lead->name ?>" data-number= "<?= $lead->country_code.$lead->phonenumber ?>" onclick="getMessages(this)">
                         <i class="fa-brands fa-whatsapp"></i>    
                         <?php echo _l('lead_conversion_whatsapp'); ?>
                     </a>

@@ -350,9 +350,9 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
+<!-- Whatsapp Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -369,11 +369,52 @@
                     <form id="messageForm" >
                         <input type="hidden" id="formUserId" value="<?= get_staff_user_id() ?>">
                         <input type="hidden" id="formNumber" class="formNumber" name="chatId"/>
+                        <input type="hidden" id="formMediaId" name="formMediaId"/>
+                        <input type="hidden" id="formMediaUrl"/>
+                        <input type="hidden" id="formType" value="1">
+                        <input type="hidden" id="mediaCategory" name="mediaCategory">
                         <div class="message-input">
-                            <input type="text" class="form-control" id="messageInput" placeholder="Type a message...">	
-                            <button  type="submit" class="btn wa-btn" id="sendMessageBtn">
-                                <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
-                            </button>
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <div class="btn-group dropup">
+                                                <button class="btn wa-drop-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-paperclip" aria-hidden="true"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#" id="textMessageOption">Text Message</a></li>
+                                                    <li><a href="#" id="imagePhotoOption">Photo/Image</a></li>
+                                                    <li><a href="#" id="documentMessageOption">Document Message</a></li>
+                                                    <li><a href="#" id="audioMessageOption">Audio Message</a></li>
+                                                    <li><a href="#" id="videoMessageOption">Video Message</a></li>
+                                                    <li><a href="#" id="templateMessageOption">Template Message</a></li>
+                                                    <li><a href="#" id="linkMessageOption">Link Message</a></li>
+                                                </ul>
+                                            </div>
+                                        </span>
+                                        <!-- Container for the fields -->
+                                            <!-- Default Text Message Field (shown by default) -->
+                                            <input type="text" class="form-control message-field message-input" id="textMessageField" placeholder="Type a message..." style="display: block;">
+                                            <!-- Media Message Field (hidden by default) -->
+                                            <input type="file" id="mediaMessageFileField" style="display:none">
+                                            <input type="text" id="mediaMessageCaptionField" class="form-control message-field message-input"placeholder="Media Caption" style="display:none">
+                                            <!-- Template Message Field (hidden by default) -->
+                                            <select class="form-select wa-form-select message-field" id="templateMessageField" style="display: none;" aria-label="Default select example">
+                                                <option selected> Open this select menu</option>
+                                                <option value="pcl">PCL Hello</option>
+                                            </select>
+                                            <!-- Link Message Field (hidden by default) -->
+                                            <input type="text" class="form-control message-field message-input" id="linkMessageField" style="display: none;" placeholder="Enter Link...">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <button  type="submit" class="btn  wa-btn" id="sendMessageBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" style="padding-top:3.5px" viewBox="0 0 50 25" width="50" height="24" fill="white"><path d="M2 21v-7l11-2-11-2V3l21 9-21 9z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -479,9 +520,9 @@
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script>
 // Socket connection
-const URL = "wss://wa-business-api.onrender.com";
-const waURL = "https://wa-business-api.onrender.com";
-const socket = io(URL);
+const SocketURL = "<?= Whatsapp_Socket_Url ?>";
+const waURL = "<?= Whatsapp_Api_Url ?>";
+const socket = io(SocketURL);
 socket.on('connect', () => {
     console.log('Connected to Socket.io server');
 });
@@ -500,7 +541,7 @@ function getMessages(element){
     $('#formNumber').val(chatId);
 	$('.chat-container').html('');// Remove any exisiting listener before adding new one
     $.ajax({
-        url: waURL+'/api/chat/messages/'+chatId+'/449778398215148/Regular',
+        url: waURL+'/api/chat/messages/'+chatId+'/665167003352668/Regular',
         method: 'GET',
         success: function (data) {
             console.log(data);
@@ -509,15 +550,104 @@ function getMessages(element){
             $('.chat-container').html('');
             // Add Messages to chat box.
             if(data.status != 'no_contact' && data.status !='no_messages'){
+                let lastDateGroup = null;
                 data.messages.forEach(function (message) {
                     const messageClass = message.message_type === 'received' ? 'incoming-message' : 'sent-message';
-                // Create a new div for each message
-                const messageDiv = $('<div>'+message.message_body+'</div>') // Create the div
-                    .attr('id', message.message_id) // Set message_id as the id attribute
-                    .addClass(messageClass); // Optionally add a class for styling
+                    // Format the Date
+                    const msgDate = new Date((message.time || message.createdAt) * 1000); // assuming `time` is Unix timestamp in seconds
+                    const today = new Date();
+                    const yesterday = new Date();
+                    yesterday.setDate(today.getDate() - 1);
 
-                // Append the created message div to the body or a specific parent
-                $('#chatContainer').append(messageDiv); // Or append to a specific container if needed
+                    const isToday = msgDate.toDateString() === today.toDateString();
+                    const isYesterday = msgDate.toDateString() === yesterday.toDateString();
+
+                    let dateLabel;
+                    if (isToday) {
+                        dateLabel = 'Today';
+                    } else if (isYesterday) {
+                        dateLabel = 'Yesterday';
+                    } else {
+                        dateLabel = msgDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+                    }
+
+                    // Insert date label if group has changed
+                    if (lastDateGroup !== dateLabel) {
+                        const dateDivider = $(`<div class="chat-date-divider">${dateLabel}</div>`);
+                        $('#chatContainer').append(dateDivider);
+                        lastDateGroup = dateLabel;
+                    }
+
+                    // Format time (e.g., 4:36 PM)
+                    const formattedTime = msgDate.toLocaleTimeString(undefined, {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    });
+                    // End Format the Date and Time
+                    // Message body with time
+                    let messageDiv;
+                    if (message.message_content != 4) {
+                        messageDiv = $(`<div class="${messageClass}" id="${message.message_id}">
+                            <div>${message.message_body}</div>
+
+                            <div class="chat-time">${formattedTime}</div>
+                        </div>`);
+                    } else {
+                        const mediaPath = waURL + '/' + message?.media_details?.path.replace('\\', '/');
+                        const mediaCaption = message.message_body;
+
+                        switch (message.media_type) {
+                            case 'image':
+                                messageDiv = $(
+                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        <a href="${mediaPath}" target="_blank"><img src="${mediaPath}" width="100%" /></a>
+                                        <p style="padding-top:10px">${mediaCaption || ''}</p>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                                break;
+                            case 'video':
+                                messageDiv = $(
+                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        <video width="100%" controls>
+                                            <source src="${mediaPath}" type="video/mp4">
+                                        </video>
+                                        <p style="padding-top:10px">${mediaCaption || ''}</p>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                                break;
+                            case 'audio':
+                                messageDiv = $(
+                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        <audio controls><source src="${mediaPath}" type="audio/mpeg"></audio>
+                                        <p style="padding-top:10px">${mediaCaption || ''}</p>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                                break;
+                            case 'document':
+                                const fileName = mediaPath.split('/').pop();
+                                messageDiv = $(
+                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        <a href="${mediaPath}" target="_blank">📄 ${fileName}</a>
+                                        <p style="padding-top:10px">${mediaCaption || ''}</p>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                                break;
+                            default:
+                                messageDiv = $(
+                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        <a href="${mediaPath}" target="_blank">Download Media</a>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                        }
+                    }
+                     $('#chatContainer').append(messageDiv);
+                    // Message body end
             });
         }else{
             const errSpan = "<span class='err_span text-center text-danger'>No Message found...</span>";
@@ -540,18 +670,76 @@ function setupChatSocketListener(chatId){
 	socket.on('chat-' + chatId, (data)=>{
 	console.log(data);//Checking.
 	var type = data.type;
-	var messageData = data.messageToInsert;//getting message body
+	var messageData = data.messageContentToInsert;//getting message body
 	var data ; // Initializing empty variable'
 	//Check if message is sent or status
 	if(type=='received'){
-        $('.err_span').html('');
-	    data = '<div class="incoming-message">'+messageData.message_body+'</div>';
+    const formattedTime = messageData.time
+        ? new Date(messageData.time * 1000).toLocaleTimeString(undefined, {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+            })
+        : '';
+
+ 
+        if(messageData.message_content != 4){
+	    data = '<div id='+messageData.message_id+' class="incoming-message">'+messageData.message_body+'<div class="chat-time">'+formattedTime+'</div></div>';
 	    //Appending chat data to UI
 	    $('.chat-container').append(data);
+        }else{
+
+            switch (messageData.media_type) {
+                case 'image':
+                    data =$(`<div class="incoming-message" id="${messageData.message_id}" style="width:50%">
+                        <a href="${waURL}/${messageData.media_path.replace('\\', '/')}" target="_blank">
+                            <img src="${waURL}/${messageData.media_path.replace('\\', '/')}" width="100%" />
+                            <p style="padding-top:10px">${messageData.message_body || ''}</p>
+                            <div class="chat-time">${formattedTime}</div>
+                        </a>
+                            `);
+                            $('.chat-container').append(data);
+                    break;
+                case 'video':
+                    data = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
+                        <video width="100%" controls>
+                            <source src="${waURL}/${messageData.media_path.replace('\\', '/')}" type="video/mp4">
+                        </video>
+                        <p style="padding-top:10px">${messageData.message_body || ''}</p>
+                        <div class="chat-time">${formattedTime}</div>`);
+                        $('.chat-container').append(data);
+                    break;
+                case 'audio':
+                    data = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
+                        <audio controls>
+                            <source src="${waURL}/${messageData.media_path.replace('\\', '/')}" type="audio/mpeg">
+                        </audio>
+                        <p style="padding-top:10px">${messageData.message_body || ''}</p>
+                        <div class="chat-time">${formattedTime}</div>`);
+                        $('.chat-container').append(data);
+                    break;
+                case 'document':
+                    const fileName = messageData.media_path.split('/').pop();
+                    data = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
+                        <a href="${waURL}/${messageData.media_path.replace('\\', '/')}" target="_blank">📄 ${fileName}</a>
+                        <p style="padding-top:10px">${messageData.message_body || ''}</p>
+                        <div class="chat-time">${formattedTime}</div>`);
+                        $('.chat-container').append(data);
+                    break;
+                default:
+                    data = $(
+                                `<div class="incoming-message" id="${messageData.message_id}" style="width:50%">
+                                    <a href="${messageData.media_path.replace('\\', '/')}" target="_blank">Download Media</a>
+                                    <div class="chat-time">${formattedTime}</div>
+                                </div>`
+                            );
+                            $('.chat-container').append(data);
+            }
+        }
 	    // Automatically scroll to the bottom of the chat box
-	    $('#chatContainer').scrollTop($('#chatContainer')[0].scrollHeight);
+        autoScrollToBottom();
 	}else{
-	    
+	    console.log(data); 
 	}
 	});
 	
@@ -627,28 +815,51 @@ $(document).ready(function() {
         const source = "crm";
         const userId = $('#formUserId').val();
         const to = $('#formNumber').val();
-        const message = $('#messageInput').val();
-        const type = 1;
+        const type = $('#formType').val();
+        const message = $('#textMessageField').val();
+        const template = $('#templateMessageField').val();
+        const linkMessage = $('#linkMessageField').val();
+        const mediaId = $('#formMediaId').val();
+        const mediaCategory = $('#mediaCategory').val();
+        const mediaCaption = $('#mediaMessageCaptionField').val();
+        const formMediaUrl = $('#formMediaUrl').val();
         const ContactType = "Regular";
+        // sendPayload
+        const sendPayload = {
+            userId: userId,
+            source: source,
+            configurationId: "684bd26e5a6a97308dd272c4",
+            to: to,
+            messageType: type,
+            contactType:ContactType,
+        }
+        if(type==1){
+            sendPayload.message = message;
+        }
+        if(type==2){
+            sendPayload.message = linkMessage;
+        }
+        if(type==3){
+            sendPayload.tempName = template;
+        }
+        if(type==4){
+            sendPayload.mediaId = mediaId;
+            sendPayload.mediaCategory = mediaCategory;
+            if(mediaCaption){
+            sendPayload.caption = mediaCaption;
+            }
+        }
 
         // Send the data via AJAX
         $.ajax({
             type: 'POST',
             url: waURL+'/api/messages/send/', // Replace with your actual URL
             contentType: 'application/json',
-            data: JSON.stringify({
-                userId: userId,
-                source: source,
-                configurationId:"67af1e630019da2d1a185581",
-                to: to,
-                message: message,
-                type: type,
-                ContactType: ContactType
-            }),
+            data: JSON.stringify(sendPayload), // Convert the data to JSON string
             success: function(response) {
                 // Handle success (e.g., clear input, display message, etc.)
                 const messageData = response.data.messages[0];
-                $('#messageInput').val(''); // Clear the input after sending
+                $('#textMessageField').val(''); // Clear the input after sending
                 data = '<div id='+messageData.id+' class="sent-message">'+message+'</div>';
                 //Appending chat data to UI
                 $('.chat-container').append(data);
@@ -897,6 +1108,209 @@ $(document).ready(function() {
             },
             complete: function() {
                 submitBtn.prop('disabled', false);
+            }
+        });
+    });
+});
+// Handle Change Message Type
+document.getElementById('textMessageOption').addEventListener('click', function() {
+    changeMessageField('textMessageField');
+    $('#formType').val(1);
+});
+// Image Photo Option
+document.getElementById('imagePhotoOption').addEventListener('click', function() {
+    $('#formType').val(4);
+    $('#mediaCategory').val('image'); // 
+    changeMessageField('mediaMessageCaptionField');
+    
+    // Accept only image files
+    document.getElementById('mediaMessageFileField').setAttribute('accept', 'image/png,image/jpeg');
+    document.getElementById('mediaMessageFileField').click();
+});
+// Document Message Option
+document.getElementById('documentMessageOption').addEventListener('click', function() {
+    $('#formType').val(4); // Common messageType for all media
+    $('#mediaCategory').val('document'); // Important: specify mediaCategory
+    changeMessageField('mediaMessageCaptionField'); // Optionally show caption field
+
+    // Accept only document files
+    document.getElementById('mediaMessageFileField').setAttribute('accept', '.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    document.getElementById('mediaMessageFileField').click();
+});
+//  Audio Message Option
+document.getElementById('audioMessageOption').addEventListener('click', function() {
+    $('#formType').val(4);
+    $('#mediaCategory').val('audio');
+    changeMessageField('mediaMessageCaptionField'); // You can hide this for audio if not needed
+
+    // Accept only audio files
+    document.getElementById('mediaMessageFileField').setAttribute('accept', 'audio/mpeg,audio/ogg');
+    document.getElementById('mediaMessageFileField').click();
+});
+// Video Message Option
+document.getElementById('videoMessageOption').addEventListener('click', function() {
+    $('#formType').val(4);
+    $('#mediaCategory').val('video');
+    changeMessageField('mediaMessageCaptionField');
+
+    // Accept only video files
+    document.getElementById('mediaMessageFileField').setAttribute('accept', 'video/mp4,video/3gpp');
+    document.getElementById('mediaMessageFileField').click();
+});
+
+document.getElementById('templateMessageOption').addEventListener('click', function() {
+    $('#formType').val(3);
+    changeMessageField('templateMessageField');
+});
+
+document.getElementById('linkMessageOption').addEventListener('click', function() {
+    $('#formType').val(2);
+    changeMessageField('linkMessageField');
+});
+// End Hanlde Change Message Type
+// Function to switch the visible field
+function changeMessageField(fieldId) {
+    // Hide all fields
+    const fields = document.querySelectorAll('.message-field');
+    fields.forEach(function(field) {
+        field.style.display = 'none';
+    });
+
+    // Show the selected field
+    document.getElementById(fieldId).style.display = 'block';
+}
+// Media Upload function
+$(document).ready(function () {
+    $('#mediaMessageFileField').on('change', function (event) {
+        console.log("Media message file triggered");
+        const file = event.target.files[0];
+        const userId = $('#formUserId').val();
+        const source = "crm";
+        const confId = "684bd26e5a6a97308dd272c4"; // Default configuration ID
+        const mediaCategory = $('#mediaCategory').val();
+
+        if (!file || !mediaCategory) {
+            alert("No file or media type selected.");
+            return;
+        }
+
+        const fileSizeMB = file.size / (1024 * 1024);
+        const fileType = file.type;
+
+        // ✅ File size validation by media type
+        const sizeLimits = {
+            image: 5,
+            video: 16,
+            audio: 16,
+            document: 100
+        };
+
+        const allowedTypes = {
+            image: ['image/jpeg', 'image/png'],
+            video: ['video/mp4', 'video/3gpp'],
+            audio: ['audio/mpeg', 'audio/ogg'],
+            document: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+        };
+
+        if (fileSizeMB > sizeLimits[mediaCategory]) {
+            alert(`File exceeds maximum size for ${mediaCategory}: ${sizeLimits[mediaCategory]} MB`);
+            return;
+        }
+
+        if (!allowedTypes[mediaCategory].includes(fileType)) {
+            alert(`Invalid file type for ${mediaCategory}. Allowed: ${allowedTypes[mediaCategory].join(', ')}`);
+            return;
+        }
+
+        // Show media preview
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            $('#formMediaUrl').val(e.target.result);
+
+            let previewElement;
+            const src = e.target.result;
+
+            if (mediaCategory === 'image') {
+                previewElement = $(`
+                    <div style="width:50%">
+                        <img src="${src}" width="100%" alt="image" />
+                        <div id="overlay" class="wa-overlay">
+                            <div class="wa-loader" id="loader"></div>
+                        </div>
+                    </div>
+                `);
+            } else if (mediaCategory === 'video') {
+                previewElement = $(`
+                    <div style="width:50%">
+                        <video width="100%" controls muted>
+                            <source src="${src}" type="${fileType}">
+                        </video>
+                        <div id="overlay" class="wa-overlay">
+                            <div class="wa-loader" id="loader"></div>
+                        </div>
+                    </div>
+                `);
+            } else if (mediaCategory === 'audio') {
+                previewElement = $(`
+                    <div style="width:50%">
+                        <audio controls>
+                            <source src="${src}" type="${fileType}">
+                        </audio>
+                        <div id="overlay" class="wa-overlay">
+                            <div class="wa-loader" id="loader"></div>
+                        </div>
+                    </div>
+                `);
+            } else {
+                previewElement = $(`
+                    <div class="doc-preview">
+                        <i class="fa fa-file-pdf-o" style="font-size:40px;"></i>
+                        <p>${file.name}</p>
+                        <div id="overlay" class="wa-overlay">
+                            <div class="wa-loader" id="loader"></div>
+                        </div>
+                    </div>
+                `);
+            }
+
+            previewElement.addClass("uploading-media");
+            $('#chatContainer').append(previewElement);
+            setTimeout(autoScrollToBottom, 50);
+        };
+        reader.readAsDataURL(file);
+
+        // Upload to backend
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('source', source);
+        formData.append('userId', userId);
+        formData.append('configurationId', confId);
+
+        $.ajax({
+            url: waURL + '/api/messages/upload',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#formMediaId').val(data.media_id);
+                $('#overlay').append($('<p class="succ-upload">').text('Upload successful! Click send to deliver.'));
+                $('#loader').hide();
+                $(".uploading-media").css({
+                    border: "4px solid green",
+                    position: "relative",
+                    left: "-30px"
+                });
+            },
+            error: function (error) {
+                $('#overlay').append($('<p class="err-upload">').text('Upload failed, please try again.'));
+                $('#loader').hide();
+                $(".uploading-media").css({
+                    border: "2px solid red",
+                    position: "relative",
+                    left: "-30px"
+                });
+                console.error('Error uploading file:', error.responseJSON);
             }
         });
     });

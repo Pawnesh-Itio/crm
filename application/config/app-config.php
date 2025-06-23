@@ -5,11 +5,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 // Detect if the app is running in a local or live environment
 if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
     // Local environment
-    define('APP_BASE_URL', 'http://localhost/crm-live');
+    define('APP_BASE_URL', 'http://localhost/crm');
     define('APP_DB_HOSTNAME', 'localhost');
     define('APP_DB_USERNAME', 'root');
     define('APP_DB_PASSWORD', '');
     define('APP_DB_NAME', 'xeyso_it_crm_db');
+    define('Whatsapp_Api_Url', 'https://api.whatsapp.xeyso.com');
+    define('Whatsapp_Socket_Url', 'wss://api.whatsapp.xeyso.com');
 } else {
     // Live environment
     define('APP_BASE_URL', 'https://xeyso.com/crm');
@@ -17,6 +19,8 @@ if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
     define('APP_DB_USERNAME', 'xeyso_it_crm_db_user');
     define('APP_DB_PASSWORD', 'wIwMlgkIHayf');
     define('APP_DB_NAME', 'xeyso_it_crm_db');
+    define('Whatsapp_Api_Url', 'https://api.whatsapp.xeyso.com');
+    define('Whatsapp_Socket_Url', 'wss://api.whatsapp.xeyso.com');
 }
 
 /*

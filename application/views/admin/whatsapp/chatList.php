@@ -153,10 +153,10 @@
 // let replyToMessage = null;
 
 // Socket connection
-const URL = "wss://wa-business-api.onrender.com";
-const waURL = "https://wa-business-api.onrender.com";
+const SocketURL = "<?= Whatsapp_Socket_Url ?>";
+const waURL = "<?= Whatsapp_Api_Url ?>";
 const source = "crm";
-const socket = io(URL);
+const socket = io(SocketURL);
 socket.on('connect', () => {
     console.log('Connected to Socket.io server');
 });
