@@ -332,6 +332,13 @@ cursor: pointer;
 .chat-link {
     color: #1e293b;
 }
+.new-chat-badge{
+  background: green;
+  color: white;
+  padding: 2px;
+  border-radius: 3px;
+  box-shadow: black 5px 2px;
+}
 
 .chat-item:hover {
     background-color: #1e293b;
@@ -340,6 +347,11 @@ cursor: pointer;
 }
 .active-chat{
     background-color: #1e293b;
+    color: #ffffff;
+    cursor: pointer;
+}
+.new-chat{
+    background-color: green;
     color: #ffffff;
     cursor: pointer;
 }

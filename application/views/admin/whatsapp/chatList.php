@@ -169,6 +169,11 @@ socket.on('error', (error) => {
 
 </script>
 <script>
+    // Setup global chat list listener
+    $(document).ready(function () {
+        // other code...
+        setupGlobalChatListListener(); //important!
+    });
     // Fetch All Configurations
     $(document).ready(function() {
     $.ajax({
@@ -212,13 +217,23 @@ socket.on('error', (error) => {
                 console.log("Fetched data length:", data.length);
                 console.log("Fetched data:", data);
                 if(data.length > 0){
-                    let chatList = data.map((item, index) => 
-                        `<a class="chat-link">
-                            <li class="chat-item" onclick="getMessage(this, '${item.wa_id}', '${item.wa_name}','${phoneNumberId}')">
-                                ${item.wa_name} (${item.wa_phone_number})
+                    let chatList = data.map((item, index) => {
+                        const lastMsg = item.lastMessage?.message_body || '';
+                            const msgTime = item.lastMessage?.time
+                                            ? formatTime(item.lastMessage.time)
+                                            : '';
+                        const msgPreview = lastMsg.length > 25 ? lastMsg.substring(0, 25) + '...' : lastMsg;
+                        const waName = item.wa_name.length > 10 ? item.wa_name.substring(0, 10) + '...' : item.wa_name;
+                        return `<a class="chat-link">
+                            <li class="chat-item" data-wa-id="${item.wa_id}" onclick="getMessage(this, '${item.wa_id}', '${item.wa_name}','${phoneNumberId}')">
+                                <span style="font-size:14px; font-weight:bold">${waName} (${item.wa_phone_number})</span>
+                                <br>
+                                <small id="msgPre">${msgPreview}</small>
+                                <small class="new-chat-badge" style="display:none;">New</small>
+                                <small style="float:right">${msgTime}</small>
                             </li>
-                        </a>`
-                    ).join(''); // Convert array to a string
+                        </a>`;
+                    }).join('');
                     $('#chatList').html(chatList);
                 }else{
                     let errMessage = `<p class="text-center text-danger">No contact found...</p>`;
@@ -254,6 +269,7 @@ socket.on('error', (error) => {
         // Remove 'active' class from all links
         links.forEach(link => link.classList.remove('active-chat'));
         // Add 'active' class to the clicked link
+        clickedLink.classList.remove('new-chat');
         clickedLink.classList.add('active-chat');
         // Fetch chats
         $.ajax({
@@ -538,18 +554,35 @@ $(document).ready(function() {
                 $('#replyPreview').hide();
                 $('#replyContent').text('');
                 // Handle success (e.g., clear input, display message, etc.)
+                    // Format time (e.g., 4:36 PM)
+                    const formattedTime = new Date(response.time*1000).toLocaleTimeString(undefined, {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                    });
+
+                    let messageDiv;
                 const messageData = response.data.messages[0];
-                if(response.type==1){
+                if(response.type== 1){
                     $('#textMessageField').val(''); // Clear the input after sending
-                    data = '<div id='+messageData.id+' class="sent-message">'+message+'</div>';
+                    messageDiv = $(`<div class="sent-message" id="${messageData.id}">
+                            <div>${message}</div>
+                            <div class="chat-time">${formattedTime}</div>
+                        </div>`);
                 }
                 if(response.type==2){
                     $('#linkMessageField').val(''); // Clear the input after sending
-                    data = '<div id='+messageData.id+' class="sent-message">'+linkMessage+'</div>';
+                        messageDiv = $(`<div class="sent-message" id="${messageData.id}">
+                            <div>${linkMessage}</div>
+                            <div class="chat-time">${formattedTime}</div>
+                        </div>`);
                 }
                 if(response.type==3){
                     $('#templateMessageField').val(''); // Clear the input after sending
-                    data = '<div id='+messageData.id+' class="sent-message">Template</div>';
+                        messageDiv = $(`<div class="sent-message" id="${messageData.id}">
+                            <div>Template</div>
+                            <div class="chat-time">${formattedTime}</div>
+                        </div>`);
                 }
                 if(response.type==4){
                     $('.uploading-media').remove();
@@ -561,14 +594,69 @@ $(document).ready(function() {
                     // Add Message box
                     const mediaPath = formMediaUrl; 
                     const currentCaption = mediaCaption;
-                    data = $('<div style="width:50%"><a href="'+mediaPath+'" target="_blank"><img src="'+mediaPath+'" width="100%" alt="media" /></a><p style="padding-top:10px">'+currentCaption+'</p></div>')
-                    .attr('id', messageData.id) // Set message_id as the id attribute
-                    .addClass("sent-message"); // Optionally add a class for styling
-                 // Append the created message div to the body or a specific parent
+                    console.log("response.category", response.category);
+                    switch (response.category) {
+                        case 'image':
+                            messageDiv = $(
+                                    `<div class="sent-message" id="${messageData.id}" style="width:50%">
+                                        <a href="${mediaPath}" target="_blank"><img src="${mediaPath}" width="100%" /></a>
+                                        <p style="padding-top:10px">${currentCaption || ''}</p>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                                break;
+                        case 'video':
+                            console.log("Video message");
+                            messageDiv = $(
+                                    `<div class="sent-message" id="${messageData.id}" style="width:50%">
+                                        <video width="100%" controls>
+                                            <source src="${mediaPath}" type="video/mp4">
+                                        </video>
+                                        <p style="padding-top:10px">${currentCaption || ''}</p>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                            );
+                            break;
+                        case 'audio':
+                                messageDiv = $(
+                                    `<div class="sent-message" id="${messageData.id}" style="width:50%">
+                                        <audio controls><source src="${mediaPath}" type="audio/mpeg"></audio>
+                                        <p style="padding-top:10px">${currentCaption || ''}</p>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                                break;
+                        case 'document':
+                                const fileName = mediaPath.split('/').pop();
+                                messageDiv = $(
+                                    `<div class="sent-message" id="${messageData.id}" style="width:50%">
+                                        <a href="${mediaPath}" target="_blank">📄 ${fileName}</a>
+                                        <p style="padding-top:10px">${currentCaption || ''}</p>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                                break;
+                        default:
+                                messageDiv = $(
+                                    `<div class="sent-message" id="${messageData.id}" style="width:50%">
+                                        <a href="${mediaPath}" target="_blank">Download Media</a>
+                                        <div class="chat-time">${formattedTime}</div>
+                                    </div>`
+                                );
+                    }
                 }
                 //Appending chat data to UI
-                $('.chat-container').append(data);
+                $('.chat-container').append(messageDiv);
                 // Automatically scroll to the bottom of the chat box
+                const $chatItem = $(`.chat-item[data-wa-id="${to}"]`);
+                // Display Badge
+                const $badge = $chatItem.find(".new-chat-badge");
+                $badge.hide();
+                // Update message preview
+                const shortText = message.slice(0, 30);
+                $chatItem.find("small#msgPre").text(shortText);
+                // Update time
+                $chatItem.find("small").last().text(formattedTime);
                 autoScrollToBottom();
             },
             error: function(error) {
@@ -798,6 +886,69 @@ $(document).on('click', '#cancelReply', function () {
     replyToMessage = null;
     $('#replyPreview').hide();
 });
+
+// Global chat list listener
+function setupGlobalChatListListener() {
+    socket.offAny();
+    socket.onAny((eventName, data) => {
+        if (!eventName.startsWith("chat-")) return;
+
+        const chatId = eventName.replace("chat-", "");
+        const msg = data.messageContentToInsert;
+
+        const shortText = msg.message_body.slice(0, 30);
+        const formattedTime = msg.time
+            ? new Date(msg.time * 1000).toLocaleTimeString(undefined, {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true
+              })
+            : '';
+
+        const $chatItem = $(`.chat-item[data-wa-id="${chatId}"]`);
+
+        if ($chatItem.length) {
+            // Update message preview
+            $chatItem.find("small#msgPre").text(shortText);
+
+            // Update time
+            $chatItem.find("small").last().text(formattedTime);
+            // Display Badge
+            const $badge = $chatItem.find(".new-chat-badge");
+            $badge.show();
+            // Move chat to top
+            $("#chatList").prepend($chatItem);
+        } else {
+            console.warn("Message for new/unloaded chat ID:", chatId);
+        }
+    });
+}
+
+
+
+function formatTime(timestamp) {
+    const date = new Date(timestamp*1000);
+    const now = new Date();
+
+    const isToday = date.toDateString() === now.toDateString();
+
+    const yesterday = new Date();
+    yesterday.setDate(now.getDate() - 1);
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+
+    if (isToday) {
+        // Format as 10:30 AM
+        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    } else if (isYesterday) {
+        return 'Yesterday';
+    } else {
+        // Format as MM/DD/YYYY
+        return (date.getMonth() + 1).toString().padStart(2, '0') + '/' +
+               date.getDate().toString().padStart(2, '0') + '/' +
+               date.getFullYear();
+    }
+}
+
 
 </script>
 </body>
