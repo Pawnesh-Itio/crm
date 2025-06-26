@@ -321,12 +321,12 @@ socket.on('error', (error) => {
                     });
 
                     let messageDiv;
-
+                    const tickIcon = getTickIcon(message.status);
                     if (message.message_content != 4) {
                         messageDiv = $(`<div class="${messageClass}" id="${message.message_id}">
                             <div>${message.message_body}</div>
 
-                            <div class="chat-time">${formattedTime}</div>
+                            <div class="chat-time">${formattedTime} ${tickIcon}</div>
                         </div>`);
                     } else {
                         const mediaPath = waURL + '/' + message?.media_details?.path.replace('\\', '/');
@@ -338,7 +338,7 @@ socket.on('error', (error) => {
                                     `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
                                         <a href="${mediaPath}" target="_blank"><img src="${mediaPath}" width="100%" /></a>
                                         <p style="padding-top:10px">${mediaCaption || ''}</p>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                                 break;
@@ -349,7 +349,7 @@ socket.on('error', (error) => {
                                             <source src="${mediaPath}" type="video/mp4">
                                         </video>
                                         <p style="padding-top:10px">${mediaCaption || ''}</p>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                                 break;
@@ -358,7 +358,7 @@ socket.on('error', (error) => {
                                     `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
                                         <audio controls><source src="${mediaPath}" type="audio/mpeg"></audio>
                                         <p style="padding-top:10px">${mediaCaption || ''}</p>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                                 break;
@@ -368,7 +368,7 @@ socket.on('error', (error) => {
                                     `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
                                         <a href="${mediaPath}" target="_blank">📄 ${fileName}</a>
                                         <p style="padding-top:10px">${mediaCaption || ''}</p>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                                 break;
@@ -376,7 +376,7 @@ socket.on('error', (error) => {
                                 messageDiv = $(
                                     `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
                                         <a href="${mediaPath}" target="_blank">Download Media</a>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                         }
@@ -412,12 +412,12 @@ socket.on('error', (error) => {
             // Ignore messages for other chats
             return;
         }
-	console.log(data);//Checking.
-	var type = data.type;
-	var messageData = data.messageContentToInsert;//getting message body
-	var data ; // Initializing empty variable'
+	var type = data.type;   
 	//Check if message is sent or status
-	if(type=='received'){
+	if(type=='received' && data.messageContentToInsert){
+        console.log("Now you see me");
+        var msgContent ;
+        var messageData = data.messageContentToInsert;//getting message body
         const formattedTime = messageData.time
         ? new Date(messageData.time * 1000).toLocaleTimeString(undefined, {
             hour: 'numeric',
@@ -428,63 +428,78 @@ socket.on('error', (error) => {
 
  
         if(messageData.message_content != 4){
-	    data = '<div id='+messageData.message_id+' class="incoming-message">'+messageData.message_body+'<div class="chat-time">'+formattedTime+'</div></div>';
+	    msgContent = '<div id='+messageData.message_id+' class="incoming-message">'+messageData.message_body+'<div class="chat-time">'+formattedTime+'</div></div>';
 	    //Appending chat data to UI
-	    $('.chat-container').append(data);
+	    $('.chat-container').append(msgContent);
         }else{
 
             switch (messageData.media_type) {
                 case 'image':
-                    data =$(`<div class="incoming-message" id="${messageData.message_id}" style="width:50%">
+                    msgContent =$(`<div class="incoming-message" id="${messageData.message_id}" style="width:50%">
                         <a href="${waURL}/${messageData.media_path.replace('\\', '/')}" target="_blank">
                             <img src="${waURL}/${messageData.media_path.replace('\\', '/')}" width="100%" />
                             <p style="padding-top:10px">${messageData.message_body || ''}</p>
                             <div class="chat-time">${formattedTime}</div>
                         </a>
                             `);
-                            $('.chat-container').append(data);
+                            $('.chat-container').append(msgContent);
                     break;
                 case 'video':
-                    data = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
+                    msgContent = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
                         <video width="100%" controls>
                             <source src="${waURL}/${messageData.media_path.replace('\\', '/')}" type="video/mp4">
                         </video>
                         <p style="padding-top:10px">${messageData.message_body || ''}</p>
                         <div class="chat-time">${formattedTime}</div>`);
-                        $('.chat-container').append(data);
+                        $('.chat-container').append(msgContent);
                     break;
                 case 'audio':
-                    data = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
+                    msgContent = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
                         <audio controls>
                             <source src="${waURL}/${messageData.media_path.replace('\\', '/')}" type="audio/mpeg">
                         </audio>
                         <p style="padding-top:10px">${messageData.message_body || ''}</p>
                         <div class="chat-time">${formattedTime}</div>`);
-                        $('.chat-container').append(data);
+                        $('.chat-container').append(msgContent);
                     break;
                 case 'document':
                     const fileName = messageData.media_path.split('/').pop();
-                    data = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
+                    msgContent = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
                         <a href="${waURL}/${messageData.media_path.replace('\\', '/')}" target="_blank">📄 ${fileName}</a>
                         <p style="padding-top:10px">${messageData.message_body || ''}</p>
                         <div class="chat-time">${formattedTime}</div>`);
-                        $('.chat-container').append(data);
+                        $('.chat-container').append(msgContent);
                     break;
                 default:
-                    data = $(
+                    msgContent = $(
                                 `<div class="incoming-message" id="${messageData.message_id}" style="width:50%">
                                     <a href="${messageData.media_path.replace('\\', '/')}" target="_blank">Download Media</a>
                                     <div class="chat-time">${formattedTime}</div>
                                 </div>`
                             );
-                            $('.chat-container').append(data);
+                            $('.chat-container').append(msgContent);
             }
         }
 	    // Automatically scroll to the bottom of the chat box
         autoScrollToBottom();
-	}else{
-    console.log(data); 
-	}
+	}else if(type=='status' ){
+        const { messageId, status } = data;
+        // Recalculate the tick icon
+        const newTickIcon = getTickIcon(status);
+        
+        // Find the message element
+        const messageElem = $(`[id='${messageId}']`);
+
+        if (messageElem.length) {
+            // Update the tick icon inside the `.chat-time` div
+            const chatTimeDiv = messageElem.find('.chat-time');
+            
+            // Optional: Replace only the icon, keeping the timestamp
+            const parts = chatTimeDiv.html().split(' ');
+            const timeText = parts[0]; // Assuming time and icon are separated by a space
+            chatTimeDiv.html(`${timeText} ${newTickIcon}`);
+        }
+    }
 	});
 }
 // Function to automatically scroll the chat container to the bottom
@@ -499,7 +514,6 @@ $(document).ready(function() {
         e.preventDefault(); // Prevent the default form submission
         // Gather form data
         const selectedPhoneNumberId = $('#confDropdown').val();
-        console.log()
         const source = "crm";
         const userId = $('#formUserId').val();
         const to = $('#formNumber').val();
@@ -563,25 +577,28 @@ $(document).ready(function() {
 
                     let messageDiv;
                 const messageData = response.data.messages[0];
+                const tickIcon = getTickIcon(response.status);
+                
+                console.log("Tick Icon:", tickIcon);
                 if(response.type== 1){
                     $('#textMessageField').val(''); // Clear the input after sending
                     messageDiv = $(`<div class="sent-message" id="${messageData.id}">
                             <div>${message}</div>
-                            <div class="chat-time">${formattedTime}</div>
+                            <div class="chat-time">${formattedTime} ${tickIcon}</div>
                         </div>`);
                 }
                 if(response.type==2){
                     $('#linkMessageField').val(''); // Clear the input after sending
                         messageDiv = $(`<div class="sent-message" id="${messageData.id}">
                             <div>${linkMessage}</div>
-                            <div class="chat-time">${formattedTime}</div>
+                            <div class="chat-time">${formattedTime} ${tickIcon}</div>
                         </div>`);
                 }
                 if(response.type==3){
                     $('#templateMessageField').val(''); // Clear the input after sending
                         messageDiv = $(`<div class="sent-message" id="${messageData.id}">
                             <div>Template</div>
-                            <div class="chat-time">${formattedTime}</div>
+                            <div class="chat-time">${formattedTime} ${tickIcon}</div>
                         </div>`);
                 }
                 if(response.type==4){
@@ -601,7 +618,7 @@ $(document).ready(function() {
                                     `<div class="sent-message" id="${messageData.id}" style="width:50%">
                                         <a href="${mediaPath}" target="_blank"><img src="${mediaPath}" width="100%" /></a>
                                         <p style="padding-top:10px">${currentCaption || ''}</p>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                                 break;
@@ -613,7 +630,7 @@ $(document).ready(function() {
                                             <source src="${mediaPath}" type="video/mp4">
                                         </video>
                                         <p style="padding-top:10px">${currentCaption || ''}</p>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                             );
                             break;
@@ -622,7 +639,7 @@ $(document).ready(function() {
                                     `<div class="sent-message" id="${messageData.id}" style="width:50%">
                                         <audio controls><source src="${mediaPath}" type="audio/mpeg"></audio>
                                         <p style="padding-top:10px">${currentCaption || ''}</p>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                                 break;
@@ -632,7 +649,7 @@ $(document).ready(function() {
                                     `<div class="sent-message" id="${messageData.id}" style="width:50%">
                                         <a href="${mediaPath}" target="_blank">📄 ${fileName}</a>
                                         <p style="padding-top:10px">${currentCaption || ''}</p>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                                 break;
@@ -640,7 +657,7 @@ $(document).ready(function() {
                                 messageDiv = $(
                                     `<div class="sent-message" id="${messageData.id}" style="width:50%">
                                         <a href="${mediaPath}" target="_blank">Download Media</a>
-                                        <div class="chat-time">${formattedTime}</div>
+                                        <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
                     }
@@ -657,6 +674,8 @@ $(document).ready(function() {
                 $chatItem.find("small#msgPre").text(shortText);
                 // Update time
                 $chatItem.find("small").last().text(formattedTime);
+                // Move chat to top
+                    $("#chatList").prepend($chatItem);
                 autoScrollToBottom();
             },
             error: function(error) {
@@ -894,6 +913,11 @@ function setupGlobalChatListListener() {
         if (!eventName.startsWith("chat-")) return;
 
         const chatId = eventName.replace("chat-", "");
+        // Only handle if it's a proper received message with content
+        if (!data.messageContentToInsert || typeof data.messageContentToInsert.message_body !== 'string') {
+            console.warn("Skipped non-text or status message:", data);
+            return;
+        }
         const msg = data.messageContentToInsert;
 
         const shortText = msg.message_body.slice(0, 30);
@@ -946,6 +970,18 @@ function formatTime(timestamp) {
         return (date.getMonth() + 1).toString().padStart(2, '0') + '/' +
                date.getDate().toString().padStart(2, '0') + '/' +
                date.getFullYear();
+    }
+}
+function getTickIcon(status) {
+    switch (status) {
+        case "sent":
+            return '<i class="fas fa-check" style="color:gray;"></i>'; // Single tick
+        case "delivered":
+            return '<i class="fas fa-check-double" style="color:gray;"></i>'; // Double tick
+        case "read":
+            return '<i class="fas fa-check-double" style="color:blue;"></i>'; // Double blue tick
+        default:
+            return ''; // No tick (unsent or unknown status)
     }
 }
 
