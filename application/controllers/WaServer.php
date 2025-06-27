@@ -6,7 +6,8 @@ class WaServer extends CI_Controller
     {
         $this->load->model('leads_model');
         $log = []; // array to collect logs
-
+        $log['controller'] = 'WaServer';
+        $this->write_log($log);
         try {
             $log['timestamp'] = date('Y-m-d H:i:s');
             $log['method'] = $this->input->method();
@@ -15,10 +16,12 @@ class WaServer extends CI_Controller
             $log['raw_post'] = file_get_contents('php://input');
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $log['request_method'] = 'POST';
 
                 $data = $this->input->post();
                 $log['parsed_post'] = $data;
-                if(isset($data['type']) && $data['type']===1){
+                $this->write_log($log);
+                if(isset($data['type']) && $data['type']==1){
                 // Validate required fields
                 if (!isset($data['timestamp'], $data['name'], $data['from'])) {
                     $log['error'] = 'Missing required POST fields.';
@@ -60,8 +63,11 @@ class WaServer extends CI_Controller
                     ->set_content_type('application/json')
                     ->set_status_header(200)
                     ->set_output(json_encode($response));
-            }else if(isset($data['type']) && $data['type']===2){
+            }else if(isset($data['type']) && $data['type']==2){
+               $log['Condition'] = 'Type 2';
                 $log['type'] = $data['type'];
+                $log['from'] = $data['from'];
+                $this->write_log($log);
                 if($data['from']){
                     $log['from'] = $data['from'];
                     $lead_record = $this->lead_model->get_lead_by_number($data['from']);
