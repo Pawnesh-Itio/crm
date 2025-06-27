@@ -2374,6 +2374,6 @@ foreach ($data as $key => $value) {
     {
         $this->db->where('CONCAT(country_code, phonenumber)', $number);
         $this->db->limit(1);
-        return $this->db->get('leads')->row();
+        return $this->db->get(db_prefix().'leads')->row();
     }
 }
