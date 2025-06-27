@@ -80,7 +80,26 @@ class WaServer extends CI_Controller
                                 $log['LeadID'] = $lead_record->id;
                                 $log['before_logging activity'] = "Before logging activity";
                                  $this->write_log($log);
-                                $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New_Message", false,"","whatsapp");
+                                //  switch case for message type
+                                $message_type = isset($data['message_type']) ? $data['message_type'] : 'text';
+                                switch ($message_type) {
+                                    case 'text':
+                                        $message = isset($data['message']) ? $data['message'] : '';
+                                        break;
+                                    case 'image':
+                                        $message = 'Image message received...';
+                                        break;
+                                    case 'video':
+                                        $message = 'Video message received...';
+                                        break;
+                                    case 'audio':
+                                        $message = 'Audio message received...';
+                                        break;
+                                    default:
+                                        $message = '';
+                                }
+                                
+                                $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New Message: "+$message, false,"","whatsapp");
                                 $log['after_logging activity'] = "After logging activity";
                                 $log['activity_log'] = $SaveLog;
                                 $this->write_log($log);
