@@ -1178,15 +1178,29 @@ class Leads_model extends App_Model
      * @param  mixed  $id          lead id
      * @param  string  $description activity description
      */
-    public function log_lead_activity($id, $description, $integration = false, $additional_data = '')
+    public function log_lead_activity($id, $description, $integration = false, $additional_data = '',$type='')
         {
             $log = [];
 
             $log['log_lead_activity'] = "Inside log_lead_activity function";
             $this->write_log($log);
-
-            $staff_id = function_exists('get_staff_user_id') ? get_staff_user_id() : 0;
-            $staff_name = $staff_id ? get_staff_full_name($staff_id) : '[Webhook]';
+            $recordExistFlag = 0;
+            if($type=="whatsapp"){
+                $staff_id =0;
+                $staff_name="[Whatsapp]";
+                // Check if similar record exists in last 24 hours
+                $this->db->where('leadid', $id);
+                $this->db->where('full_name', '[Whatsapp]');
+                $this->db->where('date >', date('Y-m-d H:i:s', strtotime('-24 hours')));
+                $this->db->limit(1);
+                $existing = $this->db->get(db_prefix() . 'lead_activity_log')->row();
+                if ($existing) {
+                    $recordExistFlag = 1; // Don't insert
+                }
+            }else{
+                $staff_id = get_staff_user_id();
+                $staff_name = get_staff_full_name($staff_id);
+            }
 
             $log = [
                 'date'            => date('Y-m-d H:i:s'),
@@ -1196,15 +1210,18 @@ class Leads_model extends App_Model
                 'additional_data' => $additional_data,
                 'full_name'       => $integration ? '[CRON]' : $staff_name,
             ];
+            if($recordExistFlag==0){
+                $this->db->insert(db_prefix() . 'lead_activity_log', $log);
 
-            $this->db->insert(db_prefix() . 'lead_activity_log', $log);
+                $insertedId = $this->db->insert_id();
+                $debugLog['activity_log_insert_id'] = $insertedId;
+                $debugLog['db_error'] = $this->db->error();
+                $this->write_log($debugLog);
 
-            $insertedId = $this->db->insert_id();
-            $debugLog['activity_log_insert_id'] = $insertedId;
-            $debugLog['db_error'] = $this->db->error();
-            $this->write_log($debugLog);
-
-            return $insertedId;
+                return $insertedId;
+            }else{
+                return true;
+            }
         }
 
 
