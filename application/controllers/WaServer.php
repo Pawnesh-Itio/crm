@@ -61,10 +61,15 @@ class WaServer extends CI_Controller
                     ->set_status_header(200)
                     ->set_output(json_encode($response));
             }else if(isset($data['type']) && $data['type']===2){
+                $log['type'] = $data['type'];
                 if($data['from']){
+                    $log['from'] = $data['from'];
                     $lead_record = $this->lead_model->get_lead_by_number($data['from']);
+                     $log['lead_record'] = $lead_record ? $lead_record->id : null;
                     if($lead_record){
+                        $log['lead_found'] = true;
                         $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New_Message", false);
+                        $log['activity_log'] = $SaveLog;
                     }
                 }
             }
