@@ -79,12 +79,13 @@ class WaServer extends CI_Controller
                                 $log['lead_found'] = true;
                                 $log['LeadID'] = $lead_record->id;
                                 $log['before_logging activity'] = "Before logging activity";
+                                $log['message'] = isset($data['text']) ? $data['text'] : '';
                                  $this->write_log($log);
                                 //  switch case for message type
                                 $message_type = isset($data['message_type']) ? $data['message_type'] : 'text';
                                 switch ($message_type) {
                                     case 'text':
-                                        $message = isset($data['message']) ? $data['message'] : '';
+                                        $message = isset($data['text']) ? $data['text'] : '';
                                         break;
                                     case 'image':
                                         $message = 'Image message received...';
