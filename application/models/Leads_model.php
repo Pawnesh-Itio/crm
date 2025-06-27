@@ -1235,7 +1235,7 @@ class Leads_model extends App_Model
                     'fromuserid'      => 0, // or get_staff_user_id() if needed
                     'link'            => 'leads/index/' . $lead_id,
                     'additional_data' => serialize([$name, $message]),
-                    'dateadded'       => date('Y-m-d H:i:s'),
+                    'date'       => date('Y-m-d H:i:s'),
                 ];
 
                 $inserted = $this->db->insert(db_prefix() . 'notifications', $notificationData);
