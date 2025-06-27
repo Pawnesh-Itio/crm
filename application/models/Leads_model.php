@@ -2371,9 +2371,10 @@ foreach ($data as $key => $value) {
         }
     }
     public function get_lead_by_number($number)
-    {
-        $this->db->where('CONCAT(country_code, phonenumber)', $number);
-        $this->db->limit(1);
-        return $this->db->get(db_prefix().'leads')->row();
-    }
+        {
+            $this->db->where("CONCAT(country_code, phonenumber) = '$number'", null, false);
+            $this->db->limit(1);
+            return $this->db->get(db_prefix() . 'leads')->row();
+        }
+
 }
