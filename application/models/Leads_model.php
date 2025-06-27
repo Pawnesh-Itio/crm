@@ -1230,7 +1230,7 @@ class Leads_model extends App_Model
                 $this->write_log($log);
 
                 $notificationData = [
-                    'description'     => $message,
+                    'description'     => "New Message: ".$message,
                     'touserid'        => $assigned,
                     'fromuserid'      => 0, // or get_staff_user_id() if needed
                     'link'            => 'leads/index/' . $lead_id,
