@@ -114,7 +114,7 @@
                                                                 </span>
                                                                 <!-- Container for the fields -->
                                                                     <!-- Default Text Message Field (shown by default) -->
-                                                                    <input type="text" class="form-control message-field message-input" id="textMessageField" placeholder="Type a message..." style="display: block;">
+                                                                    <textarea type="text" rows="1" class="form-control message-field message-input" id="textMessageField" placeholder="Type a message..." style="display: block;"></textarea>
                                                                     <!-- Media Message Field (hidden by default) -->
                                                                     <input type="file" id="mediaMessageFileField" style="display:none">
                                                                     <input type="text" id="mediaMessageCaptionField" class="form-control message-field message-input"placeholder="Media Caption" style="display:none">

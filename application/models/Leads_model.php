@@ -1223,6 +1223,26 @@ class Leads_model extends App_Model
                 return true;
             }
         }
+        public function notificationNewMessage($lead_id, $name, $assigned, $message)
+        {
+            $log = [];
+            $log['notificationNewMessage'] = "Inside notificationNewMessage function";
+            $this->write_log($log);
+            if ($lead) {
+                $notified = add_notification([
+                    'description'     => $message,
+                    'touserid'        => $assigned,
+                    'additional_data' => serialize([
+                        $name,
+                        $message,
+                        $type,
+                    ]),
+                ]);
+                if ($notified) {
+                    pusher_trigger_notification([$lead->addedfrom]);
+                }
+            }
+        }
 
 
     /**

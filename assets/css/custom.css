@@ -289,6 +289,7 @@ cursor: pointer;
 
 .wa-drop-btn{
     padding: 15px !important;
+    height: 70px !important;
 }
 .media-input{
     padding: 25px !important;
