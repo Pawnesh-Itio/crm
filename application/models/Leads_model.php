@@ -2374,7 +2374,15 @@ foreach ($data as $key => $value) {
         {
             $this->db->where("CONCAT(country_code, phonenumber) = '$number'", null, false);
             $this->db->limit(1);
+            $log['lead_record_model'] = $this->db->get(db_prefix() . 'leads')->row();
+            $this->write_log($log);
             return $this->db->get(db_prefix() . 'leads')->row();
         }
+    private function write_log($logArray)
+    {
+        $logText = json_encode($logArray, JSON_PRETTY_PRINT);
+        $logFile = APPPATH . 'logs/wa_server_log_' . date('Y-m-d') . '.log';
+        file_put_contents($logFile, $logText . PHP_EOL . str_repeat('-', 100) . PHP_EOL, FILE_APPEND);
+    }
 
 }
