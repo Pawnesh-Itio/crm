@@ -1320,9 +1320,7 @@ $(document).ready(function () {
     socket.on("whatsapp:new_message", function (data) {
     let phone = data.leadPhoneNumber || "";
 
-    // Extract last 10 digits only
-    const localPhone = phone.replace(/\D/g, '').slice(-10);
-    console.log("Local Phone:", localPhone);
+    const localPhone = phone;
 
     // Match using the data-local-phone attribute
     const $row = $(`tr[data-phone="${localPhone}"]`);
