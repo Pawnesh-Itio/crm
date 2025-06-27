@@ -1179,30 +1179,34 @@ class Leads_model extends App_Model
      * @param  string  $description activity description
      */
     public function log_lead_activity($id, $description, $integration = false, $additional_data = '')
-    {
-         $log['log_lead_activity'] = "Inside log_lead_activity function";
-         $this->write_log($log);
-        $log = [
-            'date'            => date('Y-m-d H:i:s'),
-            'description'     => $description,
-            'leadid'          => $id,
-            'staffid'         => get_staff_user_id(),
-            'additional_data' => $additional_data,
-            'full_name'       => get_staff_full_name(get_staff_user_id()),
-        ];
-        if ($integration == true) {
-            $log['staffid']   = 0;
-            $log['full_name'] = '[CRON]';
+        {
+            $log = [];
+
+            $log['log_lead_activity'] = "Inside log_lead_activity function";
+            $this->write_log($log);
+
+            $staff_id = function_exists('get_staff_user_id') ? get_staff_user_id() : 0;
+            $staff_name = $staff_id ? get_staff_full_name($staff_id) : '[Webhook]';
+
+            $log = [
+                'date'            => date('Y-m-d H:i:s'),
+                'description'     => $description,
+                'leadid'          => $id,
+                'staffid'         => $integration ? 0 : $staff_id,
+                'additional_data' => $additional_data,
+                'full_name'       => $integration ? '[CRON]' : $staff_name,
+            ];
+
+            $this->db->insert(db_prefix() . 'lead_activity_log', $log);
+
+            $insertedId = $this->db->insert_id();
+            $debugLog['activity_log_insert_id'] = $insertedId;
+            $debugLog['db_error'] = $this->db->error();
+            $this->write_log($debugLog);
+
+            return $insertedId;
         }
 
-        $this->db->insert(db_prefix() . 'lead_activity_log', $log);
-        $insertedId = $this->db->insert_id();
-        $debugLog['activity_log_insert_id'] = $insertedId;
-        $debugLog['db_error'] = $this->db->error(); // Check for DB errors
-
-        $this->write_log($debugLog);
-        return $insertedId;
-    }
 
     /**
      * Get email integration config
