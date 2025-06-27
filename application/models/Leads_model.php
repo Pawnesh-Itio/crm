@@ -1228,7 +1228,6 @@ class Leads_model extends App_Model
             $log = [];
             $log['notificationNewMessage'] = "Inside notificationNewMessage function";
             $this->write_log($log);
-            if ($lead) {
                 $notified = add_notification([
                     'description'     => $message,
                     'touserid'        => $assigned,
@@ -1239,9 +1238,12 @@ class Leads_model extends App_Model
                     ]),
                 ]);
                 if ($notified) {
-                    pusher_trigger_notification([$lead->addedfrom]);
+                    $this->db->insert(db_prefix() . 'lead_activity_log', $log);
+                    $insertedId = $this->db->insert_id();
+                    return $insertedId;
+                }else{
+                    return false;
                 }
-            }
         }
 
 
