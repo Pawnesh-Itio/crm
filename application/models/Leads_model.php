@@ -1196,8 +1196,12 @@ class Leads_model extends App_Model
         }
 
         $this->db->insert(db_prefix() . 'lead_activity_log', $log);
+        $insertedId = $this->db->insert_id();
+        $debugLog['activity_log_insert_id'] = $insertedId;
+        $debugLog['db_error'] = $this->db->error(); // Check for DB errors
 
-        return $this->db->insert_id();
+        $this->write_log($debugLog);
+        return $insertedId;
     }
 
     /**
