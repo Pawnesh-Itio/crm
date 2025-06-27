@@ -73,24 +73,20 @@ class WaServer extends CI_Controller
                     $this->write_log($log);
 
                     if (!empty($data['from'])) {
-                          $log['Inside_form'] = $data['from']." Inside Form ";
-                        $this->write_log($log);
                         try {
                             $lead_record = $this->leads_model->get_lead_by_number($data['from']);
-                            $log['lead_record'] = $lead_record;
-
                             if ($lead_record) {
                                 $log['lead_found'] = true;
                                 $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New_Message", false);
                                 $log['activity_log'] = $SaveLog;
                             } else {
                                 $log['lead_found'] = false;
+                                $this->write_log($log);
                             }
                         } catch (Exception $e) {
                             $log['exception'] = $e->getMessage();
+                            $this->write_log($log);
                         }
-
-                        $this->write_log($log);
                     } else {
                         $log['error'] = 'Missing `from` value in Type 2 request.';
                         $this->write_log($log);
