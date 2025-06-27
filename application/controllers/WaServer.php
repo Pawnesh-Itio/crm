@@ -74,7 +74,7 @@ class WaServer extends CI_Controller
 
                     if (!empty($data['from'])) {
                         try {
-                            $lead_record = $this->lead_model->get_lead_by_number($data['from']);
+                            $lead_record = $this->leads_model->get_lead_by_number($data['from']);
                             $log['lead_record'] = $lead_record;
 
                             if ($lead_record) {
