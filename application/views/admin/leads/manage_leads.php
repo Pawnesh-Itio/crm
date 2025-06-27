@@ -1315,6 +1315,34 @@ $(document).ready(function () {
         });
     });
 });
+$(document).ready(function () {
+    socket.off("whatsapp:new_message");
+    socket.on("whatsapp:new_message", function (data) {
+    let phone = data.leadPhoneNumber || "";
+
+    // Extract last 10 digits only
+    const localPhone = phone.replace(/\D/g, '').slice(-10);
+    console.log("Local Phone:", localPhone);
+
+    // Match using the data-local-phone attribute
+    const $row = $(`tr[data-phone="${localPhone}"]`);
+
+    if ($row.length) {
+        const $btnCol = $row.find('td').eq(2); ;
+        console.log("Button Column:", $btnCol);
+
+        const iconId = `wa-indicator-${localPhone}`;
+        if (!$(`#${iconId}`).length) {
+            $btnCol.append(`
+                <span id="${iconId}" title="New WhatsApp Message" style="margin-left:5px;">
+                    <i class="fa-brands fa-whatsapp text-success fa-bounce"></i>
+                </span>
+            `);
+        }
+
+    }
+    });
+});
 </script>
 </body>
 </html>

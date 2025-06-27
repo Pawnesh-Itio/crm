@@ -2355,23 +2355,25 @@ foreach ($data as $key => $value) {
    }
    
    function lead_reminder($last_status_change){
+        $currentdate=date("Y-m-d H:i:s");
+        $date1 = new DateTime($last_status_change);
+        $date2 = new DateTime($currentdate);
 
-$currentdate=date("Y-m-d H:i:s");
-$date1 = new DateTime($last_status_change);
-$date2 = new DateTime($currentdate);
+        $timestamp1 = $date1->getTimestamp();
+        $timestamp2 = $date2->getTimestamp();
 
-$timestamp1 = $date1->getTimestamp();
-$timestamp2 = $date2->getTimestamp();
-
-$diffInSeconds = abs($timestamp2 - $timestamp1); // absolute difference
-$diffInHours = round($diffInSeconds / 3600);
- if($diffInHours > 24){
- return '<i class="fa-solid fa-clock text-danger fa-fade" title="Not Update from last '. $diffInHours.' hours"></i>';
- }else{
- return '<i class="fa-solid fa-clock text-warning" title="In Progress"></i>';
- }
-
-
-
-}
+        $diffInSeconds = abs($timestamp2 - $timestamp1); // absolute difference
+        $diffInHours = round($diffInSeconds / 3600);
+        if($diffInHours > 24){
+        return '<i class="fa-solid fa-clock text-danger fa-fade" title="Not Update from last '. $diffInHours.' hours"></i>';
+        }else{
+        return '<i class="fa-solid fa-clock text-warning" title="In Progress"></i>';
+        }
+    }
+    public function get_lead_by_number($number)
+    {
+        $this->db->where('phonenumber', $number);
+        $this->db->limit(1);
+        return $this->db->get('leads')->row();
+    }
 }

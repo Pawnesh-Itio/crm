@@ -6,6 +6,17 @@
     color: #666;
     font-size: 13px;
 }
+.highlighted {
+    background-color: #fffa91 !important;
+    transition: background-color 0.5s ease;
+}
+.reply-preview {
+  padding:5px 10px;
+  border-left:3px solid #007bff;
+  margin-bottom:5px;font-size:12px;
+  cursor:pointer
+}
+
 
 .chat-time {
     text-align: right;

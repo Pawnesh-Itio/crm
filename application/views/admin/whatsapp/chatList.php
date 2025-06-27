@@ -90,7 +90,7 @@
                                                 <input type="hidden" id="ContactType" value="Regular">
                                                 <input type="hidden" id="confId">
                                                 <input type="hidden" id="mediaCategory" name="mediaCategory">
-                                                <!-- <input type="hidden" id="replyToMessageId" value=""> -->
+                                                <input type="hidden" id="replyToMessageId" value="">
 
                                                 <div class="message-input">
                                                     <div class="row">
@@ -285,105 +285,125 @@ socket.on('error', (error) => {
             // Add Messages to chat box.
                let lastDateGroup = null;
 
-                data.messages.forEach(function (message) {
+               data.messages.forEach(function (message) {
                     const messageClass = message.message_type === 'received' ? 'incoming-message' : 'sent-message';
 
-                    // Format the date
-                    const msgDate = new Date((message.time || message.createdAt) * 1000); // assuming `time` is Unix timestamp in seconds
-                    const today = new Date();
-                    const yesterday = new Date();
-                    yesterday.setDate(today.getDate() - 1);
-
-                    const isToday = msgDate.toDateString() === today.toDateString();
-                    const isYesterday = msgDate.toDateString() === yesterday.toDateString();
-
-                    let dateLabel;
-                    if (isToday) {
-                        dateLabel = 'Today';
-                    } else if (isYesterday) {
-                        dateLabel = 'Yesterday';
-                    } else {
-                        dateLabel = msgDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-                    }
-
-                    // Insert date label if group has changed
-                    if (lastDateGroup !== dateLabel) {
-                        const dateDivider = $(`<div class="chat-date-divider">${dateLabel}</div>`);
-                        $('#chatContainer').append(dateDivider);
-                        lastDateGroup = dateLabel;
-                    }
-
-                    // Format time (e.g., 4:36 PM)
+                    // Format time
+                    const msgDate = new Date((message.time || new Date(message.createdAt).getTime()) * 1000);
                     const formattedTime = msgDate.toLocaleTimeString(undefined, {
                         hour: 'numeric',
                         minute: '2-digit',
                         hour12: true
                     });
 
-                    let messageDiv;
                     const tickIcon = getTickIcon(message.status);
-                    if (message.message_content != 4) {
-                        messageDiv = $(`<div class="${messageClass}" id="${message.message_id}">
-                            <div>${message.message_body}</div>
 
-                            <div class="chat-time">${formattedTime} ${tickIcon}</div>
-                        </div>`);
+                    // Reply Preview
+                    let replyPreview = '';
+                    if (message.replied_message) {
+                        const originalMsg = message.replied_message;
+                        const sender = originalMsg.message_type === 'sent' ? 'You' : 'Contact';
+                        let previewText = '';
+
+                        switch (originalMsg.message_content) {
+                            case "1":
+                                previewText = originalMsg.message_body?.slice(0, 50) || '[Text]';
+                                break;
+                            case "2":
+                            case "4":
+                                previewText = `[${originalMsg.media_type?.toUpperCase() || 'Media'} message]`;
+                                break;
+                            default:
+                                previewText = '[Message]';
+                        }
+
+                        replyPreview = `
+                            <div class="reply-preview" data-scroll-id="${originalMsg.message_id}">
+                                <strong>${sender}:</strong> ${previewText}
+                            </div>
+                        `;
+                    }
+
+                    let messageDiv;
+
+                    if (message.message_content != 4) {
+                        // Text messages
+                        messageDiv = $(`
+                            <div class="${messageClass}" id="${message.message_id}">
+                                ${replyPreview}
+                                <div>${message.message_body}</div>
+                                <a class="reply-btn" 
+                                    data-reply-id="${message.message_id}" 
+                                    data-message-body="${message.message_body}"
+                                    style="margin-top:5px;font-size:12px">
+                                   <i class="fa fa-reply" aria-hidden="true"></i>
+                                </a>
+                                <div class="chat-time">${formattedTime} ${message.message_type === 'sent' ? tickIcon : ''}</div>
+                            </div>
+                        `);
                     } else {
+                        // Media messages
                         const mediaPath = waURL + '/' + message?.media_details?.path.replace('\\', '/');
                         const mediaCaption = message.message_body;
 
                         switch (message.media_type) {
                             case 'image':
-                                messageDiv = $(
-                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                messageDiv = $(`
+                                    <div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        ${replyPreview}
                                         <a href="${mediaPath}" target="_blank"><img src="${mediaPath}" width="100%" /></a>
                                         <p style="padding-top:10px">${mediaCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
-                                    </div>`
-                                );
+                                    </div>
+                                `);
                                 break;
                             case 'video':
-                                messageDiv = $(
-                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                messageDiv = $(`
+                                    <div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        ${replyPreview}
                                         <video width="100%" controls>
                                             <source src="${mediaPath}" type="video/mp4">
                                         </video>
                                         <p style="padding-top:10px">${mediaCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
-                                    </div>`
-                                );
+                                    </div>
+                                `);
                                 break;
                             case 'audio':
-                                messageDiv = $(
-                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                messageDiv = $(`
+                                    <div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        ${replyPreview}
                                         <audio controls><source src="${mediaPath}" type="audio/mpeg"></audio>
                                         <p style="padding-top:10px">${mediaCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
-                                    </div>`
-                                );
+                                    </div>
+                                `);
                                 break;
                             case 'document':
                                 const fileName = mediaPath.split('/').pop();
-                                messageDiv = $(
-                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                messageDiv = $(`
+                                    <div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        ${replyPreview}
                                         <a href="${mediaPath}" target="_blank">📄 ${fileName}</a>
                                         <p style="padding-top:10px">${mediaCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
-                                    </div>`
-                                );
+                                    </div>
+                                `);
                                 break;
                             default:
-                                messageDiv = $(
-                                    `<div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                messageDiv = $(`
+                                    <div class="${messageClass}" id="${message.message_id}" style="width:50%">
+                                        ${replyPreview}
                                         <a href="${mediaPath}" target="_blank">Download Media</a>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
-                                    </div>`
-                                );
+                                    </div>
+                                `);
                         }
                     }
 
                     $('#chatContainer').append(messageDiv);
                 });
+
 
             autoScrollToBottom();
             // Add realtime incomming messages.
@@ -402,7 +422,7 @@ socket.on('error', (error) => {
 </script>
 <script>
     // Incomming messages socket
-    function setupChatSocketListener(chatId){
+function setupChatSocketListener(chatId){
     console.log("Setting up socket listener for chatId:", chatId);
         activeChatId = chatId; // Track the active chat
 	// Remove any exisiting listener before adding new one
@@ -527,7 +547,7 @@ $(document).ready(function() {
         const formMediaUrl = $('#formMediaUrl').val();
         const contactType = $('#ContactType').val();
         const confID = $('#confId').val();
-        // const replyToMessageId = $('#replyToMessageId').val();
+        const replyToMessageId = $('#replyToMessageId').val();
         // SendMessage Payload
         const sendPayload = {
             userId: userId,
@@ -553,9 +573,9 @@ $(document).ready(function() {
             sendPayload.caption = mediaCaption;
             }
         }
-        // if(replyToMessageId){
-        //     sendPayload.reply_to_message_id = replyToMessageId; 
-        // }
+        if(replyToMessageId){
+            sendPayload.reply_to_message_id = replyToMessageId; 
+        }
         // Send the data via AJAX
         $.ajax({
             type: 'POST',
@@ -985,6 +1005,20 @@ function getTickIcon(status) {
     }
 }
 
+$(document).on('click', '.reply-preview', function () {
+    const targetMessageId = $(this).data('scroll-id');
+    const targetElement = document.getElementById(targetMessageId);
+    
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Highlight
+        $(targetElement).addClass('highlighted');
+        setTimeout(() => {
+            $(targetElement).removeClass('highlighted');
+        }, 1500);
+    }
+});
 
 </script>
 </body>

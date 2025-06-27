@@ -18,7 +18,7 @@ class WaServer extends CI_Controller
 
                 $data = $this->input->post();
                 $log['parsed_post'] = $data;
-
+                if(isset($data['type']) && $data['type']===1){
                 // Validate required fields
                 if (!isset($data['timestamp'], $data['name'], $data['from'])) {
                     $log['error'] = 'Missing required POST fields.';
@@ -60,6 +60,14 @@ class WaServer extends CI_Controller
                     ->set_content_type('application/json')
                     ->set_status_header(200)
                     ->set_output(json_encode($response));
+            }else if(isset($data['type']) && $data['type']===2){
+                if($data['from']){
+                    $lead_record = $this->lead_model->get_lead_by_number($data['from']);
+                    if($lead_record){
+                        $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New_Message", false);
+                    }
+                }
+            }
             } else {
                 $log['error'] = 'Invalid request method.';
                 $this->write_log($log);
