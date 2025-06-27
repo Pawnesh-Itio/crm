@@ -1180,6 +1180,8 @@ class Leads_model extends App_Model
      */
     public function log_lead_activity($id, $description, $integration = false, $additional_data = '')
     {
+         $log['log_lead_activity'] = "Inside log_lead_activity function";
+         $this->write_log($log);
         $log = [
             'date'            => date('Y-m-d H:i:s'),
             'description'     => $description,
