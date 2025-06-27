@@ -70,6 +70,7 @@ class WaServer extends CI_Controller
                 $this->write_log($log);
                 if($data['from']){
                     $log['Inside_form'] = $data['from'];
+                      $this->write_log($log);
                     $lead_record = $this->lead_model->get_lead_by_number($data['from']);
                      $log['lead_record'] = $lead_record;
                      $this->write_log($log);
