@@ -72,6 +72,7 @@ class WaServer extends CI_Controller
                         $log['activity_log'] = $SaveLog;
                     }
                 }
+                 $this->write_log($log);
             }
             } else {
                 $log['error'] = 'Invalid request method.';
