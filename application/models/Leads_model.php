@@ -1233,8 +1233,7 @@ class Leads_model extends App_Model
                     'touserid'        => $assigned,
                     'additional_data' => serialize([
                         $name,
-                        $message,
-                        $type,
+                        $message
                     ]),
                 ]);
                 if ($notified) {
