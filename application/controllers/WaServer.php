@@ -100,7 +100,7 @@ class WaServer extends CI_Controller
                                         $message = '';
                                 }
                                 
-                                $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New Message: "+$message, false,"","whatsapp");
+                                $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New Message: ".$message, false,"","whatsapp");
                                 $log['after_logging activity'] = "After logging activity";
                                 $log['activity_log'] = $SaveLog;
                                 $this->write_log($log);
