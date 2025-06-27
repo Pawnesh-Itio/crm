@@ -1223,28 +1223,34 @@ class Leads_model extends App_Model
                 return true;
             }
         }
-        public function notificationNewMessage($lead_id, $name, $assigned, $message)
-        {
-            $log = [];
-            $log['notificationNewMessage'] = "Inside notificationNewMessage function";
-            $this->write_log($log);
-                $notified = add_notification([
+       public function notificationNewMessage($lead_id, $name, $assigned, $message)
+            {
+                $log = [];
+                $log['notificationNewMessage'] = "Inside notificationNewMessage function";
+                $this->write_log($log);
+
+                $notificationData = [
                     'description'     => $message,
                     'touserid'        => $assigned,
-                    'additional_data' => serialize([
-                        $name,
-                        $message
-                    ]),
-                ]);
-                if ($notified) {
-                    $this->db->insert(db_prefix() . 'lead_activity_log', $log);
+                    'fromuserid'      => 0, // or get_staff_user_id() if needed
+                    'link'            => 'leads/index/' . $lead_id,
+                    'additional_data' => serialize([$name, $message]),
+                    'dateadded'       => date('Y-m-d H:i:s'),
+                ];
+
+                $inserted = $this->db->insert(db_prefix() . 'notifications', $notificationData);
+
+                if ($inserted) {
                     $insertedId = $this->db->insert_id();
+                    $log['notification_inserted_id'] = $insertedId;
+                    $this->write_log($log);
                     return $insertedId;
-                }else{
+                } else {
+                    $log['notification_failed'] = $this->db->error();
+                    $this->write_log($log);
                     return false;
                 }
-        }
-
+            }
 
     /**
      * Get email integration config
