@@ -116,6 +116,7 @@ return App_table::find('leads')
             db_prefix() . 'leads.email as email',
             db_prefix() . 'leads.hash as hash',
             db_prefix() . 'leads.phonenumber as phonenumber',
+             db_prefix() .'leads.country_code as country_code',
 			db_prefix() . 'leads.website as website',
 			db_prefix() . 'leads.BusinessNature as BusinessNature',
 			db_prefix() . 'leads.last_status_change as last_status_change',
@@ -417,9 +418,9 @@ return App_table::find('leads')
                 }
 
                 $row = hooks()->apply_filters('leads_table_row_data', $row, $aRow);
-                $row['DT_RowAttr'] = ['data-phone' => e($aRow['phonenumber'])];
+                $row['DT_RowAttr'] = ['data-phone' => e($aRow['country_code']).e($aRow['phonenumber'])];
 
-                $output['aaData'][] = $row;
+                $output['aaData'][] = $row; 
             }
         return $output;
     })->setRules($rules);

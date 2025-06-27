@@ -71,14 +71,20 @@ class WaServer extends CI_Controller
                 if($data['from']){
                     $log['Inside_form'] = $data['from'];
                       $this->write_log($log);
-                    $lead_record = $this->lead_model->get_lead_by_number($data['from']);
-                     $log['lead_record'] = $lead_record;
-                     $this->write_log($log);
-                    if($lead_record){
-                        $log['lead_found'] = true;
-                        $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New_Message", false);
-                        $log['activity_log'] = $SaveLog;
-                    }
+                      try{
+                            
+                            $lead_record = $this->lead_model->get_lead_by_number($data['from']);
+                            $log['lead_record'] = $lead_record;
+                            $this->write_log($log);
+                            if($lead_record){
+                                $log['lead_found'] = true;
+                                $SaveLog = $this->leads_model->log_lead_activity($lead_record->id, "New_Message", false);
+                                $log['activity_log'] = $SaveLog;
+                            }
+                      }catch (Exception $e) {
+                            $log['exception'] = $e->getMessage();
+                            $this->write_log($log);
+                      }
                 }
                  $this->write_log($log);
             }
