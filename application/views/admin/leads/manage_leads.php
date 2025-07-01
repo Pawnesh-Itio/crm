@@ -402,7 +402,7 @@
                                             <!-- Template Message Field (hidden by default) -->
                                             <select class="form-select wa-form-select message-field" id="templateMessageField" style="display: none;" aria-label="Default select example">
                                                 <option selected> Open this select menu</option>
-                                                <option value="pcl">PCL Hello</option>
+                                                <option value="hello_world">Hello World</option>
                                             </select>
                                             <!-- Link Message Field (hidden by default) -->
                                             <input type="text" class="form-control message-field message-input" id="linkMessageField" style="display: none;" placeholder="Enter Link...">
@@ -828,7 +828,7 @@ $(document).ready(function() {
         const sendPayload = {
             userId: userId,
             source: source,
-            configurationId: "684bd26e5a6a97308dd272c4",
+            configurationId: "685a8bf1d6c7ab4d519bd92f",
             to: to,
             messageType: type,
             contactType:ContactType,

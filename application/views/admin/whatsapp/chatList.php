@@ -74,6 +74,8 @@
                                             <div class="wa-lodder">
                                                 <img src="<?= base_url("assets/images/1488.gif") ?>" alt="">
                                              </div>
+                                             <div id="floatingDateLabel" class="floating-date-label"></div>
+
                                             <div class="chat-container" id="chatContainer">
 
                                             </div>
@@ -117,11 +119,11 @@
                                                                     <textarea type="text" rows="1" class="form-control message-field message-input" id="textMessageField" placeholder="Type a message..." style="display: block;"></textarea>
                                                                     <!-- Media Message Field (hidden by default) -->
                                                                     <input type="file" id="mediaMessageFileField" style="display:none">
-                                                                    <input type="text" id="mediaMessageCaptionField" class="form-control message-field message-input"placeholder="Media Caption" style="display:none">
+                                                                    <textarea type="text"rows="1"  id="mediaMessageCaptionField" class="form-control message-field message-input"placeholder="Media Caption" style="display:none"></textarea>
                                                                     <!-- Template Message Field (hidden by default) -->
                                                                     <select class="form-select wa-form-select message-field" id="templateMessageField" style="display: none;" aria-label="Default select example">
                                                                         <option selected> Open this select menu</option>
-                                                                        <option value="pcl">PCL Hello</option>
+                                                                        <option value="hello_world">Hello World</option>
                                                                     </select>
                                                                     <!-- Link Message Field (hidden by default) -->
                                                                     <input type="text" class="form-control message-field message-input" id="linkMessageField" style="display: none;" placeholder="Enter Link...">
@@ -174,6 +176,33 @@ socket.on('error', (error) => {
         // other code...
         setupGlobalChatListListener(); //important!
     });
+    // Function to get selected configuration ID from URL and set it in dropdown
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const confId = urlParams.get('id');
+
+        if (confId) {
+            setTimeout(() => {
+                let matchingVal = null;
+                $('#confDropdown option').each(function () {
+                    console.log("Checking option value:", $(this).val());
+                    if ($(this).val().startsWith(confId + ',')) {
+                        console.log("Matching value found:", $(this).val());
+                        matchingVal = $(this).val();
+                    }
+                });
+
+                if (matchingVal) {
+                    $('#confDropdown').val(matchingVal); // Set selected value
+                    contactDetails(confId);              // Load details
+                }
+            }, 500); // adjust delay if needed
+        } else {
+            // Default fallback
+            $('#confDropdown').trigger('change');
+        }
+    });
+
     // Fetch All Configurations
     $(document).ready(function() {
     $.ajax({
@@ -248,8 +277,17 @@ socket.on('error', (error) => {
     }
      // Change event listener to trigger when a new value is selected
      $('#confDropdown').change(function () {
-        const confData = $(this).val().split(',');
-        contactDetails(confData[0]);
+        const selectedValue = $(this).val();
+        const confData = selectedValue.split(',');
+        const confId = confData[0];
+
+        // Update URL without reloading the page
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('id', confId);
+        window.history.pushState({}, '', newUrl);
+
+        // Trigger your logic
+        contactDetails(confId);
     });
     function getMessage(clickedLink,chatId,name,phoneNumberId){
         const confData = $('#confDropdown').val().split(',');
@@ -290,6 +328,32 @@ socket.on('error', (error) => {
 
                     // Format time
                     const msgDate = new Date((message.time || new Date(message.createdAt).getTime()) * 1000);
+
+                    // Determine date label: Today, Yesterday, or formatted date
+                    const today = new Date();
+                    const yesterday = new Date();
+                    yesterday.setDate(today.getDate() - 1);
+
+                    let dateLabel;
+                    if (msgDate.toDateString() === today.toDateString()) {
+                        dateLabel = 'Today';
+                    } else if (msgDate.toDateString() === yesterday.toDateString()) {
+                        dateLabel = 'Yesterday';
+                    } else {
+                        dateLabel = msgDate.toLocaleDateString(undefined, {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric'
+                        }); // Format: dd/mm/yyyy
+                    }
+
+                    // Insert a date divider if it's a new group
+                    if (lastDateGroup !== dateLabel) {
+                        const divider = $(`<div class="chat-date-divider text-center my-2"><span class="chat-date-label">${dateLabel}</span></div>`);
+                        $('#chatContainer').append(divider);
+                        lastDateGroup = dateLabel;
+                    }
+
                     const formattedTime = msgDate.toLocaleTimeString(undefined, {
                         hour: 'numeric',
                         minute: '2-digit',
@@ -327,11 +391,12 @@ socket.on('error', (error) => {
                     let messageDiv;
 
                     if (message.message_content != 4) {
+                        const safeBody = escapeHtml(message.message_body).replace(/\n/g, '<br>');
                         // Text messages
                         messageDiv = $(`
                             <div class="${messageClass}" id="${message.message_id}">
                                 ${replyPreview}
-                                <div>${message.message_body}</div>
+                                <div class="message_formating">${message.message_body}</div>
                                 <a class="reply-btn" 
                                     data-reply-id="${message.message_id}" 
                                     data-message-body="${message.message_body}"
@@ -352,7 +417,7 @@ socket.on('error', (error) => {
                                     <div class="${messageClass}" id="${message.message_id}" style="width:50%">
                                         ${replyPreview}
                                         <a href="${mediaPath}" target="_blank"><img src="${mediaPath}" width="100%" /></a>
-                                        <p style="padding-top:10px">${mediaCaption || ''}</p>
+                                        <p class="message_formating" style="padding-top:10px">${mediaCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>
                                 `);
@@ -364,7 +429,7 @@ socket.on('error', (error) => {
                                         <video width="100%" controls>
                                             <source src="${mediaPath}" type="video/mp4">
                                         </video>
-                                        <p style="padding-top:10px">${mediaCaption || ''}</p>
+                                        <p class="message_formating" style="padding-top:10px">${mediaCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>
                                 `);
@@ -374,7 +439,7 @@ socket.on('error', (error) => {
                                     <div class="${messageClass}" id="${message.message_id}" style="width:50%">
                                         ${replyPreview}
                                         <audio controls><source src="${mediaPath}" type="audio/mpeg"></audio>
-                                        <p style="padding-top:10px">${mediaCaption || ''}</p>
+                                        <p class="message_formating" style="padding-top:10px">${mediaCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>
                                 `);
@@ -385,7 +450,7 @@ socket.on('error', (error) => {
                                     <div class="${messageClass}" id="${message.message_id}" style="width:50%">
                                         ${replyPreview}
                                         <a href="${mediaPath}" target="_blank">📄 ${fileName}</a>
-                                        <p style="padding-top:10px">${mediaCaption || ''}</p>
+                                        <p class="message_formating" style="padding-top:10px">${mediaCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>
                                 `);
@@ -435,7 +500,6 @@ function setupChatSocketListener(chatId){
 	var type = data.type;   
 	//Check if message is sent or status
 	if(type=='received' && data.messageContentToInsert){
-        console.log("Now you see me");
         var msgContent ;
         var messageData = data.messageContentToInsert;//getting message body
         const formattedTime = messageData.time
@@ -448,7 +512,7 @@ function setupChatSocketListener(chatId){
 
  
         if(messageData.message_content != 4){
-	    msgContent = '<div id='+messageData.message_id+' class="incoming-message">'+messageData.message_body+'<div class="chat-time">'+formattedTime+'</div></div>';
+	    msgContent = '<div id='+messageData.message_id+' class="incoming-message message_formating">'+messageData.message_body+'<div class="chat-time">'+formattedTime+'</div></div>';
 	    //Appending chat data to UI
 	    $('.chat-container').append(msgContent);
         }else{
@@ -458,7 +522,7 @@ function setupChatSocketListener(chatId){
                     msgContent =$(`<div class="incoming-message" id="${messageData.message_id}" style="width:50%">
                         <a href="${waURL}/${messageData.media_path.replace('\\', '/')}" target="_blank">
                             <img src="${waURL}/${messageData.media_path.replace('\\', '/')}" width="100%" />
-                            <p style="padding-top:10px">${messageData.message_body || ''}</p>
+                            <p class="message_formating" style="padding-top:10px">${messageData.message_body || ''}</p>
                             <div class="chat-time">${formattedTime}</div>
                         </a>
                             `);
@@ -469,7 +533,7 @@ function setupChatSocketListener(chatId){
                         <video width="100%" controls>
                             <source src="${waURL}/${messageData.media_path.replace('\\', '/')}" type="video/mp4">
                         </video>
-                        <p style="padding-top:10px">${messageData.message_body || ''}</p>
+                        <p class="message_formating" style="padding-top:10px">${messageData.message_body || ''}</p>
                         <div class="chat-time">${formattedTime}</div>`);
                         $('.chat-container').append(msgContent);
                     break;
@@ -478,7 +542,7 @@ function setupChatSocketListener(chatId){
                         <audio controls>
                             <source src="${waURL}/${messageData.media_path.replace('\\', '/')}" type="audio/mpeg">
                         </audio>
-                        <p style="padding-top:10px">${messageData.message_body || ''}</p>
+                        <p class="message_formating" style="padding-top:10px">${messageData.message_body || ''}</p>
                         <div class="chat-time">${formattedTime}</div>`);
                         $('.chat-container').append(msgContent);
                     break;
@@ -486,7 +550,7 @@ function setupChatSocketListener(chatId){
                     const fileName = messageData.media_path.split('/').pop();
                     msgContent = $(`<div id=${messageData.message_id} class="incoming-message" style="width:50%">
                         <a href="${waURL}/${messageData.media_path.replace('\\', '/')}" target="_blank">📄 ${fileName}</a>
-                        <p style="padding-top:10px">${messageData.message_body || ''}</p>
+                        <p class="message_formating" style="padding-top:10px">${messageData.message_body || ''}</p>
                         <div class="chat-time">${formattedTime}</div>`);
                         $('.chat-container').append(msgContent);
                     break;
@@ -603,14 +667,14 @@ $(document).ready(function() {
                 if(response.type== 1){
                     $('#textMessageField').val(''); // Clear the input after sending
                     messageDiv = $(`<div class="sent-message" id="${messageData.id}">
-                            <div>${message}</div>
+                            <div class="message_formating">${message}</div>
                             <div class="chat-time">${formattedTime} ${tickIcon}</div>
                         </div>`);
                 }
                 if(response.type==2){
                     $('#linkMessageField').val(''); // Clear the input after sending
                         messageDiv = $(`<div class="sent-message" id="${messageData.id}">
-                            <div>${linkMessage}</div>
+                            <div class="message_formating">${linkMessage}</div>
                             <div class="chat-time">${formattedTime} ${tickIcon}</div>
                         </div>`);
                 }
@@ -637,7 +701,7 @@ $(document).ready(function() {
                             messageDiv = $(
                                     `<div class="sent-message" id="${messageData.id}" style="width:50%">
                                         <a href="${mediaPath}" target="_blank"><img src="${mediaPath}" width="100%" /></a>
-                                        <p style="padding-top:10px">${currentCaption || ''}</p>
+                                        <p class="message_formating" style="padding-top:10px">${currentCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
@@ -649,7 +713,7 @@ $(document).ready(function() {
                                         <video width="100%" controls>
                                             <source src="${mediaPath}" type="video/mp4">
                                         </video>
-                                        <p style="padding-top:10px">${currentCaption || ''}</p>
+                                        <p class="message_formating" style="padding-top:10px">${currentCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                             );
@@ -658,7 +722,7 @@ $(document).ready(function() {
                                 messageDiv = $(
                                     `<div class="sent-message" id="${messageData.id}" style="width:50%">
                                         <audio controls><source src="${mediaPath}" type="audio/mpeg"></audio>
-                                        <p style="padding-top:10px">${currentCaption || ''}</p>
+                                        <p class="message_formating" style="padding-top:10px">${currentCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
@@ -668,7 +732,7 @@ $(document).ready(function() {
                                 messageDiv = $(
                                     `<div class="sent-message" id="${messageData.id}" style="width:50%">
                                         <a href="${mediaPath}" target="_blank">📄 ${fileName}</a>
-                                        <p style="padding-top:10px">${currentCaption || ''}</p>
+                                        <p class="message_formating" style="padding-top:10px">${currentCaption || ''}</p>
                                         <div class="chat-time">${formattedTime} ${tickIcon}</div>
                                     </div>`
                                 );
@@ -1017,6 +1081,26 @@ $(document).on('click', '.reply-preview', function () {
         setTimeout(() => {
             $(targetElement).removeClass('highlighted');
         }, 1500);
+    }
+});
+$(document).off('scroll.chatDateWatcher'); // remove old listener if any
+$('#chatContainer').on('scroll.chatDateWatcher', function () {
+    let currentLabel = null;
+    let closestOffset = -Infinity;
+
+    $('.chat-date-divider').each(function () {
+        const offset = $(this).offset().top - $('#chatContainer').offset().top;
+
+        if (offset <= 10 && offset > closestOffset) {
+            closestOffset = offset;
+            currentLabel = $(this).text().trim();
+        }
+    });
+
+    if (currentLabel) {
+        $('#floatingDateLabel').text(currentLabel).show();
+    } else {
+        $('#floatingDateLabel').hide();
     }
 });
 
