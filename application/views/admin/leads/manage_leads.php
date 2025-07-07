@@ -824,11 +824,13 @@ $(document).ready(function() {
         const mediaCaption = $('#mediaMessageCaptionField').val();
         const formMediaUrl = $('#formMediaUrl').val();
         const ContactType = "Regular";
+        const confData = $('#confDropdown').val().split(',');
+        const configurationId = confData[1];
         // sendPayload
         const sendPayload = {
             userId: userId,
             source: source,
-            configurationId: "685a8bf1d6c7ab4d519bd92f",
+            configurationId: configurationId,
             to: to,
             messageType: type,
             contactType:ContactType,

@@ -104,7 +104,7 @@ if (isset($web_data->message->chat->id) && ($web_data->message->chat->id)) {
 		} else {
 			// If no lead exists for this client_id, create a new lead record
 			// 'source' is hardcoded as 4 to indicate this lead came from Telegram
-			$sqlStmt = "INSERT INTO `it_crm_leads` (`name`, `dateadded`, `description`, `client_id`, `email`, `source`, `status`,`telegram_bot_id`) 
+			$sqlStmt = "INSERT INTO `it_crm_leads` (`name`, `dateadded`, `description`, `client_id`, `SkypeInfo`, `source`, `status`,`telegram_bot_id`) 
 				VALUES ('$name', NOW(), '$text', '$chat_id', '$username', 4, 2, '$botId')";
 
 			if(mysqli_query($conn, $sqlStmt))	//if query executed successfully then execute following section 

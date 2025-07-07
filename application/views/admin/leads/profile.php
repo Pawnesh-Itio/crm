@@ -329,7 +329,28 @@
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l('lead_add_edit_source'); ?></dt>
                     <dd class="tw-text-neutral-900 tw-mt-1 mbot15">
-                        <?php echo(isset($lead) && $lead->source_name != '' ? e($lead->source_name) : '-') ?></dd>
+                        <?php echo(isset($lead) && $lead->source_name != '' ? e($lead->source_name) : '-') ?>
+                    </dd>
+                    <?php
+                    $label = 'Skype Info';
+                    $val = isset($lead) ? strtolower($lead->SkypeInfo) : '';
+
+                    if (!empty($val)) {
+                        if (strpos($val, 't.me/') !== false || strpos($val, '@') === 0 || preg_match('/^@?[a-zA-Z0-9_]{5,}$/', $val)) {
+                            $label = 'Telegram ID';
+                        } elseif (strpos($val, 'teams.microsoft.com') !== false || strpos($val, 'teams') !== false || filter_var($val, FILTER_VALIDATE_EMAIL)) {
+                            $label = 'Teams ID';
+                        }
+                    }
+                    ?>
+
+                    <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
+                        <?php echo $label; ?>
+                    </dt>
+                    <dd class="tw-text-neutral-900 tw-mt-1 mbot15">
+                        <?php echo (!empty($lead->SkypeInfo) ? e($lead->SkypeInfo) : '-'); ?>
+                    </dd>
+
                     <?php /*?><?php if (!is_language_disabled()) { ?>
                     <dt class="lead-field-heading tw-font-medium tw-text-neutral-500">
                         <?php echo _l('localization_default_language'); ?>
