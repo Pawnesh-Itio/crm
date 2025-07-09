@@ -730,7 +730,7 @@ foreach ($custom_field_array as $key => $value) {
                 <label for="subject" class="control-label"> 
                     Telegram Id / Teams Id
                 </label>
-                <input type="text" id="subject" name="SkypeInfo" class="form-control" value="<?= $lead->SkypeInfo ?>" aria-invalid="false"></div>
+                <input type="text" id="subject" name="SkypeInfo" class="form-control" value="<?php if(isset($lead)){ echo $lead->SkypeInfo ; } ?>" aria-invalid="false"></div>
 			   <?php $value = (isset($lead) ? $lead->subject : ''); ?>
                 <?php echo render_input('subject', 'Lead Subject', $value);  ?>
 				
