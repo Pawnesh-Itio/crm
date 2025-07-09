@@ -726,6 +726,11 @@ foreach ($custom_field_array as $key => $value) {
                $selected                 = (isset($lead) ? $lead->IncorporationCountry : $customer_default_country);
                echo render_select('IncorporationCountry', $countries, [ 'country_id', [ 'short_name']], 'Incorporation Country', $selected, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
                ?>
+               <div class="form-group __web-inspector-hide-shortcut__" app-field-wrapper="subject">
+                <label for="subject" class="control-label"> 
+                    Telegram Id / Teams Id
+                </label>
+                <input type="text" id="subject" name="SkypeInfo" class="form-control" value="<?= $lead->SkypeInfo ?>" aria-invalid="false"></div>
 			   <?php $value = (isset($lead) ? $lead->subject : ''); ?>
                 <?php echo render_input('subject', 'Lead Subject', $value);  ?>
 				
