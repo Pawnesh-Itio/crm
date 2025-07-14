@@ -20,6 +20,7 @@
 								<th><?php echo _l('Name'); ?></th>
 								<th><?php echo _l('Company'); ?></th>
 								<th><?php echo _l('Email'); ?></th>
+								<th><?php echo _l('Business URL'); ?></th>
 								<th><?php echo _l('Assigned'); ?></th>
                                 <th><?php echo _l('MDR'); ?></th>
                                 <th><?php echo _l('SetupFee'); ?></th>
@@ -40,7 +41,7 @@
 								
 								
                                 <tr style="background:<?php echo $rowclr;?>">
-                                 <td><?php echo $status['id']; ?></td>   
+                                 <td title="Lead ID : <?php echo $status['leadid']; ?>"><?php echo $status['id']; ?></td>   
                                 <td><?php echo $rowstatus;?> 
 					<?php if(isset($status['Reason'])&&$status['Reason']){ ?>
 					<i class="fa-solid fa-circle-exclamation text-warning" title="<?php echo $status['Reason']; ?>"></i>
@@ -49,7 +50,18 @@
 								<td><?php echo $status['name']; ?></td>
 								<td><?php echo $status['company']; ?></td>
 								<td><?php echo $status['email']; ?></td>
-								<td><?php echo get_staff_full_name($status['assigned']); ?></td>
+								<td><?php echo $status['website']; ?></td>
+								<td>
+								<?php 
+								if(isset($status['assigned'])&&$status['assigned']){
+								echo get_staff_full_name($status['assigned']); 
+								}else{
+								echo get_staff_full_name(1); 
+								}
+								
+								?>
+								
+								</td>
                                 <?php if(isset($status['quotation_status'])&&$status['quotation_status']==1){ ?>
                                 <td><?php echo $status['MDR']; ?></td>
 								<?php }else{ ?>
