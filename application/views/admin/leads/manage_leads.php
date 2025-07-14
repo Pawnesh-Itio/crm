@@ -1,7 +1,13 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?> 
 
-
+<style>
+#dealModal{
+  background-color: rgba(0, 0, 0, 0.5); /* fade to semi-black */
+  box-shadow: -2px -2px 9px #d4d4d4, 0px 0px 0px #ffffff !important;
+  backdrop-filter: saturate(125%) blur(10px);
+}
+</style>
 <div id="wrapper"> 
     <div class="content">
         <div class="row">
