@@ -244,7 +244,7 @@
                             $date_attrs['disabled'] = true;
                         }
                         ?>
-                                <?php echo render_date_input('startdate', 'task_add_edit_start_date', $value, $date_attrs); ?>
+                                <?php echo render_date_input('startdate', 'task_add_edit_start_date', '', $date_attrs); ?>
                             </div>
                             <div class="col-md-6">
                                 <?php $value = (isset($task) ? _d($task->duedate) : ''); ?>
