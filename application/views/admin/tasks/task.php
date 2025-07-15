@@ -720,19 +720,18 @@
         init_datepicker($duedate);
     }
 	
-	$('.matcheddate').on('click', function() {
-	
-	alert(33333);
-      let start = new Date($('#startdate').val());
-      let end = new Date($('#duedate').val());
+	$(document).on('click', '.matcheddate', function () {
+  //alert(33333);
+  let start = new Date($('#startdate').val());
+  let end = new Date($('#duedate').val());
 
-      if (!isNaN(start) && !isNaN(end)) {
-        if (end >= start) {
-          //alert('End date is valid (greater than or equal to start date).');
-        } else {
-          alert('End date must be greater than or equal to start date.');
-		  return false;
-        }
-      }
-    });
+  if (!isNaN(start) && !isNaN(end)) {
+    if (end >= start) {
+      // Valid
+    } else {
+      alert('End date must be greater than or equal to start date.');
+      return false;
+    }
+  }
+});
     </script>
