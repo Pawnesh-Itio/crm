@@ -12,13 +12,13 @@
             </a>
         </div>
         <?php } elseif (isset($client) && $client->active == 0 && $client->registration_confirmed == 1) { ?>
-        <div class="alert alert-warning">
+        <?php /*?><div class="alert alert-warning">
             <?php echo _l('customer_inactive_message'); ?>
             <br />
             <a href="<?php echo admin_url('clients/mark_as_active/' . $client->userid); ?>">
                 <?php echo _l('mark_as_active'); ?>
             </a>
-        </div>
+        </div><?php */?>
         <?php } ?>
         <?php if (isset($client) && (staff_cant('view', 'customers') && is_customer_admin($client->userid))) {?>
         <div class="alert alert-info">

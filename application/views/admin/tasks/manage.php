@@ -74,6 +74,8 @@ taskid = '<?php echo e($taskid); ?>';
 $(function() {
     tasks_kanban();
 });
+
+
 </script>
 </body>
 

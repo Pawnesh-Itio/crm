@@ -126,7 +126,10 @@ function manage_invoice_items(form) {
                 $('.table-invoice-items').DataTable().ajax.reload(null, false);
             }
             alert_float('success', response.message);
-        }
+			setTimeout(function() {
+			location.reload();
+			}, 1500); // 2000 milliseconds = 2 seconds
+			}
         $('#sales_item_modal').modal('hide');
     }).fail(function (data) {
         alert_float('danger', data.responseText);

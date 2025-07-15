@@ -64,21 +64,21 @@
                                     <span
                                         class="text-dark tw-truncate sm:tw-text-clip"><?php echo _l('customers_summary_total'); ?></span>
                                 </div>
-                                <?php /*?><div
+                                <?php /*?><?php */?><div
                                     class="md:tw-border-r md:tw-border-solid md:tw-border-neutral-300 tw-flex-1 tw-flex tw-items-center">
                                     <span class="tw-font-semibold tw-mr-3 rtl:tw-ml-3 tw-text-lg">
                                         <?php echo total_rows(db_prefix() . 'clients', 'active=1' . $where_summary); ?></span>
                                     <span
-                                        class="text-success tw-truncate sm:tw-text-clip"><?php echo _l('active_customers'); ?></span>
+                                        class="text-success tw-truncate sm:tw-text-clip"><?php echo _l('customers_summary_active'); ?></span>
                                 </div>
                                 <div
                                     class="md:tw-border-r md:tw-border-solid md:tw-border-neutral-300 tw-flex-1 tw-flex tw-items-center">
                                     <span class="tw-font-semibold tw-mr-3 rtl:tw-ml-3 tw-text-lg">
                                         <?php echo total_rows(db_prefix() . 'clients', 'active=0' . $where_summary); ?></span>
                                     <span
-                                        class="text-danger tw-truncate sm:tw-text-clip"><?php echo _l('inactive_active_customers'); ?></span>
-                                </div><?php */?>
-                                <div
+                                        class="text-danger tw-truncate sm:tw-text-clip"><?php echo _l('customers_summary_inactive'); ?></span>
+                                </div>
+                                <?php /*?><div
                                     class="md:tw-border-r md:tw-border-solid md:tw-border-neutral-300 tw-flex-1 tw-flex tw-items-center">
                                     <span class="tw-font-semibold tw-mr-3 rtl:tw-ml-3 tw-text-lg">
                                         <?php echo total_rows(db_prefix() . 'contacts', 'active=1' . $where_summary); ?>
@@ -93,8 +93,8 @@
                                     </span>
                                     <span
                                         class="text-danger tw-truncate sm:tw-text-clip"><?php echo _l('customers_summary_inactive'); ?></span>
-                                </div>
-                                <div
+                                </div><?php */?>
+                                <?php /*?><div
                                     class="tw-flex tw-items-center md:tw-border-r md:tw-border-solid tw-flex-1 md:tw-border-neutral-300 lg:tw-border-r-0">
                                     <span class="tw-font-semibold tw-mr-3 rtl:tw-ml-3 tw-text-lg">
                                         <?php echo total_rows(db_prefix() . 'contacts', 'last_login LIKE "' . date('Y-m-d') . '%"' . $where_summary); ?>
@@ -120,7 +120,7 @@
                                             <?php echo _l('customers_summary_logged_in_today'); ?>
  	                                   </span>
                                     </span>
-                                </div>
+                                </div><?php */?>
                             </div>
                         </div>
                         <?php
