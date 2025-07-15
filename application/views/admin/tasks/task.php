@@ -721,6 +721,8 @@
     }
 	
 	$('.matcheddate').on('click', function() {
+	
+	alert(33333);
       let start = new Date($('#startdate').val());
       let end = new Date($('#duedate').val());
 
@@ -731,6 +733,8 @@
           alert('End date must be greater than or equal to start date.');
 		  return false;
         }
-      } 
+      } else {
+        alert('Please select both start and end dates.');
+      }
     });
     </script>
