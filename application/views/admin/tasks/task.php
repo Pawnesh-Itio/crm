@@ -733,8 +733,6 @@
           alert('End date must be greater than or equal to start date.');
 		  return false;
         }
-      } else {
-        alert('Please select both start and end dates.');
       }
     });
     </script>
