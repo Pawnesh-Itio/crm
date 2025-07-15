@@ -244,7 +244,7 @@
                             $date_attrs['disabled'] = true;
                         }
                         ?>
-                                <?php echo render_date_input('startdate', 'task_add_edit_start_date', '', $date_attrs); ?>
+                                <?php echo render_date_input('startdate', 'task_add_edit_start_date', $value, $date_attrs); ?>
                             </div>
                             <div class="col-md-6">
                                 <?php $value = (isset($task) ? _d($task->duedate) : ''); ?>
@@ -720,5 +720,19 @@
         init_datepicker($duedate);
     }
 	
-
+	$(document).on('click', '.matcheddate', function () {
+  //alert(33333);
+  let start = new Date($('#startdate').val());
+    let end = new Date($('#duedate').val());
+  //alert(start);
+  //alert(end);
+  if (!isNaN(start) && !isNaN(end)) {
+    if (end >= start) {
+      // Valid
+    } else {
+      alert('End date must be greater than or equal to start date.');
+      return false;
+    }
+  }
+});
     </script>

@@ -75,21 +75,7 @@ $(function() {
     tasks_kanban();
 });
 
-	$(document).on('click', '.matcheddate', function () {
-  //alert(33333);
-  let startx = new Date($('#startdate').val());
-    let end = new Date($('#duedate').val());
-  alert(startx);
-  alert(end);
-  if (!isNaN(startx) && !isNaN(end)) {
-    if (end >= startx) {
-      // Valid
-    } else {
-      alert('End date must be greater than or equal to start date.');
-      return false;
-    }
-  }
-});
+
 </script>
 </body>
 
