@@ -76,13 +76,13 @@ $(function() {
 });
 
 	$(document).on('click', '.matcheddate', function () {
-  alert(33333);
-  let start = new Date($('#startdate').val());
-  let end = new Date($('#duedate').val());
-  alert(start);
+  //alert(33333);
+  let startx = new Date($('#startdate').val());
+    let end = new Date($('#duedate').val());
+  alert(startx);
   alert(end);
-  if (!isNaN(start) && !isNaN(end)) {
-    if (end >= start) {
+  if (!isNaN(startx) && !isNaN(end)) {
+    if (end >= startx) {
       // Valid
     } else {
       alert('End date must be greater than or equal to start date.');
