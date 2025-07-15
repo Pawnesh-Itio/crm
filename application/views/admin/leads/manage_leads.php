@@ -1360,6 +1360,12 @@ $(document).ready(function () {
     }
     });
 });
+document.getElementById("phonenumber").addEventListener("blur", function () {
+    //if (this.value.length < 10 || this.value.length > 15) {
+      //alert("Phone number must be between 10 to 15 digits.");
+    //}
+	alert(33);
+  });
 function getConfigurations(callback){
     const source = "crm-ITIO";
     const userType = 1;

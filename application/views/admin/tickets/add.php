@@ -24,7 +24,7 @@
                         <div class="row">
                             <div class="col-md-6">
 
-                                <?php echo render_input('subject', 'ticket_settings_subject', '', 'text', ['required' => 'true']); ?>
+<?php echo render_input('subject', 'ticket_settings_subject', '', 'text', ['required' => 'true','maxlength' => '60','onkeypress' => 'return /^[a-zA-Z0-9 ]$/.test(String.fromCharCode(event.charCode))']); ?>
                                 <div class="form-group select-placeholder" id="ticket_contact_w">
                                     <label for="contactid"><?php echo _l('contact'); ?></label>
                                     <select name="contactid" required="true" id="contactid" class="ajax-search"

@@ -534,7 +534,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
-                <button type="submit" class="btn btn-primary"><?php echo _l('submit'); ?></button>
+                <button type="submit" class="btn btn-primary matcheddate"><?php echo _l('submit'); ?></button>
             </div>
         </div>
     </div>
@@ -719,4 +719,18 @@
         $duedate.datetimepicker('destroy');
         init_datepicker($duedate);
     }
+	
+	$('.matcheddate').on('click', function() {
+      let start = new Date($('#startdate').val());
+      let end = new Date($('#duedate').val());
+
+      if (!isNaN(start) && !isNaN(end)) {
+        if (end >= start) {
+          //alert('End date is valid (greater than or equal to start date).');
+        } else {
+          alert('End date must be greater than or equal to start date.');
+		  return false;
+        }
+      } 
+    });
     </script>

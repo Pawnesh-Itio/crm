@@ -392,9 +392,9 @@ foreach ($folders as $folder) {
 	  $last_email_id=$last_email_id[0]['uniqid']?? 0;//exit;
 	 
 //// Fetch Emails
-      $pg=floor($last_email_id / 50) +1;
+      $pg=floor($last_email_id / 10) +1;
 	  $messages = $mailbox->query()
-    ->all()->limit($limit = 50, $page = $pg)
+    ->all()->limit($limit = 10, $page = $pg)
     ->get() // fetch messages
     ->filter(function($message) use ($last_email_id) {
         return $message->getUid() > $last_email_id;
@@ -403,6 +403,7 @@ foreach ($folders as $folder) {
 
 
 //print_r($messages);exit;
+$this->db->query("SET SESSION wait_timeout=600;");
 foreach ($messages as $message) {
 
     $data['subject'] = $message->getSubject();
@@ -464,6 +465,7 @@ foreach ($messages as $message) {
 		$data['attachments'] = implode(',', $attachments_paths);//exit;
  }
  $cnt++;
+        $this->db->reconnect();
 		$this->db->insert(db_prefix() . 'emails', $data);
 		//echo $this->db->last_query();exit;
  

@@ -86,7 +86,7 @@
                                                                  <span style="color: blue; cursor: pointer;" onclick="showLess(<?php echo $pd['id']; ?>)">Show Less</span>
                                                             </div>
                                                             <div class="col-sm-6" style="padding-left: 15px;">
-                                                                 <a href="#" data-toggle="modal" data-target="#sales_item_modal" data-id="<?= $pd['id']; ?>">Edit </a>
+                                                                 <a href="#" data-toggle="modal" data-target="#sales_item_modal" data-id="<?= $pd['id']; ?>">Edit </a>&nbsp;&nbsp;<a href="<?php echo admin_url('invoice_items/delete'); ?>/<?php echo $pd['id']; ?>"   title="Delete" class="text-danger" onclick="return confirm('Do you really want to Delete?');">Delete </a>
                                                             </div>
                                                         </div>
                                                     </div>

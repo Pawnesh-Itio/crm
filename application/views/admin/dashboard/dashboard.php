@@ -2,8 +2,8 @@
 <?php init_head(); ?>
  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div id="wrapper">
-    <div class="screen-options-area"></div>
-    <div class="screen-options-btn">
+    <?php /*?><div class="screen-options-area"></div><?php */?>
+    <a href="<?php echo admin_url('settings');?>" title="Site Settings"  target="_blank"><div class="screen-options-btn">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="tw-w-5 tw-h-5 tw-mr-1">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -11,8 +11,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
 
-        <?php echo _l('dashboard_options'); ?>
-    </div>
+        <?php echo _l('Settings'); ?>
+    </div></a>
     <div class="content">
         <div class="row">
             <?php //$this->load->view('admin/includes/alerts'); ?>

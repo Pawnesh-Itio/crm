@@ -324,7 +324,7 @@ $monthyearnum=$year."-".$num;
       <button class="button button-blue" id="none">No Format</button>
       <button class="button button-blue" id="scientific">Scientific Notation</button>
       <button class="button button-blue" id="decimal">Decimal</button>
-      <button class="button button-blue" id="short">Short</button>
+      <?php /*?><button class="button button-blue" id="short">Short</button><?php */?>
     </div>
             </div>
         </div>

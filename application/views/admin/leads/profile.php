@@ -674,12 +674,12 @@ foreach ($custom_field_array as $key => $value) {
 				<?php
 				
                 $value = (isset($lead) ? $lead->country_code : ''); ?>
-                <?php echo render_input('country_code', 'ISD Code', $value); ?>
+                <?php echo render_input('country_code', 'ISD Code', $value,'number',['required' => 'true','maxlength' => '3','minlength' => '1','onkeypress' => 'return event.charCode >= 48 && event.charCode <= 57']); ?>
 				</div>
 				
 				<div class="col-md-8 tw-px-0">
 				<?php $value = (isset($lead) ? $lead->phonenumber : ''); ?>
-                <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $value,'number',['required' => 'true','onkeypress' => 'return event.charCode >= 48 && event.charCode <= 57']); ?>
+                <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $value,'number',['required' => 'true','maxlength' => '15','minlength' => '10','onkeypress' => 'return event.charCode >= 48 && event.charCode <= 57']); ?>
 				</div>
 				
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
@@ -691,7 +691,7 @@ foreach ($custom_field_array as $key => $value) {
             <div class="col-md-6">
 			   <?php if ((isset($lead) && empty($lead->website)) || !isset($lead)) {
                    $value = (isset($lead) ? $lead->website : '');
-                   echo render_input('website', 'Business URL', $value);//lead_website to Business URL 
+                   echo render_input('website', 'Business URL (add with https:// or http:// )', $value);//lead_website to Business URL 
                } else { ?>
                 <div class="form-group">
                     <label for="website"><?php echo _l('Business URL'); ?> (add with https:// or http:// )</label> 

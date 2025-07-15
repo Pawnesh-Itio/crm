@@ -4,8 +4,8 @@
 <?php 
 
 if(!isset($_GET['iid'])&&empty($_GET['iid'])&&empty($invoice->leadid)){ 
-echo "<h5 class='text-danger'>wrong url - not authorized to create invoice<h5>";
-echo "<h5 class='text-danger'>Generate invoice only from deal section<h5>";
+echo "<div class='alert alert-warning'><b>Unauthorized action:</b> Invoices can only be generated from the Deal section. </br>Please navigate to the appropriate deal to create an invoice.</div>";
+
 exit;
 }
 

@@ -87,7 +87,7 @@ $(function() {
             });
 
             if (page_unfinished >= total_pages_unfinished - 1) {
-                $(".unfinished-loader").addClass("disabled");
+                $(".unfinished-loader").addClass("disabled hide");
             }
         }
     });
@@ -112,7 +112,7 @@ $(function() {
             });
 
             if (page_finished >= total_pages_finished - 1) {
-                $(".finished-loader").addClass("disabled");
+                $(".finished-loader").addClass("disabled hide");
             }
         }
     });

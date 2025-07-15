@@ -41,6 +41,12 @@ class Ai_content_generator extends AdminController
     {
 	
 	    $data = $this->input->post();
+		$title = isset($data['content_title']) ? trim($data['content_title']) : '';
+         if ($title === '') {
+		 set_alert('danger', _l('Error : Empty / Wrong Content'));
+		$this->load->view('admin/ai-content-generator', $data);
+        }else{
+		
 		if (isset($data['submit'])) { unset($data['submit'] );}
 		$data['user_id']      = get_staff_user_id();
         $data['added_by'] = get_staff_full_name($data['user_id']);
@@ -60,6 +66,7 @@ class Ai_content_generator extends AdminController
 		//exit;
         set_alert('success', _l('added_successfully', _l('AI Content')));
 		$this->load->view('admin/ai-content-generator', $data);
+		}
 		}
     }
 	

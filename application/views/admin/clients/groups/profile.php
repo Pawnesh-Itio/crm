@@ -102,20 +102,20 @@
                         <?php hooks()->do_action('after_customer_profile_company_field', $client ?? null); ?>
                         <?php if (get_option('company_requires_vat_number_field') == 1) {
                       $value = (isset($client) ? $client->vat : '');
-                      echo render_input('vat', 'client_vat_number', $value);
+                      echo render_input('vat', 'client_vat_number', $value,'text',['maxlength' => '20','minlength' => '15','onkeypress' => 'return /^[a-zA-Z0-9]$/.test(String.fromCharCode(event.charCode))']);
                   } ?>
                         <?php hooks()->do_action('before_customer_profile_phone_field', $client ?? null); ?>
                         <?php $value = (isset($client) ? $client->phonenumber : ''); ?>
-                        <?php echo render_input('phonenumber', 'client_phonenumber', $value); ?>
+                        <?php echo render_input('phonenumber', 'client_phonenumber', $value,'number',['required' => 'true','maxlength' => '15','minlength' => '10','onkeypress' => 'return event.charCode >= 48 && event.charCode <= 57']); ?>
                         <?php hooks()->do_action('after_customer_profile_company_phone', $client ?? null); ?>
                         <?php if ((isset($client) && empty($client->website)) || !isset($client)) {
                       $value = (isset($client) ? $client->website : '');
-                      echo render_input('website', 'client_website', $value);
+                      echo render_input('website', 'website (add with https:// or http:// )', $value,'url');
                   } else { ?>
                         <div class="form-group">
                             <label for="website"><?php echo _l('client_website'); ?></label>
                             <div class="input-group">
-                                <input type="text" name="website" id="website" value="<?php echo e($client->website); ?>"
+                                <input type="url" name="website" id="website" value="<?php echo e($client->website); ?>"
                                     class="form-control">
                                 <span class="input-group-btn">
                                     <a href="<?php echo e(maybe_add_http($client->website)); ?>" class="btn btn-default"
@@ -252,7 +252,7 @@
                                 <?php //echo render_input('website_url', 'form_submit_website_url', $value); ?>
 	                            <label for="website"><?php echo _l('form_submit_website_url'); ?></label>
 								<div class="input-group">
-                                <input type="text" name="website_url" id="website_url" value="<?php echo e($client->website_url); ?>"
+                                <input type="url" name="website_url" id="website_url" value="<?php echo e($client->website_url); ?>"
                                     class="form-control">
 								
                                 <span class="input-group-btn">
