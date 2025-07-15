@@ -76,10 +76,11 @@ $(function() {
 });
 
 	$(document).on('click', '.matcheddate', function () {
-  //alert(33333);
+  alert(33333);
   let start = new Date($('#startdate').val());
   let end = new Date($('#duedate').val());
-
+  alert(start);
+  alert(end);
   if (!isNaN(start) && !isNaN(end)) {
     if (end >= start) {
       // Valid
