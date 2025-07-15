@@ -61,13 +61,13 @@
       </div>
       <form id="configurationForm">
             <div class="modal-body">
-                <input type="text" name="source" id="source" value="crm">
-                <input type="text" name="type" id="type">
-                <input type="text" name="confId" id="confId">
-                <div class="form-group">
+                <input type="hidden" name="source" id="source" value="crm-ITIO">
+                <input type="hidden" name="type" id="type">
+                <input type="hidden" name="confId" id="confId">
+                <!-- <div class="form-group">
                     <label>Webhook url</label>
                     <input name="webhookUrl" id="webhookUrl" type="url" class="form-control" value="https://wa-business-api.onrender.com/api/messages/webhook/<?= get_staff_user_id() ?>" readonly>
-                </div>
+                </div> -->
                 <input type="hidden" name="userId" id="userId" value="<?= get_staff_user_id() ?>">
                 <div class="form-group">
                     <label>Access Token</label>
@@ -108,11 +108,17 @@
 const url = "<?= Whatsapp_Api_Url ?>";
 $(document).ready(function() {
 
-    const source = "crm";
+    const source = "crm-ITIO"
     const userId =$('#userId').val();
         $.ajax({
-                url: `${url}/api/configuration/fetch/${source}`,
-                method: 'GET',
+                url: `${url}/api/configuration/fetch`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    source: source,
+                    userType: 1,
+                    companyId: 1
+                }),
                 success: function(response) {
                     $('.wa-lodder').css('display', 'none');
                     console.log(response);
@@ -132,7 +138,9 @@ $(document).ready(function() {
 
                             $('#tbody').append(newRows); // Append all rows at once
                         }else{
-                            const mess = `<span class="text-center">`;
+                            console.log("No Configuration found");
+                            const mess = `<span style="color:red;">No Configuration found</span>`;
+                            $('#tbody').append(mess); // Append all rows at once
                         }
                         } else {
                             console.error("Expected an array but got:", response);
@@ -159,7 +167,8 @@ $(document).ready(function() {
         phoneNumber:$('#phoneNumber').val(),
         department:$('#department').val(),
         webhookVerificationToken:$('#webhookVerificationToken').val(),
-        source:$('#source').val()
+        source:$('#source').val(),
+        companyId:1
     };
     if(type=='Edit'){
 

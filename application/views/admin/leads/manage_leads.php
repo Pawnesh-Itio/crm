@@ -363,6 +363,11 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel"></h4>
+                <div class="config-dropdown">
+                    <select name="confDropdown" id="confDropdown" class="form-control">
+                        <!-- Option Populate -->
+                    </select>
+                </div>
             </div>
             <div class="modal-body">
                     <div class="wa-lodder">
@@ -538,19 +543,25 @@ socket.on('disconnect', () => {
 socket.on('error', (error) => {
     console.log("Error:", error);
 });
-function getMessages(element){
+function getMessages(element) {
     $('#lead-modal').modal('hide');
-    var name = element.getAttribute('data-name');
-    var chatId = parseInt(element.getAttribute('data-number'));
-    console.log(name);
-    $('.modal-title').html(name+' ('+ chatId +')');
-    $('#formNumber').val(chatId);
-	$('.chat-container').html('');// Remove any exisiting listener before adding new one
-    $.ajax({
-        url: waURL+'/api/chat/messages/'+chatId+'/665167003352668/Regular',
-        method: 'GET',
-        success: function (data) {
-            console.log(data);
+    const name = element.getAttribute('data-name');
+    const chatId = parseInt(element.getAttribute('data-number'));
+    // Correct way to use confId
+    getConfigurations(function(confId) {
+        if (!confId) {
+            console.log("Configuration ID not found");
+            return;
+        }
+        $('.modal-title').html(`${name} (${chatId})`);
+        $('#formNumber').val(chatId);
+        $('.chat-container').html(''); // Clear chat container
+
+        $.ajax({
+            url: `${waURL}/api/chat/messages/${chatId}/${confId}/Regular`,
+            method: 'GET',
+            success: function(data) {
+                console.log(data);
             $('.formBtnDiv').show();
             $('.wa-lodder').hide();
             $('.chat-container').html('');
@@ -662,12 +673,12 @@ function getMessages(element){
             autoScrollToBottom();
             // Add realtime incomming messages.
             setupChatSocketListener(chatId);
-
-        },
-        error: function () {
-            $('.wa-lodder').hide();
-            console.error('Failed to fetch data');
-        }
+            },
+            error: function() {
+                $('.wa-lodder').hide();
+                console.error('Failed to fetch data');
+            }
+        });
     });
 }
 function setupChatSocketListener(chatId){
@@ -818,7 +829,7 @@ $(document).ready(function() {
     $('#messageForm').on('submit', function(e) {
         e.preventDefault(); // Prevent the default form submission
         // Gather form data
-        const source = "crm";
+        const source = "crm-ITIO";
         const userId = $('#formUserId').val();
         const to = $('#formNumber').val();
         const type = $('#formType').val();
@@ -1193,7 +1204,7 @@ $(document).ready(function () {
         console.log("Media message file triggered");
         const file = event.target.files[0];
         const userId = $('#formUserId').val();
-        const source = "crm";
+        const source = "crm-ITIO";
         const confId = "684bd26e5a6a97308dd272c4"; // Default configuration ID
         const mediaCategory = $('#mediaCategory').val();
 
@@ -1355,6 +1366,49 @@ document.getElementById("phonenumber").addEventListener("blur", function () {
     //}
 	alert(33);
   });
+function getConfigurations(callback){
+    const source = "crm-ITIO";
+    const userType = 1;
+    const companyId = 1;
+    $.ajax({
+        url: `${waURL}/api/configuration/fetch/`,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            source: source,
+            userType: userType,
+            companyId: companyId
+        }),
+        success: function(response) {
+            console.log(response);
+            if (Array.isArray(response)) {  // Check if response is an array
+                if(response.length >0){
+                    let newRows = response.map( (item, index) => 
+                        `<option value="${item.phoneNumberId},${item._id}" ${index === 0 ? 'selected' : ''}>${item.phoneNumber}</option>`
+                    ).join(''); // Convert array to a string
+
+                    $('#confDropdown').append(newRows); // Append all rows at once
+                    const confData = $('#confDropdown').val().split(',');
+                    callback(confData[0]); // return confId via callback
+                }else{
+                    console.warn("No configuration data found.");
+                    callback(null);
+                }
+                } else {
+                    console.error("Expected an array but got:", response);
+                    callback(null);
+                }
+            },
+        statusCode:{
+            400: function(response) {
+                $('.wa-lodder').css('display', 'none');
+                $('.card-wa-configuration').css('display', 'block');
+                console.error('Bad request:', response.responseJSON.message);
+                callback(null);
+            }
+        }
+    });
+}
 </script>
 </body>
 </html>
