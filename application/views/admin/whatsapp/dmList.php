@@ -192,7 +192,7 @@
 // Socket connection
 const SocketURL = "<?= Whatsapp_Socket_Url ?>";
 const waURL = "<?= Whatsapp_Api_Url ?>";
-const source = "crm";
+const source = "crm-ITIO";
 const socket = io(SocketURL);
 socket.on('connect', () => {
     console.log('Connected to Socket.io server');
@@ -240,8 +240,14 @@ socket.on('error', (error) => {
     // Fetch All Configurations
     $(document).ready(function() {
     $.ajax({
-        url: `${waURL}/api/configuration/fetch/${source}`,
-        method: 'GET',
+        url: `${waURL}/api/configuration/fetch/`,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            source: source,
+            userType: 1,
+            companyId: 1
+        }),
         success: function(response) {
             console.log(response);
             if (Array.isArray(response)) {  // Check if response is an array
@@ -643,7 +649,7 @@ $(document).ready(function() {
         e.preventDefault(); // Prevent the default form submission
         // Gather form data
         const selectedPhoneNumberId = $('#confDropdown').val();
-        const source = "crm";
+        const source = "crm-ITIO";
         const userId = $('#formUserId').val();
         const to = $('#formNumber').val();
         const type = $('#formType').val();
