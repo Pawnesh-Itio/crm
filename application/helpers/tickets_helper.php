@@ -17,7 +17,7 @@ function AdminTicketsTableStructure($name = '', $bulk_action = false)
     $table .= '<span class="hide"> - </span><div class="checkbox mass_select_all_wrap"><input type="checkbox" id="mass_select_all" data-to-table="tickets"><label></label></div>';
     $table .= '</th>';
 
-    $table .= '<th class="toggleable" id="th-number">' . _l('the_number_sign') . '</th>';
+    $table .= '<th class="toggleable" id="th-number">' . _l('TicketNo') . '</th>';
     $table .= '<th class="toggleable" id="th-subject">' . _l('ticket_dt_subject') . '</th>';
     $table .= '<th class="toggleable" id="th-tags">' . _l('tags') . '</th>';
     $table .= '<th class="toggleable" id="th-department">' . _l('ticket_dt_department') . '</th>';

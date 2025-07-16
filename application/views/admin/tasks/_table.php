@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 $table_data = [
     _l('the_number_sign'),
+    _l('TaskID'),
     _l('tasks_dt_name'),
     _l('tasks_dt_datestart'),
     [

@@ -534,7 +534,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
-                <button type="submit" class="btn btn-primary matcheddate"><?php echo _l('submit'); ?></button>
+                <button type="submit" class="btn btn-primary"><?php echo _l('submit'); ?></button>
             </div>
         </div>
     </div>
@@ -578,7 +578,20 @@
             repeat_every_custom: {
                 min: 1
             },
-        }, task_form_handler);
+        }, function(form) {
+            // Custom validation for Start Date <= Due Date
+            var startDate = $('#startdate').val();
+            var dueDate = $('#duedate').val();
+            if (startDate && dueDate) {
+                var start = new Date(startDate);
+                var due = new Date(dueDate);
+                if (start > due) {
+                    alert('Start Date must be less than or equal to Due Date.');
+                    return false;
+                }
+            }
+            task_form_handler(form);
+        });
 
         $('.rel_id_label').html(_rel_type.find('option:selected').text());
 
@@ -719,20 +732,4 @@
         $duedate.datetimepicker('destroy');
         init_datepicker($duedate);
     }
-	
-	$(document).on('click', '.matcheddate', function () {
-  //alert(33333);
-  let start = new Date($('#startdate').val());
-    let end = new Date($('#duedate').val());
-  //alert(start);
-  //alert(end);
-  if (!isNaN(start) && !isNaN(end)) {
-    if (end >= start) {
-      // Valid
-    } else {
-      alert('End date must be greater than or equal to start date.');
-      return false;
-    }
-  }
-});
     </script>
