@@ -85,9 +85,9 @@ return App_table::find('tasks')
         foreach ($rResult as $aRow) {
             $row = [];
 
-            $row[] = $serial++; // Serial number column
+            // Restore original first column (checkbox)
             $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['id'] . '"><label></label></div>';
-
+ $row[] = $serial++;
             $row[] = '<a href="' . admin_url('tasks/view/' . $aRow['id']) . '" onclick="init_task_modal(' . $aRow['id'] . '); return false;">' . $aRow['id'] . '</a>';
 
             $outputName = '';

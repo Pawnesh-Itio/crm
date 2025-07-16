@@ -1,1 +1,24 @@
 application/logs
+attachments/
+
+# Ignore all .log files
+*.log
+
+# Ignore node_modules folder
+node_modules/
+
+# Ignore environment files
+.env
+
+# Ignore all files in temp/ folder
+temp/
+
+# Ignore compiled files
+*.class
+*.pyc
+
+# Ignore OS or editor-specific files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
