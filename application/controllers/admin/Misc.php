@@ -190,6 +190,17 @@ class Misc extends AdminController
         $message    = '';
         $alert_type = 'warning';
         if ($this->input->post()) {
+            // Validate date and time is not in the past
+            $date = $this->input->post('date');
+
+            if (strtotime($date) < time()) {
+                echo json_encode([
+                    'alert_type' => 'danger',
+                    'message'    => _l('reminder_date_cannot_be_past'),
+                ]);
+                die;
+            }
+
             $success = $this->misc_model->add_reminder($this->input->post(), $rel_id_id);
             if ($success) {
                 $alert_type = 'success';

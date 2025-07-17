@@ -44,6 +44,7 @@ class LeadsKanban extends AbstractKanban
 
     protected function initiateQuery(): self
     {
+        
         $this->ci->db->select(db_prefix() . 'leads.title, ' . db_prefix() . 'leads.website, '. db_prefix() . 'leads.last_status_change, ' . db_prefix() . 'leads.lead_value, ' . db_prefix() . 'leads.address, ' . db_prefix() . 'leads.is_deal, ' . db_prefix() . 'leads.state, ' . db_prefix() . 'leads.country, ' . db_prefix() . 'leads.zip, ' . db_prefix() . 'leads.name as lead_name,'. db_prefix() . 'leads.deal_status ,' . db_prefix() . 'leads_sources.name as source_name,' . db_prefix() . 'leads.id as id,' . db_prefix() . 'leads.assigned,' . db_prefix() . 'leads.email,' . db_prefix() . 'leads.phonenumber,' . db_prefix() . 'leads.company,' . db_prefix() . 'leads.dateadded,' . db_prefix() . 'leads.status,' . db_prefix() . 'leads.lastcontact,(SELECT COUNT(*) FROM ' . db_prefix() . 'clients WHERE leadid=' . db_prefix() . 'leads.id) as is_lead_client, (SELECT COUNT(id) FROM ' . db_prefix() . 'files WHERE rel_id=' . db_prefix() . 'leads.id AND rel_type="lead") as total_files, (SELECT COUNT(id) FROM ' . db_prefix() . 'notes WHERE rel_id=' . db_prefix() . 'leads.id AND rel_type="lead") as total_notes,(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'leads.id and rel_type="lead" ORDER by tag_order ASC) as tags');
         $this->ci->db->from('leads');
         $this->ci->db->join(db_prefix() . 'leads_sources', db_prefix() . 'leads_sources.id=' . db_prefix() . 'leads.source');
@@ -64,7 +65,35 @@ class LeadsKanban extends AbstractKanban
         if (staff_cant('view', 'leads')) {
             $this->ci->db->where('(assigned = ' . get_staff_user_id() . ' OR addedfrom=' . get_staff_user_id() . ' OR is_public=1)');
         }
+
+        // Excluding records that are merged
+        $exclude_ids = $this->getMergedLeads();
+        if (!empty($exclude_ids)) {
+            $exclude_ids = array_filter($exclude_ids, 'is_numeric'); // sanitize
+            $this->ci->db->where_not_in(db_prefix() . 'leads.id', $exclude_ids);
+        }
 //return $this->db->last_query();exit;
         return $this;
+    }
+    protected function getMergedLeads(){
+            $CI =& get_instance();
+            $merged_lead_ids = $CI->db->query("
+                SELECT merged_lead_ids
+                FROM " . db_prefix() . "leads
+                WHERE is_merged = 1
+            ")->result_array();
+
+            $exclude_ids = [];
+
+            foreach ($merged_lead_ids as $row) {
+                if (!empty($row['merged_lead_ids'])) {
+                    $ids = array_filter(explode(',', $row['merged_lead_ids']), 'is_numeric');
+                    $exclude_ids = array_merge($exclude_ids, $ids);
+                }
+
+            }
+
+            $exclude_ids = array_unique(array_filter($exclude_ids)); // clean array
+            return $exclude_ids;
     }
 }

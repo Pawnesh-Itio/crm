@@ -50,20 +50,18 @@
                                     <div class="form-group">
                                      
                                         <textarea name="message" id="message" class="form-control editor"  placeholder="Message..."></textarea>
-<div class="checkbox checkbox-primary">
-<input type="checkbox" id="toggleSignature" name="toggleSignature" value="1">
-<label for="SignatureX">Add Signature</label>
-</div>
+                                            <div class="checkbox checkbox-primary">
+                                                <input type="checkbox" id="toggleSignature" name="toggleSignature" value="1">
+                                                <label for="SignatureX">Add Signature</label>
+                                            </div>
 										
                                     </div>
                                 </div>
-																<div class="col">
-	  <div class="tw-text-right">
-	  <a name="send" class="ailoader" onclick="get_content();return false;"><img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" /></a>
-	 
-	  </div>
-
-	  </div>
+								<div class="col">
+                                    <div class="tw-text-right">
+                                        <a name="send" class="ailoader" onclick="get_content();return false;"><img src="<?php echo base_url('assets/images/artificial-intelligence.png')?>" title="Draft with AI"  style="width:30px;" /></a>
+                                    </div>
+                                </div>
 								
                                 <div class="col">
                                     <div class="form-group">
@@ -91,7 +89,7 @@
     div.classList.toggle('hidden');
   }
   
-  function get_content() { 
+function get_content() { 
 
 
 //let str = $('input[name="aicontent"]').val();

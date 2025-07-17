@@ -1639,7 +1639,8 @@ $lang['email_piping_default_priority']                            = 'Default pri
 $lang['show_lead_reminders_on_calendar']                          = 'Lead Reminders';
 $lang['tickets_piping']                                           = 'Email Piping';
 $lang['email_piping_only_replies']                                = 'Only Replies Allowed by Email';
-$lang['email_piping_only_registered']                             = 'Pipe Only on Registered Users';
+$lang['email_piping_only_registered']                             = 'Pipe Only on Registered U sers';
+$lang['reminder_date_cannot_be_past']                             = 'Reminder date cannot be in the past. Please select a valid date.';
 
 # Estimates
 $lang['view_estimate_as_client']         = 'View estimate as customer';

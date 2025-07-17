@@ -77,7 +77,7 @@ foreach ($statuses as $status) {
                         <li class="text-center not-sortable kanban-load-more"
                             data-load-status="<?php echo e($status['id']); ?>">
                             <a href="#" class="btn btn-default btn-block<?php if ($total_pages <= 1 || $kanBan->getPage() === $total_pages) {
-                    echo ' disabled';
+                    echo ' hide';
                 } ?>" data-page="<?php echo $kanBan->getPage(); ?>"
                                 onclick="kanban_load_more(<?php echo e($status['id']); ?>, this, 'leads/leads_kanban_load_more', 315, 360); return false;"
                                 ;>
