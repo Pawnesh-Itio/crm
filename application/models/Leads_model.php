@@ -1892,7 +1892,7 @@ class Leads_model extends App_Model
 		
 		if ($this->db->affected_rows() > 0) {
 		$datax['deal_status']=2;
-		$datax['last_status_change']= date('Y-m-d H:i:s');
+		//$datax['last_status_change']= date('Y-m-d H:i:s');
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
 		$log_message=" Rejected and Converted this lead to Document";
@@ -1915,7 +1915,7 @@ class Leads_model extends App_Model
 		
 		if ($this->db->affected_rows() > 0) {
 		$datax['deal_status']=4;
-		$datax['last_status_change']= date('Y-m-d H:i:s');
+		//$datax['last_status_change']= date('Y-m-d H:i:s');
 		$this->db->where('id', $id);
         $this->db->update(db_prefix().'leads', $datax);
 		$log_message=" Approved and Converted this lead to Final Invoice";
